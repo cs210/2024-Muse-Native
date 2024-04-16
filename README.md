@@ -4,6 +4,7 @@ To get it working:
 
 ```
 npm i
+npm i expo
 ```
 First time (or after major changes):
 ```
