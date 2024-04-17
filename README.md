@@ -5,6 +5,7 @@ To get it working:
 ```
 npm i
 npm i expo
+npx expo install @supabase/supabase-js @react-native-async-storage/async-storage react-native-url-polyfill
 ```
 First time (or after major changes):
 ```
