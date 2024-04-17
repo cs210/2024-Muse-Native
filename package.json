@@ -13,10 +13,12 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "@expo-google-fonts/inter": "^0.2.3",
+    "@expo-google-fonts/noto-serif": "^0.2.3",
     "@expo/vector-icons": "^14.0.0",
     "@react-native-async-storage/async-storage": "1.21.0",
     "@react-navigation/native": "^6.0.2",
-    "@supabase/supabase-js": "^2.42.3",
+    "@supabase/supabase-js": "^2.42.4",
     "expo": "~50.0.14",
     "expo-dev-client": "~3.3.11",
     "expo-font": "~11.10.3",

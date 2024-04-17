@@ -1,4 +1,6 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { NotoSerif_400Regular } from "@expo-google-fonts/noto-serif";
+import { Inter_400Regular, Inter_700Bold } from "@expo-google-fonts/inter";
 import {
   DarkTheme,
   DefaultTheme,
@@ -26,6 +28,9 @@ export default function RootLayout() {
   const [loaded, error] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
     ...FontAwesome.font,
+    NotoSerif_400Regular,
+    Inter_400Regular,
+    Inter_700Bold,
   });
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
@@ -49,8 +54,7 @@ export default function RootLayout() {
 function RootLayoutNav() {
   return (
     <Stack>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+      <Stack.Screen name="index" options={{ headerShown: false }} />
     </Stack>
   );
 }
