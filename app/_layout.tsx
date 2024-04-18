@@ -55,8 +55,6 @@ const InitialLayout = () => {
   }, [initialized, session]);
 
   const [loaded, error] = useFonts({
-    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
-    ...FontAwesome.font,
     NotoSerif_400Regular,
     Inter_400Regular,
     Inter_700Bold,
@@ -67,11 +65,13 @@ const InitialLayout = () => {
     if (error) throw error;
   }, [error]);
 
-  useCallback(async () => {
-    if (loaded || error) {
-      await SplashScreen.hideAsync();
+  useEffect(() => {
+    if (loaded) {
+      setTimeout(() => {
+        SplashScreen.hideAsync();
+      }, 10);
     }
-  }, [loaded, error]);
+  }, [loaded]);
  
   if (!loaded) {
     return null;
