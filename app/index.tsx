@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#5a324e",
   },
   logInButton: {
-    marginTop: 20,
+    marginTop: 25,
     marginBottom: 15,
     alignItems: "center",
     backgroundColor: "#2a8535",
@@ -137,15 +137,5 @@ const styles = StyleSheet.create({
 });
 
 /* Do both Apple and Google */
-
-/**
- * 
-begin
-  insert into public.profiles (id, full_name, avatar_url)
-  values (new.id, new.raw_user_meta_data->>'full_name', new.raw_user_meta_data->>'avatar_url');
-  return new;
-end;
-
- */
 
 export default Page;
