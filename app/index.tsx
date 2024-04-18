@@ -1,8 +1,17 @@
 import { useState } from "react";
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ActivityIndicator, Alert } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  ActivityIndicator,
+  Alert,
+} from "react-native";
 import { supabase } from "@/utils/supabase";
+import { AppleAuth } from "@/components/AppleAuth.native";
 
-const Page = () => { 
+const Page = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -10,7 +19,7 @@ const Page = () => {
   const onLogInPress = async () => {
     setLoading(true);
 
-    const { error } = await supabase.auth.signInWithPassword({ 
+    const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
@@ -25,10 +34,10 @@ const Page = () => {
   const onSignUpPress = async () => {
     setLoading(true);
 
-    const { 
+    const {
       data: { session },
       error,
-    } = await supabase.auth.signUp({ 
+    } = await supabase.auth.signUp({
       email,
       password,
     });
@@ -46,7 +55,7 @@ const Page = () => {
     <View style={styles.container}>
       {loading && (
         <View style={styles.overlay}>
-          <ActivityIndicator size="large" color="#ffeffa"/>
+          <ActivityIndicator size="large" color="#ffeffa" />
           <Text style={{ color: "#ffeffa" }}>Loading...</Text>
         </View>
       )}
@@ -74,6 +83,9 @@ const Page = () => {
       <TouchableOpacity style={styles.signUpButton} onPress={onSignUpPress}>
         <Text style={styles.signUpText}>Sign up</Text>
       </TouchableOpacity>
+      <View style={{ alignItems: "center", marginTop: 30, gap: 10 }}>
+        <AppleAuth />
+      </View>
     </View>
   );
 };
@@ -121,7 +133,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   signUpText: {
-    color: "#ffeffa", 
+    color: "#ffeffa",
     fontFamily: "Inter_700Bold",
     fontSize: 15,
   },
@@ -133,7 +145,7 @@ const styles = StyleSheet.create({
     elevation: 1,
     backgroundColor: "rgba(0,0,0,0.5)",
     gap: 10,
-  }
+  },
 });
 
 /* Do both Apple and Google */

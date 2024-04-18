@@ -7,14 +7,11 @@ import {
   ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
+import { Slot, useRouter, useSegments } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
-
-export {
-  // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
-} from "expo-router";
+import { useEffect, useState } from "react";
+import { Session } from "@supabase/supabase-js";
+import { supabase } from "@/utils/supabase";
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
@@ -24,7 +21,39 @@ export const unstable_settings = {
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-export default function RootLayout() {
+const InitialLayout = () => {
+  const [session, setSession] = useState<Session | null>(null);
+  const [initialized, setInitialized] = useState(false);
+
+  const segments = useSegments();
+  const router = useRouter();
+
+  useEffect(() => {
+    const { data } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log("supabase.auth.onAuthStateChange", event, session);
+      setSession(session);
+      setInitialized(true);
+    });
+
+    return () => {
+      data.subscription.unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!initialized) return;
+
+    const inAuthGroup = segments[0] === "(auth)";
+
+    if (session && !inAuthGroup) {
+      router.replace("/(auth)");
+    } else if (!session) {
+      setTimeout(() => {
+        router.replace("/");
+      }, 1);
+    }
+  }, [initialized, session]);
+
   const [loaded, error] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
     ...FontAwesome.font,
@@ -48,13 +77,7 @@ export default function RootLayout() {
     return null;
   }
 
-  return <RootLayoutNav />;
-}
+  return <Slot />;
+};
 
-function RootLayoutNav() {
-  return (
-    <Stack>
-      <Stack.Screen name="index" options={{ headerShown: false }} />
-    </Stack>
-  );
-}
+export default InitialLayout;
