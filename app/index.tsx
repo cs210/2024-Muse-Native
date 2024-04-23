@@ -54,13 +54,16 @@ const Page = () => {
 
   return (
     <View style={styles.container}>
+      {/* Loading screen after user logs in or signs up */}
       {loading && (
         <View style={styles.overlay}>
           <ActivityIndicator size="large" color={colors.text_pink} />
           <Text style={{ color: "#ffeffa" }}>Loading...</Text>
         </View>
       )}
+      {/* Muse Logo */}
       <Text style={styles.header}>Muse</Text>
+      {/* Email field */}
       <TextInput
         style={styles.inputField}
         placeholder="Email"
@@ -69,6 +72,7 @@ const Page = () => {
         value={email}
         autoCapitalize="none"
       />
+      {/* Password field */}
       <TextInput
         style={styles.inputField}
         placeholder="Password"
@@ -78,12 +82,15 @@ const Page = () => {
         autoCapitalize="none"
         secureTextEntry
       />
+      {/* Log in button */}
       <TouchableOpacity style={styles.logInButton} onPress={onLogInPress}>
         <Text style={styles.logInText}>Log in</Text>
       </TouchableOpacity>
+      {/* Sign up button */}
       <TouchableOpacity style={styles.signUpButton} onPress={onSignUpPress}>
         <Text style={styles.signUpText}>Sign up</Text>
       </TouchableOpacity>
+      {/* Sign in with Apple */}
       <View style={{ alignItems: "center", marginTop: 30, gap: 10 }}>
         <AppleAuth />
       </View>
@@ -143,7 +150,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     zIndex: 1,
-    elevation: 1,
+    elevation: 1, // Add drop shadow to loading screen
     backgroundColor: "rgba(0,0,0,0.5)",
     gap: 10,
   },

@@ -31,13 +31,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
     flexDirection: "column", // Aligns children in a column
-    marginBottom: 2,
+    marginBottom: 10,
   },
   museumContainer: {
     backgroundColor: colors.background,
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 25,
+    marginBottom: 27,
     marginLeft: 3,
   },
   icon: {
@@ -49,6 +49,7 @@ const styles = StyleSheet.create({
   usernameText: {
     color: colors.text_pink, // Replace with the exact text color from your image
     fontFamily: "Inter_700Bold", // Makes the text bold
+    fontSize: 15,
   },
   exhibition: {
     flex: 1, // Container takes the remaining space

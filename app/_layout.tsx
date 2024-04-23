@@ -8,7 +8,7 @@ import { Session } from "@supabase/supabase-js";
 import { supabase } from "@/utils/supabase";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+SplashScreen.preventAutoHideAsync(); // TODO: Custom Splash Screen
 
 const InitialLayout = () => {
   const [session, setSession] = useState<Session | null>(null);
@@ -25,7 +25,7 @@ const InitialLayout = () => {
     });
 
     return () => {
-      data.subscription.unsubscribe();
+      data.subscription.unsubscribe(); // Prevent memory leak
     };
   }, []);
 
@@ -34,9 +34,11 @@ const InitialLayout = () => {
 
     const inAuthGroup = segments[0] === "(auth)";
 
+    // Redirect to home page after signing in
     if (session && !inAuthGroup) {
       router.replace("/(auth)/(drawer)/(tabs)/home");
     } else if (!session) {
+      // Give time for custom fonts to load
       setTimeout(() => {
         router.replace("/");
       }, 10);
@@ -56,6 +58,7 @@ const InitialLayout = () => {
 
   useEffect(() => {
     if (loaded) {
+      // Give time for custom fonts to load
       setTimeout(() => {
         SplashScreen.hideAsync();
       }, 10);
@@ -69,8 +72,6 @@ const InitialLayout = () => {
   return (
     <>
       <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="index" />
-        <Stack.Screen name="(auth)/(drawer)" /> 
       </Stack>
     </>
   );
