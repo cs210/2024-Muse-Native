@@ -25,6 +25,14 @@ const Layout = () => {
           },
         }}
       />
+      <Drawer.Screen
+        name="setup"
+        options={{
+          title: "Settings",
+          drawerLabel: "Settings",
+          headerShown: false,
+        }}
+      />
     </Drawer>
   );
 };
