@@ -9,7 +9,7 @@ export function AppleAuth() {
         buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
         buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.WHITE_OUTLINE}
         cornerRadius={5}
-        style={{ width: 200, height: 48 }}
+        style={{ width: 200, height: 50 }}
         onPress={async () => {
           try {
             const credential = await AppleAuthentication.signInAsync({

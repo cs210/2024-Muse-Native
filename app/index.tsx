@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { supabase } from "@/utils/supabase";
 import { AppleAuth } from "@/components/AppleAuth.native";
+import colors from "@/styles/colors";
 
 const Page = () => {
   const [email, setEmail] = useState("");
@@ -55,7 +56,7 @@ const Page = () => {
     <View style={styles.container}>
       {loading && (
         <View style={styles.overlay}>
-          <ActivityIndicator size="large" color="#ffeffa" />
+          <ActivityIndicator size="large" color={colors.text_pink} />
           <Text style={{ color: "#ffeffa" }}>Loading...</Text>
         </View>
       )}
@@ -63,7 +64,7 @@ const Page = () => {
       <TextInput
         style={styles.inputField}
         placeholder="Email"
-        placeholderTextColor={"#ffeffa"}
+        placeholderTextColor={colors.text_pink}
         onChangeText={setEmail}
         value={email}
         autoCapitalize="none"
@@ -71,7 +72,7 @@ const Page = () => {
       <TextInput
         style={styles.inputField}
         placeholder="Password"
-        placeholderTextColor={"#ffeffa"}
+        placeholderTextColor={colors.text_pink}
         onChangeText={setPassword}
         value={password}
         autoCapitalize="none"
@@ -95,11 +96,11 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 170,
     padding: 20,
-    backgroundColor: "#392132",
+    backgroundColor: colors.background,
   },
   header: {
     fontSize: 50,
-    color: "#ffeffa",
+    color: colors.text_pink,
     textAlign: "center",
     fontFamily: "NotoSerif_400Regular",
     margin: 45,
@@ -112,18 +113,18 @@ const styles = StyleSheet.create({
     padding: 10,
     color: "#ffeffa",
     fontFamily: "Inter_400Regular",
-    backgroundColor: "#5a324e",
+    backgroundColor: colors.plum,
   },
   logInButton: {
     marginTop: 25,
     marginBottom: 15,
     alignItems: "center",
-    backgroundColor: "#2a8535",
+    backgroundColor: colors.light_green,
     padding: 12,
     borderRadius: 4,
   },
   logInText: {
-    color: "#fff",
+    color: colors.white,
     fontFamily: "Inter_700Bold",
     fontSize: 15,
   },
@@ -133,7 +134,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   signUpText: {
-    color: "#ffeffa",
+    color: colors.text_pink,
     fontFamily: "Inter_700Bold",
     fontSize: 15,
   },

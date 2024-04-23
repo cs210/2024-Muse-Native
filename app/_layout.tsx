@@ -1,22 +1,11 @@
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { NotoSerif_400Regular } from "@expo-google-fonts/noto-serif";
 import { Inter_400Regular, Inter_700Bold } from "@expo-google-fonts/inter";
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { Slot, useRouter, useSegments } from "expo-router";
+import { Stack, useRouter, useSegments } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Session } from "@supabase/supabase-js";
 import { supabase } from "@/utils/supabase";
-
-// export const unstable_settings = {
-//   // Ensure that reloading on `/modal` keeps a back button present.
-//   initialRouteName: "(tabs)",
-// };
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -46,11 +35,11 @@ const InitialLayout = () => {
     const inAuthGroup = segments[0] === "(auth)";
 
     if (session && !inAuthGroup) {
-      router.replace("/(auth)");
+      router.replace("/(auth)/(drawer)/(tabs)/home");
     } else if (!session) {
       setTimeout(() => {
         router.replace("/");
-      }, 1);
+      }, 10);
     }
   }, [initialized, session]);
 
@@ -72,12 +61,21 @@ const InitialLayout = () => {
       }, 10);
     }
   }, [loaded]);
- 
+
   if (!loaded) {
     return null;
   }
 
-  return <Slot />;
+  return (
+    <>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="index" />
+        <Stack.Screen name="(auth)/(drawer)" /> 
+      </Stack>
+    </>
+  );
 };
 
-export default InitialLayout;
+export default function RootLayout() {
+  return <InitialLayout />;
+}
