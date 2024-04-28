@@ -8,6 +8,7 @@ import {
   SafeAreaView,
 } from "react-native";
 import FavoriteCard from "@/components/profile/FavoriteCard";
+import ReviewCard from "@/components/profile/ReviewCard";
 import { supabase } from "@/utils/supabase";
 
 // TODO: Unhardcode
@@ -49,8 +50,21 @@ const ProfilePage = () => {
             <FavoriteCard />
           </View>
         </View>
-
         {/* Posts */}
+        <View
+          style={{
+            display: "flex",
+            width: "100%",
+            borderColor: "white",
+            borderWidth: 2,
+          }}
+        >
+          <ReviewCard />
+        </View>
+
+        {/* <View style={styles.favoritesContainer}>
+          
+        </View> */}
       </ScrollView>
     </SafeAreaView>
   );
