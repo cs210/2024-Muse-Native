@@ -36,16 +36,18 @@ const InitialLayout = () => {
 
     // Redirect to home page after signing in
     if (session && !inAuthGroup) {
-      router.replace("/(auth)/(drawer)/(tabs)/home");
+      // IF USERNAME == NULL GOTO SETUP
+      // ELSE:
+      router.replace("/(auth)/(drawer)/setup");
     } else if (!session) {
       // Give time for custom fonts to load
       setTimeout(() => {
         router.replace("/");
-      }, 10);
+      }, 1000);
     }
   }, [initialized, session]);
 
-  const [loaded, error] = useFonts({
+  let [loaded, error] = useFonts({
     NotoSerif_400Regular,
     Inter_400Regular,
     Inter_700Bold,
@@ -61,7 +63,7 @@ const InitialLayout = () => {
       // Give time for custom fonts to load
       setTimeout(() => {
         SplashScreen.hideAsync();
-      }, 10);
+      }, 1000);
     }
   }, [loaded]);
 
@@ -71,8 +73,7 @@ const InitialLayout = () => {
 
   return (
     <>
-      <Stack screenOptions={{ headerShown: false }}>
-      </Stack>
+      <Stack screenOptions={{ headerShown: false }}></Stack>
     </>
   );
 };
