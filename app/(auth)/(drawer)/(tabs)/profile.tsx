@@ -51,20 +51,16 @@ const ProfilePage = () => {
           </View>
         </View>
         {/* Posts */}
-        <View
-          style={{
-            display: "flex",
-            width: "100%",
-            borderColor: "white",
-            borderWidth: 2,
-          }}
-        >
+
+        <View>
+          <ReviewCard />
+          <ReviewCard />
+          <ReviewCard />
+          <ReviewCard />
+          <ReviewCard />
+          <ReviewCard />
           <ReviewCard />
         </View>
-
-        {/* <View style={styles.favoritesContainer}>
-          
-        </View> */}
       </ScrollView>
     </SafeAreaView>
   );
@@ -77,7 +73,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   container: {
-    flex: 1,
     padding: 12,
     paddingVertical: 40,
     backgroundColor: colors.background,
