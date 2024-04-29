@@ -26,6 +26,18 @@ const Layout = () => {
         }}
       />
       <Drawer.Screen
+        name="review/[id]"
+        options={{
+          title: "Review",
+          drawerLabel: "Review",
+          headerTintColor: colors.text_pink,
+          headerShadowVisible: false,
+          headerStyle: {
+            backgroundColor: colors.background,
+          },
+        }}
+      />
+      <Drawer.Screen
         name="setup"
         options={{
           title: "Settings",

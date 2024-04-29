@@ -13,7 +13,14 @@ import { supabase } from "@/utils/supabase";
 
 // TODO: Unhardcode
 // TODO: Add Lists Feature Eventually
-// TODO: Only load 5 posts
+// TODO: Only load 5 posts (Map)
+// TODO: Click on profile and it grows
+// TODO: Click on Followers / Following
+// TODO: Click on Favorites
+interface ReviewCardProps {
+  reviewId: string; // Type for reviewId
+}
+
 const ProfilePage = () => {
   return (
     <SafeAreaView style={styles.safeContainer}>
@@ -52,14 +59,11 @@ const ProfilePage = () => {
         </View>
         {/* Posts */}
 
-        <View>
-          <ReviewCard />
-          <ReviewCard />
-          <ReviewCard />
-          <ReviewCard />
-          <ReviewCard />
-          <ReviewCard />
-          <ReviewCard />
+        <View style={styles.reviewsContainer}>
+          <ReviewCard reviewId={1} />
+          <ReviewCard reviewId={2} />
+          <ReviewCard reviewId={3} />
+          <ReviewCard reviewId={4} />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -136,6 +140,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderColor: "white",
     borderWidth: 2,
+  },
+  reviewsContainer: {
+    gap: 12,
   },
 });
 export default ProfilePage;

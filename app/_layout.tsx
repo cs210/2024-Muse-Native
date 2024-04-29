@@ -38,7 +38,7 @@ const InitialLayout = () => {
     if (session && !inAuthGroup) {
       // IF USERNAME == NULL GOTO SETUP
       // ELSE:
-      router.replace("/(auth)/(drawer)/setup");
+      router.replace("/(auth)/(drawer)/review/[id]");
     } else if (!session) {
       // Give time for custom fonts to load
       setTimeout(() => {
