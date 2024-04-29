@@ -1,7 +1,7 @@
 import colors from "@/styles/colors";
-import { Stack, useRouter, Link } from "expo-router";
+import { Stack, useRouter, Link, router } from "expo-router";
 import { useNavigation } from "@react-navigation/native";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -10,16 +10,50 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { supabase } from "@/utils/supabase";
 
 // TODO: In the future, we ask people what kind of art they like here.
 const setup = () => {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const navigation = useNavigation();
+  const [message, setMessage] = useState("");
 
-  //   const onLogInPress = () => {
-  //     navigation.navigate("home");
-  //   };
+  useEffect(() => {
+    const fetchUser = async () => {
+      const {
+        data: { user },
+        error,
+      } = await supabase.auth.getUser();
+
+      if (error) {
+        setMessage("Failed to fetch user: " + error.message);
+      } else {
+        // console.log(user);
+        // Optionally set user details to state here
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  const handlePress = async () => {
+    // href="/(auth)/(drawer)/(tabs)/home"
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    const { data, error } = await supabase
+      .from("profiles")
+      .update({ first_name: name, username: username })
+      .eq("id", user?.id);
+
+    if (error) {
+      setMessage("Failed to update: " + error.message);
+    } else {
+      setMessage("Profile updated successfully!");
+    }
+    router.push("/(auth)/(drawer)/(tabs)/home");
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -47,9 +81,10 @@ const setup = () => {
           autoCapitalize="none"
         />
 
-        <Link style={styles.logInButton} href="/(auth)/(drawer)/(tabs)/home">
+        <TouchableOpacity onPress={handlePress} style={styles.logInButton}>
           <Text style={styles.logInText}>Create Account</Text>
-        </Link>
+        </TouchableOpacity>
+        {message ? <Text>{message}</Text> : null}
       </ScrollView>
     </SafeAreaView>
   );

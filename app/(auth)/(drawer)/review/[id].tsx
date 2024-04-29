@@ -1,5 +1,6 @@
 import { View, Text, ScrollView, StyleSheet, Image } from "react-native";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { Stack, useLocalSearchParams, Link } from "expo-router";
+
 import colors from "@/styles/colors";
 // TODO: Background when scrolling
 const review = () => {
@@ -8,32 +9,44 @@ const review = () => {
     <ScrollView contentContainerStyle={styles.container}>
       {/* Info */}
       <View style={styles.museumInfo}>
-        <Image
-          source={require("../../../../images/cantor.jpg")}
-          style={{
-            width: 100,
-            height: 100,
-            borderRadius: 10,
-          }}
-        />
+        <Link href={"/(auth)/(drawer)/exhibition"}>
+          <Image
+            source={require("../../../../images/cantor.jpg")}
+            style={{
+              width: 100,
+              height: 100,
+              borderRadius: 10,
+            }}
+          />
+        </Link>
         {/* Visit Info */}
         <View style={styles.museumInfoTextCont}>
-          <Text style={styles.exhibitionText}>Day Jobs</Text>
-          <Text style={styles.museumText}>Cantor Arts Center </Text>
+          <Link href={"/(auth)/(drawer)/exhibition"}>
+            <Text style={styles.exhibitionText}>Day Jobs</Text>
+          </Link>
+          <Link href={"/(auth)/(drawer)/museum"}>
+            <Text style={styles.museumText}>Cantor Arts Center </Text>
+          </Link>
         </View>
       </View>
       {/* HEADER */}
+
       <View style={styles.header}>
-        <Image
-          source={require("../../../../images/cantor.jpg")}
-          style={{
-            width: 30,
-            height: 30,
-            borderRadius: 15,
-          }}
-        />
-        <Text style={styles.username}> jajacque </Text>
+        <Link href={"/(auth)/(drawer)/(tabs)/profile"}>
+          <Image
+            source={require("../../../../images/cantor.jpg")}
+            style={{
+              width: 30,
+              height: 30,
+              borderRadius: 15,
+            }}
+          />
+        </Link>
+        <Link href={"/(auth)/(drawer)/(tabs)/profile"}>
+          <Text style={styles.username}> jajacque </Text>
+        </Link>
       </View>
+
       <Text style={styles.reviewText}>
         This exhibition changed my life. Lorem ipsum dolor sit amet, consectetur
         adipiscing elit. Sed dui quam, rutrum sit amet interdum ac, dapibus
