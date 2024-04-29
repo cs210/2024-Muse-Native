@@ -51,8 +51,8 @@ const setup = () => {
       setMessage("Failed to update: " + error.message);
     } else {
       setMessage("Profile updated successfully!");
+      router.push("/(auth)/(drawer)/(tabs)/home");
     }
-    router.push("/(auth)/(drawer)/(tabs)/home");
   };
 
   return (

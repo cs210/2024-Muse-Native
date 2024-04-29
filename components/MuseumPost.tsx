@@ -1,11 +1,26 @@
-import { View, Text, Image, StyleSheet, Dimensions } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity,
+} from "react-native";
 import { museumStyles } from "@/styles/museumStyles";
 import colors from "@/styles/colors";
+import { Link, router } from "expo-router";
 
 const windowWidth = Dimensions.get("window").width;
 const iconSize = windowWidth * 0.08; // for example, 8% of the window width
 
 const MuseumPost = () => {
+  const handlePress = () => {
+    router.push({
+      pathname: "/(auth)/(drawer)/exhibition/[id]",
+      params: { id: 123 },
+    });
+  };
+
   return (
     <View style={styles.container}>
       {/* Museum Name and PFP */}
@@ -14,14 +29,15 @@ const MuseumPost = () => {
         <Text style={styles.usernameText}>cantorarts</Text>
       </View>
       {/* Exhibition */}
-      <View style={styles.exhibition}>
+
+      <TouchableOpacity style={styles.exhibition} onPress={handlePress}>
         <Image
           source={require("../images/exhibition.jpg")}
           style={styles.exhibitionImage}
           resizeMode="cover"
         />
         <Text style={styles.exhibitionText}>Day Jobs</Text>
-      </View>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -69,7 +85,11 @@ const styles = StyleSheet.create({
     fontFamily: "Inter_400Regular",
     fontSize: 20,
     paddingLeft: 5,
-  }
+  },
+  linkStyle: {
+    flex: 1,
+    width: "100%",
+  },
 });
 
 export default MuseumPost;

@@ -9,7 +9,7 @@ const review = () => {
     <ScrollView contentContainerStyle={styles.container}>
       {/* Info */}
       <View style={styles.museumInfo}>
-        <Link href={"/(auth)/(drawer)/exhibition"}>
+        <Link href={"/(auth)/(drawer)/exhibition/2"}>
           <Image
             source={require("../../../../images/cantor.jpg")}
             style={{
@@ -21,7 +21,7 @@ const review = () => {
         </Link>
         {/* Visit Info */}
         <View style={styles.museumInfoTextCont}>
-          <Link href={"/(auth)/(drawer)/exhibition"}>
+          <Link href={"/(auth)/(drawer)/exhibition/2"}>
             <Text style={styles.exhibitionText}>Day Jobs</Text>
           </Link>
           <Link href={"/(auth)/(drawer)/museum"}>
