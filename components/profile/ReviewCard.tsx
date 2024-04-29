@@ -12,6 +12,7 @@ interface ReviewCardProps {
 const ReviewCard: React.FC<ReviewCardProps> = ({ reviewId }) => {
   const navigation = useNavigation();
 
+  // ! Important Code:
   const handlePress = () => {
     // Navigate and pass the review ID to the destination screen
     router.push({
