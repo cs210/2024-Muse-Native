@@ -7,7 +7,7 @@ export interface Todo {
 }
 
 export interface Profile {
-  id: number;
+  id: string;
   email: string;
   first_name: string;
   last_name: string;

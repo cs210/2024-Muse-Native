@@ -1,3 +1,4 @@
+import FollowButton from "@/components/FollowButton";
 import colors from "@/styles/colors";
 import { Profile } from "@/utils/interfaces";
 import { supabase } from "@/utils/supabase";
@@ -13,6 +14,23 @@ import {
 
 const SearchPage = () => {
   const [profiles, setProfiles] = useState<Profile[]>([]);
+  const [userId, setUserId] = useState("");
+
+  useEffect(() => {
+    getCurrentUserId();
+  }, []);
+
+  const getCurrentUserId = async () => {
+    const { data: { user }, error } = await supabase.auth.getUser();
+
+    if (user) {
+      console.log("~ getCurrentUserId ~ user", user);
+      console.log("~ getCurrentUserId ~ userId", user.id);
+      setUserId(user.id);
+    } else {
+      console.log("~ getCurrentUserId ~ error", error);
+    }
+  }
 
   useEffect(() => {
     loadProfiles();
@@ -35,7 +53,10 @@ const SearchPage = () => {
   const renderRow: ListRenderItem<Profile> = ({ item }) => {
     return (
       <View style={styles.profileContainer}>
-        <Image source={{ uri: item.avatar_url }} style={{ height: 50, width: 50, borderRadius: 25, }}/>
+        <Image
+          source={{ uri: item.avatar_url }}
+          style={{ height: 50, width: 50, borderRadius: 25 }}
+        />
         <View style={styles.nameUserContainer}>
           <View style={styles.nameContainer}>
             <Text style={styles.nameText}>{item.first_name}</Text>
@@ -43,8 +64,8 @@ const SearchPage = () => {
           </View>
           <Text style={styles.usernameText}>{item.username}</Text>
         </View>
+        <FollowButton currentUserId={userId} profileUserId={item.id} />
       </View>
-      
     );
   };
   return (
