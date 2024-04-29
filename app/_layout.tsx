@@ -36,9 +36,49 @@ const InitialLayout = () => {
 
     // Redirect to home page after signing in
     if (session && !inAuthGroup) {
+      const fetchUser = async () => {
+        const {
+          data: { user },
+          error,
+        } = await supabase.auth.getUser();
+
+        if (error) {
+          console.log("Failed to Fetch User");
+        } else {
+          // console.log(user);
+          // Optionally set user details to state here
+        }
+      };
+      const checkUserNameNull = async () => {
+        // Query the profiles table for a specific ID and check if the username is NULL
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("id, username") // Select only the id and username fields for efficiency
+          .eq("id", user?.id) // Filter for the specific ID
+          .is("username", null); // Check if username is NULL
+
+        if (error) {
+          console.error("Error fetching data:", error);
+          return false; // or handle the error in a way that fits your app logic
+        }
+
+        // If data is not empty, it means there's a row with id = "123" where username is NULL
+        if (data.length > 0) {
+          router.replace("/(auth)/(drawer)/setup");
+        } else {
+          router.replace("/(auth)/(drawer)/(tabs)/home");
+        }
+      };
+
+      fetchUser();
+      checkUserNameNull();
+
       // IF USERNAME == NULL GOTO SETUP
       // ELSE:
-      router.replace("/(auth)/(drawer)/setup");
+      // router.replace("/(auth)/(drawer)/(tabs)/profile");
     } else if (!session) {
       // Give time for custom fonts to load
       setTimeout(() => {

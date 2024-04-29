@@ -1,17 +1,20 @@
 import { View, Text, StyleSheet, Image } from "react-native";
 import colors from "@/styles/colors";
+import { Link } from "expo-router";
 
 const FavoriteCard = () => {
   return (
     <View>
-      <Image
-        source={require("../../images/cantor.jpg")}
-        style={{
-          width: 100,
-          height: 100,
-          borderRadius: 10,
-        }}
-      />
+      <Link href={"/(auth)/(drawer)/setup"}>
+        <Image
+          source={require("../../images/cantor.jpg")}
+          style={{
+            width: 100,
+            height: 100,
+            borderRadius: 10,
+          }}
+        />
+      </Link>
     </View>
   );
 };

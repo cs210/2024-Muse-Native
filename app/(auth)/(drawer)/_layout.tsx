@@ -1,39 +1,52 @@
 import colors from "@/styles/colors";
 import { Drawer } from "expo-router/drawer";
+import { Stack } from "expo-router";
 
 const Layout = () => {
   return (
-    <Drawer
-      screenOptions={{
-        drawerActiveBackgroundColor: colors.plum,
-        drawerActiveTintColor: colors.text_pink,
-        drawerInactiveTintColor: colors.text_pink,
-        drawerStyle: {
-          backgroundColor: colors.background,
-        },
-      }}
+    <Stack
+    // screenOptions={{
+    //   drawerActiveBackgroundColor: colors.plum,
+    //   drawerActiveTintColor: colors.text_pink,
+    //   drawerInactiveTintColor: colors.text_pink,
+    //   drawerStyle: {
+    //     backgroundColor: colors.background,
+    //   },
+    // }}
     >
-      <Drawer.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Drawer.Screen
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen
         name="settings"
         options={{
           title: "Settings",
-          drawerLabel: "Settings",
+          // drawerLabel: "Settings",
           headerTintColor: colors.text_pink,
           headerStyle: {
             backgroundColor: colors.background,
           },
         }}
       />
-      <Drawer.Screen
+      <Stack.Screen
+        name="review/[id]"
+        options={{
+          title: "Review",
+          // drawerLabel: "Review",
+          headerTintColor: colors.text_pink,
+          headerShadowVisible: false,
+          headerStyle: {
+            backgroundColor: colors.background,
+          },
+        }}
+      />
+      <Stack.Screen
         name="setup"
         options={{
           title: "Settings",
-          drawerLabel: "Settings",
+          // drawerLabel: "Settings",
           headerShown: false,
         }}
       />
-    </Drawer>
+    </Stack>
   );
 };
 export default Layout;
