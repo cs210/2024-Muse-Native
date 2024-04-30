@@ -39,7 +39,7 @@ interface Review {
   exhibition_id: string;
   text: string;
   exhibition: {
-    title: string;
+    title: any;
   };
 }
 const ProfilePage: React.FC = () => {
@@ -81,10 +81,10 @@ const ProfilePage: React.FC = () => {
         setUserProfile(data);
       }
     };
-
     getUserData();
   }, []);
 
+  // Then get user reviews based on user data
   useEffect(() => {
     if (!userProfile) return;
 
@@ -171,8 +171,9 @@ const ProfilePage: React.FC = () => {
           <ReviewCard reviewId={3} />
           <ReviewCard reviewId={4} />
           <Text style={{ color: "white" }}>
-            {" "}
-            {userReviews[0].exhibition.title}{" "}
+            {userReviews &&
+              userReviews.length > 0 &&
+              userReviews[0].exhibition.title}
           </Text>
         </View>
       </ScrollView>
