@@ -5,18 +5,30 @@ import {
   StyleSheet,
   Dimensions,
   Image,
+  TouchableOpacity,
 } from "react-native";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import colors from "@/styles/colors";
+import ReviewCard from "@/components/profile/ReviewCard";
+import { SafeAreaView } from "react-native-safe-area-context";
+import FavoriteCard from "@/components/profile/FavoriteCard";
 
 // Get the full height of the screen
 const screenHeight = Dimensions.get("window").height;
 
 const exhibition = () => {
   const { id } = useLocalSearchParams();
+
+  const museumPressed = () => {
+    router.push({
+      pathname: "/(auth)/(drawer)/museum",
+      params: { id: 123 },
+    });
+  };
   return (
-    <ScrollView contentContainerStyle={styles.containerScroll}>
-      <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
+      {/* Profile Container */}
+      <View style={styles.container2}>
         <View style={styles.imageContainer}>
           <Image
             source={require("../../../../images/cantor.jpg")}
@@ -25,24 +37,111 @@ const exhibition = () => {
           <View style={styles.gradientOverlay} />
         </View>
 
-        <View style={styles.logoContainer}>
+        <TouchableOpacity style={styles.logoContainer} onPress={museumPressed}>
           <Image
             source={require("../../../../images/cantor.jpg")}
             style={styles.museumLogo}
           />
-        </View>
+        </TouchableOpacity>
       </View>
-      <Text style={{ color: "white" }}> {id} </Text>
+      {/* TEXT */}
+      <View style={{ padding: 12, gap: 12 }}>
+        <Text style={{ color: "white" }}>Day Jobs </Text>
+        <Text style={{ color: "white" }}>March 24th - July 3rd </Text>
+        <Text style={{ color: "white" }}>
+          Through some 160 works of painting, sculpture, photography, film, and
+          ephemera, it will explore the comprehensive and far-reaching ways in
+          which Black artists portrayed everyday modern life in the new Black
+          cities that took shape in the 1920s–40s in New York City’s Harlem and
+          nationwide in the early decades of the Great Migration when millions
+          of African Americans began to move away from the segregated rural
+          South.
+        </Text>
+      </View>
+      {/* Posts */}
+      <View style={styles.reviewsContainer}>
+        <ReviewCard reviewId={1} />
+        <ReviewCard reviewId={2} />
+        <ReviewCard reviewId={3} />
+        <ReviewCard reviewId={4} />
+      </View>
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  containerScroll: {
-    backgroundColor: colors.background, // Just as an example for visibility
+  safeContainer: {
     flex: 1,
+    backgroundColor: colors.background,
   },
   container: {
+    backgroundColor: colors.background,
+    gap: 10,
+  },
+  profileContainer: {
+    borderColor: "white",
+    borderWidth: 2,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 10,
+  },
+
+  followersContainer: {
+    borderColor: "white",
+    borderWidth: 2,
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+    gap: 10,
+  },
+  favoritesContainer: {
+    borderColor: "white",
+    borderWidth: 2,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start",
+    gap: 10,
+  },
+  follow: {
+    padding: 4,
+    display: "flex",
+    justifyContent: "center",
+    gap: 4,
+    alignItems: "center",
+    borderColor: "white",
+    borderWidth: 2,
+  },
+  text: {
+    color: colors.text_pink,
+    fontFamily: "Inter_400Regular",
+    fontSize: 20,
+  },
+  signUpButton: {
+    alignItems: "center",
+    padding: 5,
+    borderRadius: 4,
+  },
+  userNameText: {
+    color: colors.text_pink,
+    fontFamily: "Inter_700Bold",
+    fontSize: 17,
+  },
+  favoriteScroll: {
+    display: "flex",
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+    borderColor: "white",
+    borderWidth: 2,
+  },
+  reviewsContainer: {
+    gap: 12,
+    padding: 12,
+  },
+  container2: {
     position: "relative",
   },
   imageContainer: {

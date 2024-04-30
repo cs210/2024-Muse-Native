@@ -58,7 +58,6 @@ const ProfilePage = () => {
           </View>
         </View>
         {/* Posts */}
-
         <View style={styles.reviewsContainer}>
           <ReviewCard reviewId={1} />
           <ReviewCard reviewId={2} />

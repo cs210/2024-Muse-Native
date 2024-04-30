@@ -1,5 +1,12 @@
 import React from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
 import colors from "@/styles/colors";
 import { useNavigation } from "@react-navigation/native";
 import { router } from "expo-router";
@@ -8,6 +15,7 @@ import { router } from "expo-router";
 interface ReviewCardProps {
   reviewId: number; // This prop will hold the review ID passed from the parent
 }
+const screenHeight = Dimensions.get("window").height;
 
 const ReviewCard: React.FC<ReviewCardProps> = ({ reviewId }) => {
   const navigation = useNavigation();
@@ -46,7 +54,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: "100%",
-    aspectRatio: 2.5,
+    height: screenHeight / 6,
     padding: 12,
     borderRadius: 10,
     backgroundColor: colors.plum,
