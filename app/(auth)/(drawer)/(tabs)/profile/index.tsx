@@ -6,6 +6,7 @@ import {
   View,
   Image,
   SafeAreaView,
+  TouchableOpacity,
 } from "react-native";
 import FavoriteCard from "@/components/profile/FavoriteCard";
 import ReviewCard from "@/components/profile/ReviewCard";
@@ -29,6 +30,7 @@ interface Profile {
   username: string | null;
   follower_ids: string[]; // Array of user IDs who follow this user
   following_ids: string[]; // Array of user IDs this user follows
+  avatar_url: string;
 }
 const ProfilePage: React.FC = () => {
   const [userProfile, setUserProfile] = useState<Profile | null>(null);
@@ -55,7 +57,7 @@ const ProfilePage: React.FC = () => {
 
       const { data, error } = await supabase
         .from("profiles")
-        .select("id, username, follower_ids, following_ids")
+        .select("id, username, follower_ids, following_ids, avatar_url")
         .eq("id", user?.user.id)
         .single();
 
@@ -71,13 +73,21 @@ const ProfilePage: React.FC = () => {
     getUserData();
   }, []);
 
+  const goToFollowing = () => {
+    router.push({
+      pathname: "/(auth)/(drawer)/(tabs)/profile/following",
+      // TODO: Fix this red squiggly
+      params: { following: userProfile?.following_ids },
+    });
+  };
+
   return (
     <SafeAreaView style={styles.safeContainer}>
       <ScrollView contentContainerStyle={styles.container}>
         {/* Profile Container */}
         <View style={styles.profileContainer}>
           <Image
-            source={require("../../../../images/cantor.jpg")}
+            source={{ uri: userProfile?.avatar_url }}
             style={{
               width: 100,
               height: 100,
@@ -88,13 +98,12 @@ const ProfilePage: React.FC = () => {
         </View>
         {/*Followers / Following */}
         <View style={styles.followersContainer}>
-          <View style={styles.follow}>
+          <TouchableOpacity style={styles.follow} onPress={goToFollowing}>
             <Text style={styles.userNameText}>
-              {" "}
-              {userProfile?.following_ids.length}{" "}
+              {userProfile?.following_ids.length}
             </Text>
             <Text style={styles.userNameText}> Following </Text>
-          </View>
+          </TouchableOpacity>
           <View style={styles.follow}>
             <Text style={styles.userNameText}>
               {" "}
