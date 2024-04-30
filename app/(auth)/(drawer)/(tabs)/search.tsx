@@ -21,7 +21,10 @@ const SearchPage = () => {
   }, []);
 
   const getCurrentUserId = async () => {
-    const { data: { user }, error } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser();
 
     if (user) {
       console.log("~ getCurrentUserId ~ user", user);
@@ -30,7 +33,7 @@ const SearchPage = () => {
     } else {
       console.log("~ getCurrentUserId ~ error", error);
     }
-  }
+  };
 
   useEffect(() => {
     loadProfiles();
@@ -51,6 +54,7 @@ const SearchPage = () => {
   };
 
   const renderRow: ListRenderItem<Profile> = ({ item }) => {
+    const isSelf = (userId == item.id);
     return (
       <View style={styles.profileContainer}>
         <Image
@@ -64,7 +68,9 @@ const SearchPage = () => {
           </View>
           <Text style={styles.usernameText}>{item.username}</Text>
         </View>
-        <FollowButton currentUserId={userId} profileUserId={item.id} />
+        <View style={isSelf ? styles.noButton : styles.followButtonContainer}>
+          <FollowButton currentUserId={userId} profileUserId={item.id} />
+        </View>
       </View>
     );
   };
@@ -92,6 +98,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     flexDirection: "row",
     height: 75,
+    gap: 10,
     backgroundColor: colors.plum,
   },
   profilePicContainer: {
@@ -101,12 +108,14 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   },
   nameUserContainer: {
+    // backgroundColor: colors.plum_light,
     flexDirection: "column",
+    justifyContent: "center",
   },
   nameContainer: {
-    backgroundColor: colors.plum_light,
+    // backgroundColor: colors.plum_light,
     flexDirection: "row",
-    gap: 4,
+    gap: 3,
   },
   usernameText: {
     color: colors.text_pink,
@@ -115,8 +124,16 @@ const styles = StyleSheet.create({
   },
   nameText: {
     color: colors.text_pink,
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Inter_700Bold",
     fontSize: 14,
+  },
+  followButtonContainer: {
+    justifyContent: "center",
+    marginRight: 10,
+    marginLeft: "auto",
+  },
+  noButton: {
+    display: "none",
   },
 });
 export default SearchPage;

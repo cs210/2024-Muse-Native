@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/utils/supabase";
-import { TouchableOpacity, Text } from "react-native";
+import { StyleSheet, TouchableOpacity, Text } from "react-native";
+import colors from "@/styles/colors";
 
 const FollowButton = ({
   currentUserId,
@@ -52,10 +53,34 @@ const FollowButton = ({
   };
 
   return (
-    <TouchableOpacity onPress={toggleFollow}>
-      <Text>{isFollowing ? "Following" : "Follow"}</Text>
+    <TouchableOpacity style={isFollowing ? styles.followingButton : styles.followButton} onPress={toggleFollow}>
+      <Text style={styles.followButtonText}>{isFollowing ? "Following" : "Follow"}</Text>
     </TouchableOpacity>
   );
 };
+
+const styles = StyleSheet.create({
+  followButton: {
+    height: 30,
+    width: 100,
+    backgroundColor: colors.dark_green,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 8,
+  },
+  followButtonText: {
+    color: colors.white,
+    fontFamily: "Inter_700Bold",
+    fontSize: 15,
+  },
+  followingButton: {
+    height: 30,
+    width: 100,
+    backgroundColor: colors.light_background,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 8,
+  }
+});
 
 export default FollowButton;
