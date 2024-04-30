@@ -39,7 +39,7 @@ interface Review {
   exhibition_id: string;
   text: string;
   exhibition: {
-    title: any;
+    title: string;
   };
 }
 const ProfilePage: React.FC = () => {
@@ -90,24 +90,16 @@ const ProfilePage: React.FC = () => {
 
     const getUserReviews = async () => {
       setLoading(true);
-      const { data, error } = await supabase
+      const { data: userReviews, error } = await supabase
         .from("reviews")
-        .select(
-          `
-        id,
-        created_at,
-        exhibition_id,
-        text,
-        exhibition:exhibition_id (title)
-    `
-        )
+        .select(`*, exhibition:exhibition_id(title)`)
         .eq("user_id", userProfile.id);
 
       if (error) {
         console.error("Error fetching data:", error);
         setError(error.message);
       } else {
-        setUserReviews(data);
+        setUserReviews(userReviews);
       }
       setLoading(false);
     };
@@ -116,11 +108,13 @@ const ProfilePage: React.FC = () => {
   }, [userProfile]); // This useEffect runs only when userProfile changes.
 
   const goToFollowing = () => {
+    if (!userProfile) return;
+    
     router.push({
       pathname: "/(auth)/(drawer)/(tabs)/profile/following",
       // TODO: Fix this red squiggly
       // !
-      params: { following: userProfile?.following_ids },
+      params: { following: userProfile.following_ids },
     });
   };
 
