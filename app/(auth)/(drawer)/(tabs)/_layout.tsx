@@ -55,6 +55,7 @@ const Layout = () => {
         name="search"
         options={{
           title: "Muse",
+          headerShown: false,
           tabBarShowLabel: false,
           tabBarIcon: ({ size, color }) => (
             <Ionicons name="search-outline" size={size} color={color} />

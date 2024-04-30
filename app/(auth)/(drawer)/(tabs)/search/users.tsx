@@ -12,7 +12,7 @@ import {
   View,
 } from "react-native";
 
-const SearchPage = () => {
+const UsersScreen = () => {
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [userId, setUserId] = useState("");
 
@@ -54,7 +54,7 @@ const SearchPage = () => {
   };
 
   const renderRow: ListRenderItem<Profile> = ({ item }) => {
-    const isSelf = (userId == item.id);
+    const isSelf = userId == item.id;
     return (
       <View style={styles.profileContainer}>
         <Image
@@ -83,6 +83,7 @@ const SearchPage = () => {
 
 const styles = StyleSheet.create({
   container: {
+    paddingVertical: 10,
     flex: 1,
     padding: 12,
     backgroundColor: colors.background,
@@ -94,11 +95,11 @@ const styles = StyleSheet.create({
   },
   profileContainer: {
     padding: 12,
-    marginVertical: 8,
+    marginVertical: 5,
     borderRadius: 10,
     flexDirection: "row",
     height: 75,
-    gap: 10,
+    gap: 11,
     backgroundColor: colors.plum,
   },
   profilePicContainer: {
@@ -111,6 +112,7 @@ const styles = StyleSheet.create({
     // backgroundColor: colors.plum_light,
     flexDirection: "column",
     justifyContent: "center",
+    gap: 2,
   },
   nameContainer: {
     // backgroundColor: colors.plum_light,
@@ -136,4 +138,5 @@ const styles = StyleSheet.create({
     display: "none",
   },
 });
-export default SearchPage;
+
+export default UsersScreen;
