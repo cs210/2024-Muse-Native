@@ -35,7 +35,7 @@ const FollowButton = ({
 
   const toggleFollow = async () => {
     const method = isFollowing ? "array_remove" : "array_append";
-
+    // EVENT: FOLLOW HAPPENED
     const { error } = await supabase.rpc("update_following_array", {
       user_id: currentUserId,
       follow_user_id: profileUserId,
