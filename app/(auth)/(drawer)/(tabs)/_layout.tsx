@@ -3,7 +3,7 @@ import { supabase } from "@/utils/supabase";
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import { TouchableOpacity } from "react-native";
-import { DrawerToggleButton } from "@react-navigation/drawer"
+import { DrawerToggleButton } from "@react-navigation/drawer";
 
 const Layout = () => {
   return (
@@ -66,6 +66,7 @@ const Layout = () => {
         options={{
           title: "Muse",
           tabBarShowLabel: false,
+          headerShown: false,
           tabBarIcon: ({ size, color }) => (
             <Ionicons name="person-outline" size={size} color={color} />
           ),

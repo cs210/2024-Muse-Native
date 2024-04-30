@@ -6,46 +6,110 @@ import {
   View,
   Image,
   SafeAreaView,
+  TouchableOpacity,
 } from "react-native";
 import FavoriteCard from "@/components/profile/FavoriteCard";
 import ReviewCard from "@/components/profile/ReviewCard";
 import { supabase } from "@/utils/supabase";
+import { useEffect, useState } from "react";
+import { router } from "expo-router";
 
 // TODO: Unhardcode
 // TODO: Add Lists Feature Eventually
 // TODO: Only load 5 posts (Map)
 // TODO: Click on profile and it grows
 // TODO: Click on Followers / Following
+// TODO: Only Fetch When Required to do so
 // TODO: Click on Favorites
 interface ReviewCardProps {
   reviewId: string; // Type for reviewId
 }
 
-const ProfilePage = () => {
+interface Profile {
+  id: string;
+  username: string | null;
+  follower_ids: string[]; // Array of user IDs who follow this user
+  following_ids: string[]; // Array of user IDs this user follows
+  avatar_url: string;
+}
+const ProfilePage: React.FC = () => {
+  const [userProfile, setUserProfile] = useState<Profile | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const getUserData = async () => {
+      setLoading(true);
+      const { data: user, error: authError } = await supabase.auth.getUser();
+      // IF FOLLOW HAPPENED, REFRESH
+      if (authError) {
+        console.error("Error fetching user:", authError);
+        setError(authError.message);
+        setLoading(false);
+        return;
+      }
+
+      if (!user) {
+        setError("No user data available.");
+        setLoading(false);
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("id, username, follower_ids, following_ids, avatar_url")
+        .eq("id", user?.user.id)
+        .single();
+
+      if (error) {
+        console.error("Error fetching data:", error);
+        setError(error.message);
+      } else {
+        setUserProfile(data);
+      }
+      setLoading(false);
+    };
+
+    getUserData();
+  }, []);
+
+  const goToFollowing = () => {
+    router.push({
+      pathname: "/(auth)/(drawer)/(tabs)/profile/following",
+      // TODO: Fix this red squiggly
+      params: { following: userProfile?.following_ids },
+    });
+  };
+
   return (
     <SafeAreaView style={styles.safeContainer}>
       <ScrollView contentContainerStyle={styles.container}>
         {/* Profile Container */}
         <View style={styles.profileContainer}>
           <Image
-            source={require("../../../../images/cantor.jpg")}
+            source={{ uri: userProfile?.avatar_url }}
             style={{
               width: 100,
               height: 100,
               borderRadius: 100 / 2,
             }}
           />
-          <Text style={styles.userNameText}>jajacque</Text>
+          <Text style={styles.userNameText}>{userProfile?.username}</Text>
         </View>
         {/*Followers / Following */}
         <View style={styles.followersContainer}>
+          <TouchableOpacity style={styles.follow} onPress={goToFollowing}>
+            <Text style={styles.userNameText}>
+              {userProfile?.following_ids.length}
+            </Text>
+            <Text style={styles.userNameText}> Following </Text>
+          </TouchableOpacity>
           <View style={styles.follow}>
-            <Text style={styles.userNameText}> 6 </Text>
-            <Text style={styles.userNameText}> Followers</Text>
-          </View>
-          <View style={styles.follow}>
-            <Text style={styles.userNameText}> 6 </Text>
-            <Text style={styles.userNameText}> Followers</Text>
+            <Text style={styles.userNameText}>
+              {" "}
+              {userProfile?.follower_ids.length}{" "}
+            </Text>
+            <Text style={styles.userNameText}>Followers</Text>
           </View>
         </View>
         {/* Favorites */}
