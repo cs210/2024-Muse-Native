@@ -32,16 +32,28 @@ interface Profile {
   following_ids: string[]; // Array of user IDs this user follows
   avatar_url: string;
 }
+
+interface Review {
+  id: string;
+  created_at: string;
+  exhibition_id: string;
+  text: string;
+  exhibition: {
+    title: string;
+  };
+}
 const ProfilePage: React.FC = () => {
   const [userProfile, setUserProfile] = useState<Profile | null>(null);
+  const [userReviews, setUserReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Get the user Data
   useEffect(() => {
     const getUserData = async () => {
       setLoading(true);
       const { data: user, error: authError } = await supabase.auth.getUser();
-      // IF FOLLOW HAPPENED, REFRESH
+
       if (authError) {
         console.error("Error fetching user:", authError);
         setError(authError.message);
@@ -58,25 +70,56 @@ const ProfilePage: React.FC = () => {
       const { data, error } = await supabase
         .from("profiles")
         .select("id, username, follower_ids, following_ids, avatar_url")
-        .eq("id", user?.user.id)
+        .eq("id", user.user.id)
         .single();
 
       if (error) {
         console.error("Error fetching data:", error);
         setError(error.message);
+        setLoading(false);
       } else {
         setUserProfile(data);
       }
-      setLoading(false);
     };
 
     getUserData();
   }, []);
 
+  useEffect(() => {
+    if (!userProfile) return;
+
+    const getUserReviews = async () => {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from("reviews")
+        .select(
+          `
+        id,
+        created_at,
+        exhibition_id,
+        text,
+        exhibition:exhibition_id (title)
+    `
+        )
+        .eq("user_id", userProfile.id);
+
+      if (error) {
+        console.error("Error fetching data:", error);
+        setError(error.message);
+      } else {
+        setUserReviews(data);
+      }
+      setLoading(false);
+    };
+
+    getUserReviews();
+  }, [userProfile]); // This useEffect runs only when userProfile changes.
+
   const goToFollowing = () => {
     router.push({
       pathname: "/(auth)/(drawer)/(tabs)/profile/following",
       // TODO: Fix this red squiggly
+      // !
       params: { following: userProfile?.following_ids },
     });
   };
@@ -127,6 +170,10 @@ const ProfilePage: React.FC = () => {
           <ReviewCard reviewId={2} />
           <ReviewCard reviewId={3} />
           <ReviewCard reviewId={4} />
+          <Text style={{ color: "white" }}>
+            {" "}
+            {userReviews[0].exhibition.title}{" "}
+          </Text>
         </View>
       </ScrollView>
     </SafeAreaView>
