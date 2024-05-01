@@ -11,7 +11,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import colors from "@/styles/colors";
 import ReviewCard from "@/components/profile/ReviewCard";
 import { SafeAreaView } from "react-native-safe-area-context";
-import FollowButton from "@/components/FollowButton";
+import FollowMuseumButton from "@/components/FollowMuseumButton";
 // Get the full height of the screen
 const screenHeight = Dimensions.get("window").height;
 
@@ -44,9 +44,9 @@ const exhibition = () => {
               source={require("../../../images/cantor.jpg")}
               style={styles.museumLogo}
             />
-            <Text> cantorarts </Text>
-            {/* <FollowButton/> */}
           </TouchableOpacity>
+          <Text style={{ color: "white", fontSize: 20 }}> cantorarts </Text>
+          <FollowMuseumButton userId="123" museumId="123" />
         </View>
       </View>
       {/* TEXT */}
@@ -172,7 +172,9 @@ const styles = StyleSheet.create({
     bottom: 0,
     width: "100%",
     borderWidth: 2,
+    backgroundColor: "blue",
     display: "flex",
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -186,11 +188,6 @@ const styles = StyleSheet.create({
   museumLogo: {
     height: "100%",
     resizeMode: "cover",
-    position: "absolute",
-    zIndex: 10,
-    top: "50%",
-    left: "50%",
-    transform: [{ translateX: -37.5 }, { translateY: -37.5 }], // Adjusting translate based on half of the width and height
   },
 });
 

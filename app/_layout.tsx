@@ -69,7 +69,8 @@ const InitialLayout = () => {
         if (data.length > 0) {
           router.replace("/(auth)/(drawer)/setup");
         } else {
-          router.replace("/(auth)/(drawer)/(tabs)/home");
+          // router.replace("/(auth)/(drawer)/(tabs)/home");
+          router.replace("/(auth)/(drawer)/museum");
         }
       };
 
