@@ -1,9 +1,5 @@
 import colors from "@/styles/colors";
-import {
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 const MuseumsScreen = () => {
   return (
