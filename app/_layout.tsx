@@ -70,7 +70,7 @@ const InitialLayout = () => {
           router.replace("/(auth)/(drawer)/setup");
         } else {
           // router.replace("/(auth)/(drawer)/(tabs)/home");
-          router.replace("/(auth)/(drawer)/museum");
+          router.replace("/(auth)/(drawer)/(tabs)/home");
         }
       };
 

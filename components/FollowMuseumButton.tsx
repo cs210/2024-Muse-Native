@@ -19,13 +19,14 @@ const FollowMuseumButton: React.FC<FollowButtonProps> = ({
   }, []);
 
   const checkFollowingStatus = async () => {
+    // TODO, this in museum
+    const { data: user, error: authError } = await supabase.auth.getUser();
     try {
       const { data, error } = await supabase
         .from("user_follows_museums")
         .select("*")
-        .eq("user_id", userId)
-        .eq("museum_id", museumId)
-        .single();
+        .eq("user_id", user.user?.id)
+        .eq("museum_id", user.user?.id);
 
       if (error && error.message !== "No rows found") {
         throw error;
@@ -33,7 +34,7 @@ const FollowMuseumButton: React.FC<FollowButtonProps> = ({
 
       setIsFollowing(!!data);
     } catch (error) {
-      alert("Error checking follow status: " + error.message);
+      alert("Error checking follows status: " + error.message);
     } finally {
       setLoading(false);
     }
@@ -44,7 +45,7 @@ const FollowMuseumButton: React.FC<FollowButtonProps> = ({
     if (isFollowing) {
       // Unfollow the museum
       await supabase
-        .from("users_follow_museums")
+        .from("user_follows_museums")
         .delete()
         .match({ user_id: userId, museum_id: museumId });
     } else {
