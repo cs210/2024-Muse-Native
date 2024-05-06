@@ -13,7 +13,20 @@ import { Link, router } from "expo-router";
 const windowWidth = Dimensions.get("window").width;
 const iconSize = windowWidth * 0.08; // for example, 8% of the window width
 
-const MuseumPost = () => {
+// TODO: Exhibition Name, Exhibition id, exhibition photo, museum username.
+interface MuseumPostProps {
+  id: string;
+  title: string;
+  coverPhotoUrl: string;
+  museumUsername: string;
+}
+
+const MuseumPost: React.FC<MuseumPostProps> = ({
+  id,
+  title,
+  coverPhotoUrl,
+  museumUsername,
+}) => {
   const handlePress = () => {
     router.push({
       pathname: "/(auth)/(drawer)/exhibition/[id]",
@@ -25,18 +38,18 @@ const MuseumPost = () => {
     <View style={styles.container}>
       {/* Museum Name and PFP */}
       <View style={styles.museumContainer}>
-        <Image source={require("../images/cantor.jpg")} style={styles.icon} />
-        <Text style={styles.usernameText}>cantorarts</Text>
+        <Image source={{ uri: coverPhotoUrl }} style={styles.icon} />
+        <Text style={styles.usernameText}>{museumUsername}</Text>
       </View>
       {/* Exhibition */}
 
       <TouchableOpacity style={styles.exhibition} onPress={handlePress}>
         <Image
-          source={require("../images/exhibition.jpg")}
+          source={{ uri: coverPhotoUrl }}
           style={styles.exhibitionImage}
           resizeMode="cover"
         />
-        <Text style={styles.exhibitionText}>Day Jobs</Text>
+        <Text style={styles.exhibitionText}>{title}</Text>
       </TouchableOpacity>
     </View>
   );

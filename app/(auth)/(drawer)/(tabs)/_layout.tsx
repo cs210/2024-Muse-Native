@@ -12,7 +12,6 @@ const Layout = () => {
         headerShadowVisible: false,
         headerStyle: {
           backgroundColor: colors.background,
-          height: 100,
         },
         headerTintColor: "#ffeffa",
         tabBarActiveTintColor: "#ffeffa",

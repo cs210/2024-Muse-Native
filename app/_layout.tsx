@@ -65,7 +65,7 @@ const InitialLayout = () => {
           return false; // or handle the error in a way that fits your app logic
         }
 
-        // If data is not empty, it means there's a row with id = "123" where username is NULL
+        // If data is not empty, it means there's a row with id where username is NULL
         if (data.length > 0) {
           router.replace("/(auth)/(drawer)/setup");
         } else {
