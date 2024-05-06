@@ -14,10 +14,25 @@ import { router } from "expo-router";
 // Define the props for the component using TypeScript
 interface ReviewCardProps {
   reviewId: number; // This prop will hold the review ID passed from the parent
+  pfp: string;
 }
+
+interface Review {
+  id: string;
+  exhibition_id: string;
+  user_id: string; // assuming there is a user associated with the review
+  text: string;
+  created_at: Date;
+  //TODO:
+  // Exhibition name !
+  // Museum Name !
+  // User Photo
+  // museum id !
+}
+
 const screenHeight = Dimensions.get("window").height;
 
-const ReviewCard: React.FC<ReviewCardProps> = ({ reviewId }) => {
+const ReviewCard: React.FC<ReviewCardProps> = ({ reviewId, pfp }) => {
   const navigation = useNavigation();
 
   // ! Important Code:
@@ -33,7 +48,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ reviewId }) => {
     <TouchableOpacity onPress={handlePress} style={styles.container}>
       <View style={styles.header}>
         <Image
-          source={require("../../images/cantor.jpg")}
+          source={{ uri: pfp }}
           style={{
             width: 50,
             height: 50,

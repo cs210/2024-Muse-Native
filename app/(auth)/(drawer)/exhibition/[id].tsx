@@ -18,25 +18,38 @@ import { supabase } from "@/utils/supabase";
 // Get the full height of the screen
 const screenHeight = Dimensions.get("window").height;
 
+interface Museum {
+  id: string;
+  name: string; // Add other necessary fields as needed
+}
+
 interface Exhibition {
   id: string;
-  museum_id: any;
+  museum_id: string;
   title: string;
   start_date: string;
   end_date: string;
   description: string;
   cover_photo_url: string;
   ticket_link: string;
+  museum: Museum;
 }
 
 interface Review {
   id: string;
   exhibition_id: string;
-  user_id: string; // assuming there is a user associated with the review
+  user_id: string;
   text: string;
-  // rating: number; // assuming there's a rating
   created_at: Date;
+  user: {
+    avatar_url: string;
+  };
 }
+
+// Museum Name
+// User Photo
+// pass museum id
+// pass title: string;
 
 const exhibition = () => {
   const { id } = useLocalSearchParams();
@@ -49,29 +62,48 @@ const exhibition = () => {
   const [reviewsLoading, setReviewsLoading] = useState<boolean>(true);
   const [reviewsError, setReviewsError] = useState<string | null>(null);
 
-  // Get the user Data
+  // Get the user Exhibition
   useEffect(() => {
     const getExhibitionData = async () => {
       setLoading(true);
-      const { data, error } = await supabase
-        .from("exhibitions")
-        .select("*")
-        .eq("id", id)
-        .single();
+      try {
+        const { data, error } = await supabase
+          .from("exhibitions")
+          .select(
+            `
+            id,
+            museum_id,
+            title,
+            start_date,
+            end_date,
+            description,
+            cover_photo_url,
+            ticket_link,
+            museum: museum_id (id, name)
+          `
+          ) // Adjust the selection to include fields from the museum table
+          .eq("id", id)
+          .single();
 
-      if (error) {
-        console.error("Error fetching data:", error);
-        setLoading(false);
-        setError(error.message);
-        setLoading(false);
-      } else {
+        if (error) {
+          throw error;
+        }
+
         setExhibition(data);
-        setLoading(false);
-        // console.log("DATA: " + data.description);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setError(error.message);
       }
+      setLoading(false);
     };
-    getExhibitionData();
-  }, []);
+
+    if (id) {
+      getExhibitionData();
+    } else {
+      setError("Invalid or missing exhibition ID");
+      setLoading(false);
+    }
+  }, [id]); // Include id as a dependency to re-run the effect if id changes
   // Fetch Reviews
   useEffect(() => {
     const fetchReviews = async () => {
@@ -79,13 +111,22 @@ const exhibition = () => {
       try {
         const { data: reviewsData, error } = await supabase
           .from("reviews")
-          .select("*")
+          .select(
+            `
+            id,
+            exhibition_id,
+            user_id,
+            text,
+            created_at,
+            user: user_id (avatar_url)  // Join with profiles table and get avatar_url
+          `
+          )
           .eq("exhibition_id", id);
 
         if (error) throw error;
 
         setReviews(reviewsData);
-        console.log("REVIEWS: " + reviews);
+        console.log("REVIEWS: ", reviewsData); // Improved logging to display the actual data
       } catch (error) {
         console.error("Error fetching reviews:", error);
         setReviewsError(error.message);
@@ -96,7 +137,7 @@ const exhibition = () => {
     if (id) {
       fetchReviews();
     }
-  }, []); // Re-run this effect if 'id' changes
+  }, [id]); // Include `id` in the dependency array to re-run this effect when `id` changes
   const museumPressed = () => {
     router.push({
       pathname: "/(auth)/(drawer)/museum/[id]",
@@ -136,7 +177,7 @@ const exhibition = () => {
       {/* Posts */}
       <View style={styles.reviewsContainer}>
         {reviews.map((review) => (
-          <Text key={review.id}>{review.text}</Text>
+          <ReviewCard key={review.id} pfp={review.user.avatar_url} />
         ))}
       </View>
     </ScrollView>
