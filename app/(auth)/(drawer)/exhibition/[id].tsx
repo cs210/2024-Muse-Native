@@ -12,26 +12,107 @@ import colors from "@/styles/colors";
 import ReviewCard from "@/components/profile/ReviewCard";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FavoriteCard from "@/components/profile/FavoriteCard";
+import { useEffect, useState } from "react";
+import { supabase } from "@/utils/supabase";
 
 // Get the full height of the screen
 const screenHeight = Dimensions.get("window").height;
 
+interface Exhibition {
+  id: string;
+  museum_id: any;
+  title: string;
+  start_date: string;
+  end_date: string;
+  description: string;
+  cover_photo_url: string;
+  ticket_link: string;
+}
+
+interface Review {
+  id: string;
+  exhibition_id: string;
+  user_id: string; // assuming there is a user associated with the review
+  text: string;
+  // rating: number; // assuming there's a rating
+  created_at: Date;
+}
+
 const exhibition = () => {
   const { id } = useLocalSearchParams();
+  //  console.log("Exhibition ID:", id);
+  const [exhibition, setExhibition] = useState<Exhibition | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [reviewsLoading, setReviewsLoading] = useState<boolean>(true);
+  const [reviewsError, setReviewsError] = useState<string | null>(null);
+
+  // Get the user Data
+  useEffect(() => {
+    const getExhibitionData = async () => {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from("exhibitions")
+        .select("*")
+        .eq("id", id)
+        .single();
+
+      if (error) {
+        console.error("Error fetching data:", error);
+        setLoading(false);
+        setError(error.message);
+        setLoading(false);
+      } else {
+        setExhibition(data);
+        setLoading(false);
+        // console.log("DATA: " + data.description);
+      }
+    };
+    getExhibitionData();
+  }, []);
+  // Fetch Reviews
+  useEffect(() => {
+    const fetchReviews = async () => {
+      setReviewsLoading(true);
+      try {
+        const { data: reviewsData, error } = await supabase
+          .from("reviews")
+          .select("*")
+          .eq("exhibition_id", id);
+
+        if (error) throw error;
+
+        setReviews(reviewsData);
+        console.log("REVIEWS: " + reviews);
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
+        setReviewsError(error.message);
+      }
+      setReviewsLoading(false);
+    };
+
+    if (id) {
+      fetchReviews();
+    }
+  }, []); // Re-run this effect if 'id' changes
   const museumPressed = () => {
     router.push({
-      pathname: "/(auth)/(drawer)/museum",
+      pathname: "/(auth)/(drawer)/museum/[id]",
       params: { id: 123 },
     });
   };
+
+  if (loading) return <Text>Loading...</Text>;
+  if (error) return <Text>Error: {error}</Text>;
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* Profile Container */}
       <View style={styles.container2}>
         <View style={styles.imageContainer}>
           <Image
-            source={require("../../../../images/cantor.jpg")}
+            source={{ uri: exhibition.cover_photo_url }}
             style={styles.coverImage}
           />
           <View style={styles.gradientOverlay} />
@@ -46,24 +127,17 @@ const exhibition = () => {
       </View>
       {/* TEXT */}
       <View style={{ padding: 12, gap: 12 }}>
-        <Text style={{ color: "white" }}>Day Jobs </Text>
-        <Text style={{ color: "white" }}>March 24th - July 3rd </Text>
+        <Text style={{ color: "white" }}>{exhibition?.title} </Text>
         <Text style={{ color: "white" }}>
-          Through some 160 works of painting, sculpture, photography, film, and
-          ephemera, it will explore the comprehensive and far-reaching ways in
-          which Black artists portrayed everyday modern life in the new Black
-          cities that took shape in the 1920s–40s in New York City’s Harlem and
-          nationwide in the early decades of the Great Migration when millions
-          of African Americans began to move away from the segregated rural
-          South.
+          {exhibition?.start_date} - {exhibition?.end_date}
         </Text>
+        <Text style={{ color: "white" }}>{exhibition?.description}</Text>
       </View>
       {/* Posts */}
       <View style={styles.reviewsContainer}>
-        <ReviewCard reviewId={1} />
-        <ReviewCard reviewId={2} />
-        <ReviewCard reviewId={3} />
-        <ReviewCard reviewId={4} />
+        {reviews.map((review) => (
+          <Text key={review.id}>{review.text}</Text>
+        ))}
       </View>
     </ScrollView>
   );

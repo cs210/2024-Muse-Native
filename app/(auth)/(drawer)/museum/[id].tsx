@@ -20,7 +20,7 @@ const exhibition = () => {
 
   const museumPressed = () => {
     router.push({
-      pathname: "/(auth)/(drawer)/museum",
+      pathname: "/(auth)/(drawer)/museum/[id]",
       params: { id: 123 },
     });
   };
@@ -30,7 +30,7 @@ const exhibition = () => {
       <View style={styles.container2}>
         <View style={styles.imageContainer}>
           <Image
-            source={require("../../../images/cantor.jpg")}
+            source={require("../../../../images/cantor.jpg")}
             style={styles.coverImage}
           />
           <View style={styles.gradientOverlay} />
@@ -41,7 +41,7 @@ const exhibition = () => {
             onPress={museumPressed}
           >
             <Image
-              source={require("../../../images/cantor.jpg")}
+              source={require("../../../../images/cantor.jpg")}
               style={styles.museumLogo}
             />
           </TouchableOpacity>

@@ -15,7 +15,9 @@ interface Exhibition {
   title: string;
   cover_photo_url: string;
   museum: {
-    username: string; // Assuming the museum table has a 'username' column
+    id: string;
+    username: string;
+    profilePhotoUrl: string;
   }[];
 }
 
@@ -42,11 +44,22 @@ const MuseumsScreen: React.FC = () => {
 
       if (museumsError) throw new Error(museumsError.message);
 
-      // Step 2: Fetch exhibitions from these museums
+      // Step 2: Fetch exhibitions from these museums, including museum details
       const museumIds = museums.map((museum) => museum.museum_id);
       const { data: exhibitions, error: exhibitionsError } = await supabase
         .from("exhibitions")
-        .select("id, title, cover_photo_url, museum: museum_id (username)")
+        .select(
+          `
+          id, 
+          title, 
+          cover_photo_url, 
+          museum: museum_id (
+            id,
+            username,
+            profilePhotoUrl
+          )
+        `
+        )
         .in("museum_id", museumIds);
 
       if (exhibitionsError) throw new Error(exhibitionsError.message);
@@ -72,6 +85,8 @@ const MuseumsScreen: React.FC = () => {
               title={exhibition.title}
               coverPhotoUrl={exhibition.cover_photo_url}
               museumUsername={exhibition.museum.username}
+              museumId={exhibition.museum.id}
+              museumPfp={exhibition.museum.profilePhotoUrl}
             />
           </View>
         ))}
