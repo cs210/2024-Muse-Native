@@ -13,48 +13,80 @@ import { Link, router } from "expo-router";
 const windowWidth = Dimensions.get("window").width;
 const iconSize = windowWidth * 0.08; // for example, 8% of the window width
 
-const MuseumPost = () => {
-  const handlePress = () => {
+// TODO: MUSEUM PROFILE PHOTO, MUSEUM ID
+interface MuseumPostProps {
+  id: string;
+  museumId: string;
+  museumPfp: string;
+  title: string;
+  coverPhotoUrl: string;
+  museumUsername: string;
+}
+
+const MuseumPost: React.FC<MuseumPostProps> = ({
+  id,
+  title,
+  coverPhotoUrl,
+  museumUsername,
+  museumId,
+  museumPfp,
+}) => {
+  const handleExhibitionPress = () => {
     router.push({
       pathname: "/(auth)/(drawer)/exhibition/[id]",
-      params: { id: 123 },
+      params: { id: id },
+    });
+  };
+
+  const handleMuseumPress = () => {
+    router.push({
+      pathname: "/(auth)/(drawer)/museum/[id]",
+      params: { id: { id } },
     });
   };
 
   return (
     <View style={styles.container}>
       {/* Museum Name and PFP */}
-      <View style={styles.museumContainer}>
-        <Image source={require("../images/cantor.jpg")} style={styles.icon} />
-        <Text style={styles.usernameText}>cantorarts</Text>
-      </View>
+      <TouchableOpacity
+        style={styles.museumContainer}
+        onPress={handleMuseumPress}
+      >
+        <Image source={{ uri: museumPfp }} style={styles.icon} />
+        <Text style={styles.usernameText}>{museumUsername}</Text>
+      </TouchableOpacity>
       {/* Exhibition */}
 
-      <TouchableOpacity style={styles.exhibition} onPress={handlePress}>
+      <TouchableOpacity
+        style={styles.exhibition}
+        onPress={handleExhibitionPress}
+      >
         <Image
-          source={require("../images/exhibition.jpg")}
+          source={{ uri: coverPhotoUrl }}
           style={styles.exhibitionImage}
           resizeMode="cover"
         />
-        <Text style={styles.exhibitionText}>Day Jobs</Text>
       </TouchableOpacity>
+      <Text style={styles.exhibitionText}>{title}</Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    borderWidth: 2,
     flex: 1,
     backgroundColor: colors.background,
     flexDirection: "column", // Aligns children in a column
-    marginBottom: 10,
   },
   museumContainer: {
     backgroundColor: colors.background,
     flexDirection: "row",
     alignItems: "center",
+    alignSelf: "flex-start",
     marginBottom: 27,
     marginLeft: 3,
+    width: "auto",
   },
   icon: {
     width: iconSize, // Set a fixed width for your icon
@@ -76,7 +108,6 @@ const styles = StyleSheet.create({
     width: "100%", // Ensures the image's width is the same as the container
     height: "90%", // Ensures the image's height is the same as the container
     borderRadius: 20,
-    marginBottom: 7,
   },
   exhibitionText: {
     width: "100%",

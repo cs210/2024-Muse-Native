@@ -1,7 +1,7 @@
 import colors from "@/styles/colors";
 import { StyleSheet, Text, View } from "react-native";
 
-const MuseumsScreen = () => {
+const UsersScreen = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.titleText}>Museums</Text>
@@ -67,4 +67,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MuseumsScreen;
+export default UsersScreen;

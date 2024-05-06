@@ -31,6 +31,7 @@ interface Profile {
   follower_ids: string[]; // Array of user IDs who follow this user
   following_ids: string[]; // Array of user IDs this user follows
   avatar_url: string;
+  favorite_exhibitions: string[]; // Array of favorite exhibition IDs
 }
 
 interface Review {
@@ -42,9 +43,18 @@ interface Review {
     title: string;
   };
 }
+
+interface FavoriteExhibition {
+  id: string;
+  title: any;
+}
+
 const ProfilePage: React.FC = () => {
   const [userProfile, setUserProfile] = useState<Profile | null>(null);
   const [userReviews, setUserReviews] = useState<Review[]>([]);
+  const [favoriteExhibitions, setFavoriteExhibitions] = useState<
+    FavoriteExhibition[]
+  >([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -69,7 +79,9 @@ const ProfilePage: React.FC = () => {
 
       const { data, error } = await supabase
         .from("profiles")
-        .select("id, username, follower_ids, following_ids, avatar_url")
+        .select(
+          "id, username, follower_ids, following_ids, avatar_url, favorite_exhibitions"
+        )
         .eq("id", user.user.id)
         .single();
 
@@ -79,10 +91,38 @@ const ProfilePage: React.FC = () => {
         setLoading(false);
       } else {
         setUserProfile(data);
+        fetchFavoriteExhibitions(data.id);
       }
     };
     getUserData();
   }, []);
+
+  const fetchFavoriteExhibitions = async (userId: string) => {
+    const { data, error } = await supabase
+      .from("favorite_exhibitions")
+      .select(
+        `
+      exhibition_id,
+      user_id,
+      exhibition:exhibition_id (title)  // This specifies you want to fetch 'title' from the related exhibition
+    `
+      )
+      .eq("user_id", userId);
+
+    if (error) {
+      console.error("Error fetching favorite exhibitions:", error);
+      setError(error.message);
+    } else {
+      setFavoriteExhibitions(
+        data.map((item) => ({
+          // TODO: Check why this isn't working
+          id: item.exhibition_id,
+          title: item.exhibition.title,
+        }))
+      );
+    }
+    setLoading(false);
+  };
 
   // Then get user reviews based on user data
   useEffect(() => {
@@ -109,12 +149,12 @@ const ProfilePage: React.FC = () => {
 
   const goToFollowing = () => {
     if (!userProfile) return;
-    
+
     router.push({
       pathname: "/(auth)/(drawer)/(tabs)/profile/following",
       // TODO: Fix this red squiggly
       // !
-      params: { following: userProfile.following_ids },
+      params: { following: userProfile.following_ids, userId: userProfile.id },
     });
   };
 
@@ -153,9 +193,9 @@ const ProfilePage: React.FC = () => {
         <View style={styles.favoritesContainer}>
           <Text style={styles.userNameText}> Favorites </Text>
           <View style={styles.favoriteScroll}>
-            <FavoriteCard />
-            <FavoriteCard />
-            <FavoriteCard />
+            {favoriteExhibitions.map((exhibition) => (
+              <FavoriteCard key={exhibition.id} exhibitionId={exhibition.id} />
+            ))}
           </View>
         </View>
         {/* Posts */}
@@ -165,11 +205,14 @@ const ProfilePage: React.FC = () => {
           <ReviewCard reviewId={3} />
           <ReviewCard reviewId={4} />
           <Text style={{ color: "white" }}>
-            {userReviews &&
+            {/* {userReviews &&
               userReviews.length > 0 &&
-              userReviews[0].exhibition.title}
+              userReviews[0].exhibition.title} */}
           </Text>
         </View>
+        {favoriteExhibitions.map((exhibition) => (
+          <Text key={exhibition.id}>{exhibition.id}</Text>
+        ))}
       </ScrollView>
     </SafeAreaView>
   );
