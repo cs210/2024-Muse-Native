@@ -2,7 +2,6 @@ import colors from "@/styles/colors";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import UsersScreen from "./users";
 import MuseumsScreen from "./museums";
-import { StyleSheet } from "react-native";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -11,7 +10,8 @@ const HomePage = () => {
     <Tab.Navigator
       initialRouteName="museums"
       screenOptions={{
-        tabBarActiveTintColor: colors.text_pink,
+        tabBarActiveTintColor: colors.text_darker_pink,
+
         tabBarLabelStyle: {
           fontSize: 18,
           textTransform: "none",
@@ -20,7 +20,7 @@ const HomePage = () => {
         tabBarStyle: {
           backgroundColor: colors.background,
         },
-        tabBarIndicatorStyle: { backgroundColor: colors.text_pink },
+        tabBarIndicatorStyle: { backgroundColor: "transparent" },
       }}
     >
       <Tab.Screen
@@ -36,9 +36,5 @@ const HomePage = () => {
     </Tab.Navigator>
   );
 };
-
-const styles = StyleSheet.create({
-  tabBarLabel: {},
-});
 
 export default HomePage;

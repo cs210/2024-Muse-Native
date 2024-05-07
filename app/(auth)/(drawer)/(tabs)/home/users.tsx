@@ -114,6 +114,7 @@ const UsersScreen = () => {
             museumId={review.exhibition.museum_id}
             coverPhoto={review.exhibition.cover_photo_url}
             museumName={review.exhibition.museum.name}
+            user_id={review.user_id}
           />
         ))}
       </View>

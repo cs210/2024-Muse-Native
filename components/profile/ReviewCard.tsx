@@ -35,6 +35,7 @@ interface ReviewCardProps {
   exhibitionName: string;
   exhibitionId: string;
   coverPhoto: string;
+  user_id: string;
 }
 
 const screenHeight = Dimensions.get("window").height;
@@ -49,6 +50,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
   exhibitionName,
   exhibitionId,
   coverPhoto,
+  user_id,
 }) => {
   const navigation = useNavigation();
 
@@ -68,6 +70,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
           exhibitionName,
           exhibitionId,
           coverPhoto,
+          user_id,
         }),
       },
     });
@@ -117,7 +120,7 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontFamily: "Inter_400Regular",
     fontSize: 15,
-  }
+  },
 });
 
 export default ReviewCard;

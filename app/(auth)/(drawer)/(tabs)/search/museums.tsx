@@ -1,10 +1,72 @@
+import {
+  StyleSheet,
+  Text,
+  View,
+  ActivityIndicator,
+  ScrollView,
+} from "react-native";
+import { useEffect, useState } from "react";
+import { supabase } from "@/utils/supabase";
 import colors from "@/styles/colors";
-import { StyleSheet, Text, View } from "react-native";
+import FollowMuseumButton from "@/components/FollowMuseumButton";
+
+interface Museum {
+  id: string;
+  name: string;
+  username: string;
+  profilePhotoUrl: string;
+}
 
 const MuseumsScreen = () => {
+  const [loading, setLoading] = useState(false);
+  const [museums, setMuseums] = useState<Museum[]>([]);
+  const [userId, setUserId] = useState("");
+
+  useEffect(() => {
+    const getMuseums = async () => {
+      setLoading(true);
+
+      const { data: user, error: authError } = await supabase.auth.getUser();
+      if (user.user) {
+        setUserId(user.user.id);
+        // Continue with fetching museums or other logic that depends on userId
+      }
+      try {
+        const { data, error } = await supabase.from("museums").select(`*`);
+        if (error) {
+          throw error;
+        }
+        setMuseums(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    getMuseums();
+  }, []);
+
+  if (loading) {
+    return (
+      <ScrollView style={styles.container}>
+        <ActivityIndicator size="large" color={colors.text_pink} />
+      </ScrollView>
+    );
+  }
+
   return (
     <View style={styles.container}>
-      <Text style={styles.titleText}>Museums</Text>
+      {/* {museums.length > 0 ? (
+        <Text style={styles.titleText}>{museums[0].name}</Text>
+      ) : (
+        <Text style={styles.titleText}>No museums found.</Text>
+      )} */}
+      {museums.map((museum) => (
+        <View key={museum.id}>
+          <Text>{museum.name}</Text>
+          <FollowMuseumButton museum_id={museum.id} user_id={userId} />
+        </View>
+      ))}
     </View>
   );
 };
