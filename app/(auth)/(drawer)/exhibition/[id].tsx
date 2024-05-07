@@ -10,8 +10,9 @@ import {
 import { router, useLocalSearchParams } from "expo-router";
 import colors from "@/styles/colors";
 import ReviewCard from "@/components/profile/ReviewCard";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/utils/supabase";
+import { Ionicons } from "@expo/vector-icons";
 
 // Get the full height of the screen
 const screenHeight = Dimensions.get("window").height;
@@ -65,7 +66,7 @@ const exhibition = () => {
   const [userId, setUserId] = useState("");
 
   const channels = supabase
-    .channel("custom-insert-channel")
+    .channel("custom-update-channel")
     .on(
       "postgres_changes",
       {
@@ -202,7 +203,7 @@ const exhibition = () => {
   if (error) return <Text>Error: {error}</Text>;
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.outerContainer}>
       <ScrollView contentContainerStyle={styles.container}>
         {/* Profile Container */}
         <View style={styles.container2}>
@@ -231,7 +232,9 @@ const exhibition = () => {
           <Text style={styles.exhibitionDates}>
             {exhibition?.start_date} - {exhibition?.end_date}
           </Text>
-          <Text style={styles.exhibitionDescription}>{exhibition?.description}</Text>
+          <Text style={styles.exhibitionDescription}>
+            {exhibition?.description}
+          </Text>
         </View>
         {/* Posts */}
         <View style={styles.reviewsContainer}>
@@ -258,13 +261,17 @@ const exhibition = () => {
         </View>
       </ScrollView>
       <TouchableOpacity style={styles.fab} onPress={writeReviewPressed}>
-        <Text style={styles.fabIcon}>+</Text>
+        <Ionicons name="create-outline" size={32} color={colors.white} />
       </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  outerContainer: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
   safeContainer: {
     flex: 1,
     backgroundColor: colors.background,
@@ -272,6 +279,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.background,
     gap: 10,
+    paddingBottom: 20,
   },
   profileContainer: {
     borderColor: "white",
@@ -380,14 +388,14 @@ const styles = StyleSheet.create({
   },
   fab: {
     position: "absolute",
-    width: 56,
-    height: 56,
+    width: 64,
+    height: 64,
     alignItems: "center",
     justifyContent: "center",
     right: 20,
     bottom: 20,
-    backgroundColor: "#03A9F4",
-    borderRadius: 28,
+    backgroundColor: colors.dark_blue,
+    borderRadius: 32,
     elevation: 8,
   },
   fabIcon: {
