@@ -21,6 +21,7 @@ const screenHeight = Dimensions.get("window").height;
 interface Museum {
   id: string;
   name: string; // Add other necessary fields as needed
+  profilePhotoUrl: string;
 }
 
 interface Exhibition {
@@ -43,6 +44,7 @@ interface Review {
   created_at: Date;
   user: {
     avatar_url: string;
+    username: string;
   };
 }
 
@@ -79,7 +81,7 @@ const exhibition = () => {
             description,
             cover_photo_url,
             ticket_link,
-            museum: museum_id (id, name)
+            museum: museum_id (id, name, profilePhotoUrl)
           `
           ) // Adjust the selection to include fields from the museum table
           .eq("id", id)
@@ -118,7 +120,7 @@ const exhibition = () => {
             user_id,
             text,
             created_at,
-            user: user_id (avatar_url)  // Join with profiles table and get avatar_url
+            user: user_id (avatar_url, username)  // Join with profiles table and get avatar_url
           `
           )
           .eq("exhibition_id", id);
@@ -141,7 +143,7 @@ const exhibition = () => {
   const museumPressed = () => {
     router.push({
       pathname: "/(auth)/(drawer)/museum/[id]",
-      params: { id: 123 },
+      params: { id: exhibition?.museum_id },
     });
   };
 
@@ -153,7 +155,7 @@ const exhibition = () => {
       <View style={styles.container2}>
         <View style={styles.imageContainer}>
           <Image
-            source={{ uri: exhibition.cover_photo_url }}
+            source={{ uri: exhibition?.cover_photo_url }}
             style={styles.coverImage}
           />
           <View style={styles.gradientOverlay} />
@@ -161,11 +163,12 @@ const exhibition = () => {
 
         <TouchableOpacity style={styles.logoContainer} onPress={museumPressed}>
           <Image
-            source={require("../../../../images/cantor.jpg")}
+            source={{ uri: exhibition?.museum.profilePhotoUrl }}
             style={styles.museumLogo}
           />
         </TouchableOpacity>
       </View>
+
       {/* TEXT */}
       <View style={{ padding: 12, gap: 12 }}>
         <Text style={{ color: "white" }}>{exhibition?.title} </Text>
@@ -177,7 +180,17 @@ const exhibition = () => {
       {/* Posts */}
       <View style={styles.reviewsContainer}>
         {reviews.map((review) => (
-          <ReviewCard key={review.id} pfp={review.user.avatar_url} />
+          // Museum Name
+          // User Photo
+          // pass museum id
+          // pass title: string;
+          <ReviewCard
+            key={review.id}
+            pfp={review.user.avatar_url}
+            username={review.user.username}
+            text={review.text}
+            museumId={exhibition?.museum_id}
+          />
         ))}
       </View>
     </ScrollView>
@@ -195,7 +208,7 @@ const styles = StyleSheet.create({
   },
   profileContainer: {
     borderColor: "white",
-    borderWidth: 2,
+    // borderWidth: 2,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -204,7 +217,7 @@ const styles = StyleSheet.create({
 
   followersContainer: {
     borderColor: "white",
-    borderWidth: 2,
+    // borderWidth: 2,
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-evenly",
@@ -213,7 +226,7 @@ const styles = StyleSheet.create({
   },
   favoritesContainer: {
     borderColor: "white",
-    borderWidth: 2,
+    // borderWidth: 2,
     display: "flex",
     flexDirection: "column",
     alignItems: "flex-start",
@@ -295,12 +308,8 @@ const styles = StyleSheet.create({
   },
   museumLogo: {
     height: "100%",
+    width: "100%",
     resizeMode: "cover",
-    position: "absolute",
-    zIndex: 10,
-    top: "50%",
-    left: "50%",
-    transform: [{ translateX: -37.5 }, { translateY: -37.5 }], // Adjusting translate based on half of the width and height
   },
 });
 

@@ -7,23 +7,73 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import { router, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import colors from "@/styles/colors";
-import ReviewCard from "@/components/profile/ReviewCard";
-import { SafeAreaView } from "react-native-safe-area-context";
-import FollowMuseumButton from "@/components/FollowMuseumButton";
+import { supabase } from "@/utils/supabase";
+import { useState, useEffect } from "react";
 // Get the full height of the screen
 const screenHeight = Dimensions.get("window").height;
 
-const exhibition = () => {
-  const { id } = useLocalSearchParams();
+interface Museum {
+  id: string;
+  name: string;
+  username: string;
+  coverPhotoUrl: string;
+  profilePhotoUrl: string;
+  bio: string;
+}
 
-  const museumPressed = () => {
-    router.push({
-      pathname: "/(auth)/(drawer)/museum/[id]",
-      params: { id: 123 },
-    });
-  };
+interface Exhibition {
+  id: string;
+  title: string;
+  start_date: string;
+  end_date: string;
+  museum_id: string;
+  description?: string;
+  cover_photo_url?: string;
+}
+
+const museum: React.FC = () => {
+  const { id } = useLocalSearchParams();
+  const [museum, setMuseum] = useState<Museum | null>(null);
+  const [exhibitions, setExhibitions] = useState<Exhibition[]>([]);
+
+  async function fetchMuseumById(museumId: string | string[]) {
+    const { data, error } = await supabase
+      .from("museums")
+      .select("*")
+      .eq("id", museumId)
+      .single();
+
+    if (error) {
+      console.error("Error fetching museum:", error);
+      return;
+    }
+
+    setMuseum(data);
+  }
+
+  async function fetchExhibitionsForMuseum(museumId: string | string[]) {
+    const { data, error } = await supabase
+      .from("exhibitions")
+      .select("*")
+      .eq("museum_id", museumId);
+
+    if (error) {
+      console.error("Error fetching exhibitions:", error);
+      return;
+    }
+
+    setExhibitions(data);
+  }
+
+  useEffect(() => {
+    if (id) {
+      fetchMuseumById(id);
+      fetchExhibitionsForMuseum(id);
+    }
+  }, [id]); // Dependency on 'id' ensures fetch is re-run if 'id' changes
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* Profile Container */}
@@ -36,71 +86,54 @@ const exhibition = () => {
           <View style={styles.gradientOverlay} />
         </View>
         <View style={styles.infoContainer}>
-          <TouchableOpacity
-            style={styles.logoContainer}
-            onPress={museumPressed}
-          >
-            <Image
-              source={require("../../../../images/cantor.jpg")}
-              style={styles.museumLogo}
-            />
-          </TouchableOpacity>
-          <Text style={{ color: "white", fontSize: 20 }}> cantorarts </Text>
-          <FollowMuseumButton userId="123" museumId="123" />
+          <View style={styles.museumInfo}>
+            <TouchableOpacity style={styles.logoContainer}>
+              <Image
+                source={require("../../../../images/cantor.jpg")}
+                style={styles.museumLogo}
+              />
+            </TouchableOpacity>
+            <Text style={{ color: "white", fontSize: 20 }}>
+              {" "}
+              {museum?.username}{" "}
+            </Text>
+          </View>
+          <Text> Follow </Text>
         </View>
       </View>
       {/* TEXT */}
-      <View style={{ padding: 12, gap: 12 }}>
-        <Text style={{ color: "white" }}>Day Jobs </Text>
-        <Text style={{ color: "white" }}>March 24th - July 3rd </Text>
-        <Text style={{ color: "white" }}>
-          Through some 160 works of painting, sculpture, photography, film, and
-          ephemera, it will explore the comprehensive and far-reaching ways in
-          which Black artists portrayed everyday modern life in the new Black
-          cities that took shape in the 1920s–40s in New York City’s Harlem and
-          nationwide in the early decades of the Great Migration when millions
-          of African Americans began to move away from the segregated rural
-          South.
-        </Text>
-      </View>
+      <Text style={{ color: "white" }}> {museum?.bio} </Text>
+      <Text style={{ color: "white" }}> What's On </Text>
+
+      {exhibitions.map((exhibition) => (
+        <Image
+          key={exhibition.id}
+          source={{ uri: exhibition.cover_photo_url }}
+          style={{ height: 100, width: 200 }}
+        />
+      ))}
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  safeContainer: {
-    flex: 1,
-    backgroundColor: colors.background,
+  whatsOnScroll: {
+    display: "flex",
+    flexDirection: "row",
+    borderColor: "white",
+    gap: 100,
+    borderWidth: 2,
   },
   container: {
     backgroundColor: colors.background,
     gap: 10,
   },
-  profileContainer: {
-    borderColor: "white",
-    borderWidth: 2,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: 10,
-  },
-
-  followersContainer: {
-    borderColor: "white",
-    borderWidth: 2,
-    display: "flex",
+  museumInfo: {
     flexDirection: "row",
-    justifyContent: "space-evenly",
+
+    justifyContent: "space-between",
     alignItems: "center",
-    gap: 10,
-  },
-  favoritesContainer: {
-    borderColor: "white",
-    borderWidth: 2,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "flex-start",
-    gap: 10,
+    alignSelf: "flex-start",
   },
   follow: {
     padding: 4,
@@ -164,18 +197,16 @@ const styles = StyleSheet.create({
     height: "100%",
     backgroundColor: "transparent",
     zIndex: 2,
-    // React Native doesn't directly support CSS gradients,
-    // you might need to use an image or external library to simulate gradients
   },
   infoContainer: {
     position: "absolute",
     bottom: 0,
     width: "100%",
     borderWidth: 2,
-    backgroundColor: "blue",
     display: "flex",
     flexDirection: "row",
-    justifyContent: "center",
+    paddingHorizontal: 12,
+    justifyContent: "space-between",
     alignItems: "center",
   },
   logoContainer: {
@@ -187,8 +218,9 @@ const styles = StyleSheet.create({
   },
   museumLogo: {
     height: "100%",
+    width: "100%",
     resizeMode: "cover",
   },
 });
 
-export default exhibition;
+export default museum;
