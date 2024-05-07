@@ -251,6 +251,7 @@ const exhibition = () => {
                 museumName={exhibition?.museum.name}
                 exhibitionName={exhibition?.title}
                 coverPhoto={exhibition?.cover_photo_url}
+                user_id={review.user_id}
               />
             ))
           ) : (

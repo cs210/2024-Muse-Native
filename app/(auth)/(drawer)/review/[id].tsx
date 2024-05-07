@@ -22,6 +22,16 @@ const review = () => {
     });
   };
 
+  const handleProfileClicked = useCallback(() => {
+    if (review.user_id) {
+      console.log(review.user_id);
+      router.push({
+        pathname: "/(auth)/(drawer)/user/[id]",
+        params: { id: review.user_id },
+      });
+    }
+  }, [review]); // Dependency array includes `review`
+
   const handleExhibitionPress = useCallback(() => {
     console.log("review ID: " + review?.reviewId);
     if (review?.reviewId) {
@@ -68,7 +78,16 @@ const review = () => {
       {/* HEADER */}
 
       <View style={styles.header}>
-        <Link href={"/(auth)/(drawer)/(tabs)/profile"}>
+        <TouchableOpacity
+          onPress={handleProfileClicked}
+          style={{
+            borderWidth: 2,
+            alignSelf: "flex-start",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <Image
             source={{ uri: review.pfp }}
             style={{
@@ -77,10 +96,9 @@ const review = () => {
               borderRadius: 15,
             }}
           />
-        </Link>
-        <Link href={"/(auth)/(drawer)/(tabs)/profile"}>
+
           <Text style={styles.username}> {review.username} </Text>
-        </Link>
+        </TouchableOpacity>
       </View>
 
       <Text style={styles.reviewText}>{review.text}</Text>
