@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { supabase } from "@/utils/supabase";
 import { useEffect, useState } from "react";
 import review from "../../review/[id]";
+import ReviewCard from "@/components/profile/ReviewCard";
 
 interface FollowedUser {
   followed_id: string; // Assumed data type, adjust according to your database schema
@@ -40,7 +41,16 @@ async function fetchReviewsFromFollowedUsers() {
   // Now, fetch reviews where the user_id is in the list of followed user IDs
   const { data: reviews, error: reviewsError } = await supabase
     .from("reviews")
-    .select("*")
+    .select(
+      `
+      id,
+      exhibition_id,
+      user_id,
+      text,
+      created_at,
+      user: user_id (avatar_url, username)  // Join with profiles table and get avatar_url
+    `
+    )
     .in("user_id", followedUserIds);
 
   if (reviewsError) {
@@ -61,9 +71,13 @@ const UsersScreen = () => {
   return (
     <View style={styles.container}>
       {reviews.map((review) => (
-        <Text key={review.id} style={{ color: "white" }}>
-          {review.id}
-        </Text>
+        <ReviewCard
+          key={review.id}
+          reviewId={review.id}
+          pfp={review.user.avatar_url}
+          username={review.user.username}
+          text={review.text}
+        />
       ))}
     </View>
   );

@@ -11,6 +11,19 @@ import colors from "@/styles/colors";
 import { useNavigation } from "@react-navigation/native";
 import { router } from "expo-router";
 
+// interface Review {
+//   id: string;
+//   exhibition_id: string;
+//   user_id: string; // assuming there is a user associated with the review
+//   text: string;
+//   created_at: Date;
+//   //TODO:
+//   // Exhibition name !
+//   // Museum Name !
+//   // User Photo
+//   // museum id !
+// }
+
 // Define the props for the component using TypeScript
 interface ReviewCardProps {
   reviewId: number; // This prop will hold the review ID passed from the parent
@@ -18,19 +31,10 @@ interface ReviewCardProps {
   username: string;
   museumId: string;
   text: string;
-}
-
-interface Review {
-  id: string;
-  exhibition_id: string;
-  user_id: string; // assuming there is a user associated with the review
-  text: string;
-  created_at: Date;
-  //TODO:
-  // Exhibition name !
-  // Museum Name !
-  // User Photo
-  // museum id !
+  museumName: string;
+  exhibitionName: string;
+  exhibitionId: string;
+  coverPhoto: string;
 }
 
 const screenHeight = Dimensions.get("window").height;
@@ -41,6 +45,10 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
   username,
   text,
   museumId,
+  museumName,
+  exhibitionName,
+  exhibitionId,
+  coverPhoto,
 }) => {
   const navigation = useNavigation();
 
@@ -49,7 +57,19 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
     // Navigate and pass the review ID to the destination screen
     router.push({
       pathname: "/(auth)/(drawer)/review/[id]",
-      params: { id: reviewId },
+      params: {
+        id: JSON.stringify({
+          reviewId,
+          pfp,
+          username,
+          museumId,
+          text,
+          museumName,
+          exhibitionName,
+          exhibitionId,
+          coverPhoto,
+        }),
+      },
     });
   };
 
@@ -68,7 +88,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
           <Text style={styles.museumText}>{username}</Text>
         </View>
       </View>
-      <Text>{text}</Text>
+      <Text>TEXT: {text}</Text>
     </TouchableOpacity>
   );
 };

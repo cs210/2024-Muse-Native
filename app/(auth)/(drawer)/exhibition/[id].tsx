@@ -141,10 +141,12 @@ const exhibition = () => {
     }
   }, [id]); // Include `id` in the dependency array to re-run this effect when `id` changes
   const museumPressed = () => {
-    router.push({
-      pathname: "/(auth)/(drawer)/museum/[id]",
-      params: { id: exhibition?.museum_id },
-    });
+    if (exhibition) {
+      router.push({
+        pathname: "/(auth)/(drawer)/museum/[id]",
+        params: { id: exhibition.museum_id },
+      });
+    }
   };
 
   if (loading) return <Text>Loading...</Text>;
@@ -186,10 +188,15 @@ const exhibition = () => {
           // pass title: string;
           <ReviewCard
             key={review.id}
+            reviewId={review.id}
             pfp={review.user.avatar_url}
             username={review.user.username}
             text={review.text}
             museumId={exhibition?.museum_id}
+            exhibitionId={exhibition?.id}
+            museumName={exhibition?.museum.name}
+            exhibitionName={exhibition?.title}
+            coverPhoto={exhibition?.cover_photo_url}
           />
         ))}
       </View>
