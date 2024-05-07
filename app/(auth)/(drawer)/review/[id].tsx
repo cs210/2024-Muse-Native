@@ -5,13 +5,15 @@ import colors from "@/styles/colors";
 // TODO: Background when scrolling
 const review = () => {
   const { id } = useLocalSearchParams();
+  const review = JSON.parse(id);
+  console.log("IDL " + id);
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* Info */}
       <View style={styles.museumInfo}>
         <Link href={"/(auth)/(drawer)/exhibition/2"}>
           <Image
-            source={require("../../../../images/cantor.jpg")}
+            source={{ uri: review.coverPhoto }}
             style={{
               width: 100,
               height: 100,
@@ -22,10 +24,10 @@ const review = () => {
         {/* Visit Info */}
         <View style={styles.museumInfoTextCont}>
           <Link href={"/(auth)/(drawer)/exhibition/2"}>
-            <Text style={styles.exhibitionText}>Day Jobs</Text>
+            <Text style={styles.exhibitionText}>{review.exhibitionName}</Text>
           </Link>
           <Link href={"/(auth)/(drawer)/museum"}>
-            <Text style={styles.museumText}>Cantor Arts Center </Text>
+            <Text style={styles.museumText}>{review.museumName} </Text>
           </Link>
         </View>
       </View>
@@ -34,7 +36,7 @@ const review = () => {
       <View style={styles.header}>
         <Link href={"/(auth)/(drawer)/(tabs)/profile"}>
           <Image
-            source={require("../../../../images/cantor.jpg")}
+            source={{ uri: review.pfp }}
             style={{
               width: 30,
               height: 30,
@@ -43,24 +45,14 @@ const review = () => {
           />
         </Link>
         <Link href={"/(auth)/(drawer)/(tabs)/profile"}>
-          <Text style={styles.username}> jajacque </Text>
+          <Text style={styles.username}> {review.username} </Text>
         </Link>
       </View>
 
-      <Text style={styles.reviewText}>
-        This exhibition changed my life. Lorem ipsum dolor sit amet, consectetur
-        adipiscing elit. Sed dui quam, rutrum sit amet interdum ac, dapibus
-        condimentum nisl.This exhibition changed my life. Lorem ipsum dolor sit
-        amet, consectetur adipiscing elit. Sed dui quam, rutrum sit amet
-        interdum ac, dapibus condimentum nisl. This exhibition changed my life.
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dui quam,
-        rutrum sit amet interdum ac, dapibus condimentum nisl. This exhibition
-        changed my life. Lorem ipsum dolor sit amet, consectetur adipiscing
-        elit.
-      </Text>
+      <Text style={styles.reviewText}>{review.text}</Text>
 
       <View style={styles.visited}>
-        <Text style={styles.subtext}> Visited March 4, 2024</Text>
+        {/* <Text style={styles.subtext}> Visited </Text> */}
       </View>
     </ScrollView>
   );
