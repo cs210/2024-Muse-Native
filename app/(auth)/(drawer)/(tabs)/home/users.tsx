@@ -2,12 +2,7 @@ import colors from "@/styles/colors";
 import { StyleSheet, Text, View, ScrollView } from "react-native";
 import { supabase } from "@/utils/supabase";
 import { useEffect, useState } from "react";
-import review from "../../review/[id]";
 import ReviewCard from "@/components/profile/ReviewCard";
-
-interface FollowedUser {
-  followed_id: string; // Assumed data type, adjust according to your database schema
-}
 
 interface Review {
   id: string;

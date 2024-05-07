@@ -9,20 +9,10 @@ import {
 import { supabase } from "@/utils/supabase";
 import MuseumPost from "@/components/MuseumPost";
 import colors from "@/styles/colors";
-
-interface Exhibition {
-  id: string;
-  title: string;
-  cover_photo_url: string;
-  museum: {
-    id: string;
-    username: string;
-    profilePhotoUrl: string;
-  }[];
-}
+import { ExhibitionAndMuseum } from "@/utils/interfaces";
 
 const MuseumsScreen: React.FC = () => {
-  const [exhibitions, setExhibitions] = useState<Exhibition[]>([]);
+  const [exhibitions, setExhibitions] = useState<ExhibitionAndMuseum[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -32,11 +22,10 @@ const MuseumsScreen: React.FC = () => {
 
   const fetchExhibitions = async () => {
     try {
-      // Assuming the current user's ID is somehow fetched or stored
-      const { data: user, error: authError } = await supabase.auth.getUser();
-      const userId = user.user?.id;
+      const { data } = await supabase.auth.getUser();
+      const userId = data.user?.id;
 
-      // Step 1: Fetch museum IDs the user follows
+      // Fetch museum IDs the user follows
       const { data: museums, error: museumsError } = await supabase
         .from("user_follows_museums")
         .select("museum_id")
@@ -44,7 +33,7 @@ const MuseumsScreen: React.FC = () => {
 
       if (museumsError) throw new Error(museumsError.message);
 
-      // Step 2: Fetch exhibitions from these museums, including museum details
+      // Fetch exhibitions from these museums, including museum details
       const museumIds = museums.map((museum) => museum.museum_id);
       const { data: exhibitions, error: exhibitionsError } = await supabase
         .from("exhibitions")
@@ -64,15 +53,26 @@ const MuseumsScreen: React.FC = () => {
 
       if (exhibitionsError) throw new Error(exhibitionsError.message);
 
-      setExhibitions(exhibitions);
+      const processedExhibitions = exhibitions.map((exhibition) => ({
+        ...exhibition,
+        museum: exhibition.museum[0], // Take the first object from the museum array
+      }));
+      setExhibitions(processedExhibitions);
       setLoading(false);
-    } catch (err) {
+    } catch (err: any) {
       setError(err.message);
       setLoading(false);
     }
   };
 
-  if (loading) return <ActivityIndicator size="large" />;
+  if (loading)
+    return (
+      <ActivityIndicator
+        size="large"
+        style={{ flex: 1, backgroundColor: colors.background }}
+        color={colors.text_darker_pink}
+      />
+    );
   if (error) return <Text>Error: {error}</Text>;
 
   return (
@@ -84,20 +84,13 @@ const MuseumsScreen: React.FC = () => {
               id={exhibition.id}
               title={exhibition.title}
               coverPhotoUrl={exhibition.cover_photo_url}
-              museumUsername={exhibition.museum.username}
-              museumId={exhibition.museum.id}
-              museumPfp={exhibition.museum.profilePhotoUrl}
+              museumUsername={exhibition?.museum?.username}
+              museumId={exhibition?.museum?.id}
+              museumPfp={exhibition?.museum?.profilePhotoUrl}
             />
           </View>
         ))}
       </ScrollView>
-      {/* {exhibitions.map((exhibition) => (
-        <View key={exhibition.id}>
-          <Text>
-            {exhibition.title} - Presented by {exhibition.museum.username}
-          </Text>
-        </View>
-      ))} */}
     </View>
   );
 };
@@ -107,55 +100,6 @@ const styles = StyleSheet.create({
     padding: 12,
     backgroundColor: colors.background,
   },
-  titleText: {
-    color: colors.text_pink,
-    fontFamily: "Inter_400Regular",
-    fontSize: 20,
-  },
-  profileContainer: {
-    padding: 12,
-    marginVertical: 5,
-    borderRadius: 10,
-    flexDirection: "row",
-    height: 75,
-    gap: 11,
-    backgroundColor: colors.plum,
-  },
-  profilePicContainer: {
-    width: 200,
-    height: 200,
-    alignSelf: "center",
-    borderRadius: 100,
-  },
-  nameUserContainer: {
-    // backgroundColor: colors.plum_light,
-    flexDirection: "column",
-    justifyContent: "center",
-    gap: 2,
-  },
-  nameContainer: {
-    // backgroundColor: colors.plum_light,
-    flexDirection: "row",
-    gap: 3,
-  },
-  usernameText: {
-    color: colors.text_pink,
-    fontFamily: "Inter_400Regular",
-    fontSize: 14,
-  },
-  nameText: {
-    color: colors.text_pink,
-    fontFamily: "Inter_700Bold",
-    fontSize: 14,
-  },
-  followButtonContainer: {
-    justifyContent: "center",
-    marginRight: 10,
-    marginLeft: "auto",
-  },
-  noButton: {
-    display: "none",
-  },
   scrollContainer: {
     flex: 1,
     padding: 12,
@@ -164,58 +108,3 @@ const styles = StyleSheet.create({
 });
 
 export default MuseumsScreen;
-
-// import colors from "@/styles/colors";
-// import { StyleSheet, Text, View, ScrollView } from "react-native";
-// import MuseumPost from "@/components/MuseumPost";
-
-// const MuseumsScreen = () => {
-//   return (
-//     <View style={styles.container}>
-//       <ScrollView style={styles.scrollContainer}>
-//         <View style={{ height: 350 }}>
-//           <MuseumPost />
-//         </View>
-
-//         <View style={{ height: 350 }}>
-//           <MuseumPost />
-//         </View>
-
-//         <View style={{ height: 350 }}>
-//           <MuseumPost />
-//         </View>
-//       </ScrollView>
-//     </View>
-//   );
-// };
-
-// export default MuseumsScreen;
-
-// // import MuseumPost from "@/components/MuseumPost";
-// // import colors from "@/styles/colors";
-// // import { View, ScrollView, StyleSheet } from "react-native";
-
-// // const HomePage = () => {
-// //   return (
-// //     <ScrollView style={styles.container}>
-// //       <View style={{ height: 350 }}>
-// //         <MuseumPost />
-// //       </View>
-// //       <View style={{ height: 350 }}>
-// //         <MuseumPost />
-// //       </View>
-// //       <View style={{ height: 350 }}>
-// //         <MuseumPost />
-// //       </View>
-// //     </ScrollView>
-// //   );
-// // };
-
-// // const styles = StyleSheet.create({
-// //   container: {
-// //     flex: 1,
-// //     padding: 12,
-// //     backgroundColor: colors.background,
-// //   },
-// // });
-// // export default HomePage;

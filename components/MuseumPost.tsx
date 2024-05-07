@@ -5,10 +5,11 @@ import {
   StyleSheet,
   Dimensions,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
-import { museumStyles } from "@/styles/museumStyles";
 import colors from "@/styles/colors";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
+import { useState } from "react";
 
 const windowWidth = Dimensions.get("window").width;
 const iconSize = windowWidth * 0.08; // for example, 8% of the window width
@@ -31,6 +32,7 @@ const MuseumPost: React.FC<MuseumPostProps> = ({
   museumId,
   museumPfp,
 }) => {
+  const [loading, setLoading] = useState(true);
   const handleExhibitionPress = () => {
     router.push({
       pathname: "/(auth)/(drawer)/exhibition/[id]",
@@ -61,11 +63,28 @@ const MuseumPost: React.FC<MuseumPostProps> = ({
         style={styles.exhibition}
         onPress={handleExhibitionPress}
       >
-        <Image
-          source={{ uri: coverPhotoUrl }}
-          style={styles.exhibitionImage}
-          resizeMode="cover"
-        />
+        <View style={styles.imageContainer}>
+          <Image
+            source={{ uri: coverPhotoUrl }}
+            style={styles.exhibitionImage}
+            resizeMode="cover"
+            onLoadStart={() => {
+              console.log("loading Started");
+              setLoading(true);
+            }}
+            onLoadEnd={() => {
+              console.log("loading Ended");
+              setLoading(false);
+            }}
+          />
+          {loading && (
+            <ActivityIndicator
+              style={styles.activityIndicator}
+              size="large"
+              color={colors.text_pink} // Ensure colors.text_pink is defined in your colors object
+            />
+          )}
+        </View>
       </TouchableOpacity>
       <Text style={styles.exhibitionText}>{title}</Text>
     </View>
@@ -88,6 +107,10 @@ const styles = StyleSheet.create({
     marginLeft: 3,
     width: "auto",
   },
+  hidden: {
+    width: 0,
+    height: 0, // Effectively hides the image
+  },
   icon: {
     width: iconSize, // Set a fixed width for your icon
     height: iconSize, // Set the height equal to the width to create a square (which will become a circle with borderRadius)
@@ -106,7 +129,7 @@ const styles = StyleSheet.create({
   },
   exhibitionImage: {
     width: "100%", // Ensures the image's width is the same as the container
-    height: "90%", // Ensures the image's height is the same as the container
+    height: "100%", // Ensures the image's height is the same as the container
     borderRadius: 20,
   },
   exhibitionText: {
@@ -120,6 +143,21 @@ const styles = StyleSheet.create({
   linkStyle: {
     flex: 1,
     width: "100%",
+  },
+  imageContainer: {
+    position: "relative",
+    width: "100%", // Adjust width as necessary
+    height: "100%", // Adjust height as necessary
+  },
+
+  activityIndicator: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

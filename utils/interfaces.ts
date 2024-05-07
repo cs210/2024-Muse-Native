@@ -25,10 +25,21 @@ export interface Exhibition {
   museum: Museum;
 }
 
+export interface ExhibitionAndMuseum {
+  id: string;
+  title: string;
+  cover_photo_url: string;
+  museum: {
+    id: string;
+    username: string;
+    profilePhotoUrl: string;
+  };
+}
+
 export interface ExhibitionBasic {
   title: string;
   cover_photo_url: string;
   museum: {
-    name: string,
+    name: string;
   };
 }
