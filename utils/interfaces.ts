@@ -1,11 +1,3 @@
-export interface Todo {
-  id: number;
-  inserted_at: string;
-  is_complete: boolean;
-  task: string;
-  user_id: string;
-}
-
 export interface Profile {
   id: string;
   email: string;
@@ -13,4 +5,30 @@ export interface Profile {
   last_name: string;
   username: string;
   avatar_url: string;
+}
+
+export interface Museum {
+  id: string;
+  name: string; // Add other necessary fields as needed
+  profilePhotoUrl: string;
+}
+
+export interface Exhibition {
+  id: string;
+  museum_id: string;
+  title: string;
+  start_date: string;
+  end_date: string;
+  description: string;
+  cover_photo_url: string;
+  ticket_link: string;
+  museum: Museum;
+}
+
+export interface ExhibitionBasic {
+  title: string;
+  cover_photo_url: string;
+  museum: {
+    name: string,
+  };
 }

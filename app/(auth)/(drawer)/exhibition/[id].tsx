@@ -59,9 +59,27 @@ const exhibition = () => {
   const [error, setError] = useState<string | null>(null);
 
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [reviewsUpdate, setReviewsUpdate] = useState<boolean>(false);
   const [reviewsLoading, setReviewsLoading] = useState<boolean>(true);
   const [reviewsError, setReviewsError] = useState<string | null>(null);
+  const [userId, setUserId] = useState("");
 
+  const channels = supabase
+    .channel("custom-insert-channel")
+    .on(
+      "postgres_changes",
+      {
+        event: "*",
+        schema: "public",
+        table: "reviews",
+        filter: "user_id=eq.".concat(userId),
+      },
+      (payload) => {
+        console.log("Change received!", payload);
+        setReviewsUpdate(!reviewsUpdate);
+      }
+    )
+    .subscribe();
   // Get the user Exhibition
   useEffect(() => {
     console.log("ID  " + id);
@@ -138,7 +156,27 @@ const exhibition = () => {
     if (id) {
       fetchReviews();
     }
-  }, [id]); // Include `id` in the dependency array to re-run this effect when `id` changes
+  }, [reviewsUpdate]); // Include `reviewsUpdate` in the dependency array to re-run this effect when `id` changes
+
+  useEffect(() => {
+    const getUserId = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (session) {
+        // console.log("User ID:", session.user.id);
+        const userId = session.user.id;
+        setUserId(userId);
+      }
+    };
+
+    if (id) {
+      getUserId();
+    } else {
+      console.log("Invalid or missing exhibition ID");
+    }
+  }, [id]);
+
   const museumPressed = () => {
     if (exhibition) {
       router.push({
@@ -148,60 +186,81 @@ const exhibition = () => {
     }
   };
 
+  const writeReviewPressed = () => {
+    if (exhibition) {
+      console.log(exhibition.title);
+      router.push({
+        pathname: "/(auth)/(drawer)/write-review/WriteReview",
+        params: {
+          id: exhibition.id,
+        },
+      });
+    }
+  };
+
   if (loading) return <Text>Loading...</Text>;
   if (error) return <Text>Error: {error}</Text>;
+
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      {/* Profile Container */}
-      <View style={styles.container2}>
-        <View style={styles.imageContainer}>
-          <Image
-            source={{ uri: exhibition?.cover_photo_url }}
-            style={styles.coverImage}
-          />
-          <View style={styles.gradientOverlay} />
+    <View style={{ flex: 1 }}>
+      <ScrollView contentContainerStyle={styles.container}>
+        {/* Profile Container */}
+        <View style={styles.container2}>
+          <View style={styles.imageContainer}>
+            <Image
+              source={{ uri: exhibition?.cover_photo_url }}
+              style={styles.coverImage}
+            />
+            <View style={styles.gradientOverlay} />
+          </View>
+
+          <TouchableOpacity
+            style={styles.logoContainer}
+            onPress={museumPressed}
+          >
+            <Image
+              source={{ uri: exhibition?.museum.profilePhotoUrl }}
+              style={styles.museumLogo}
+            />
+          </TouchableOpacity>
         </View>
 
-        <TouchableOpacity style={styles.logoContainer} onPress={museumPressed}>
-          <Image
-            source={{ uri: exhibition?.museum.profilePhotoUrl }}
-            style={styles.museumLogo}
-          />
-        </TouchableOpacity>
-      </View>
-
-      {/* TEXT */}
-      <View style={{ padding: 12, gap: 12 }}>
-        <Text style={{ color: "white" }}>{exhibition?.title} </Text>
-        <Text style={{ color: "white" }}>
-          {exhibition?.start_date} - {exhibition?.end_date}
-        </Text>
-        <Text style={{ color: "white" }}>{exhibition?.description}</Text>
-      </View>
-      {/* Posts */}
-      <View style={styles.reviewsContainer}>
-        {reviews && reviews.length > 0 ? (
-          reviews.map((review) => (
-            <ReviewCard
-              key={review.id}
-              reviewId={review.id}
-              pfp={review.user.avatar_url}
-              username={review.user.username}
-              text={review.text}
-              museumId={exhibition?.museum_id}
-              exhibitionId={exhibition?.id}
-              museumName={exhibition?.museum.name}
-              exhibitionName={exhibition?.title}
-              coverPhoto={exhibition?.cover_photo_url}
-            />
-          ))
-        ) : (
-          <Text style={{ color: "white" }}>
-            No reviews available be the first person to review this
+        {/* TEXT */}
+        <View style={{ padding: 12, gap: 12 }}>
+          <Text style={styles.exhibitionTitle}>{exhibition?.title} </Text>
+          <Text style={styles.exhibitionDates}>
+            {exhibition?.start_date} - {exhibition?.end_date}
           </Text>
-        )}
-      </View>
-    </ScrollView>
+          <Text style={styles.exhibitionDescription}>{exhibition?.description}</Text>
+        </View>
+        {/* Posts */}
+        <View style={styles.reviewsContainer}>
+          {reviews && reviews.length > 0 ? (
+            reviews.map((review) => (
+              <ReviewCard
+                key={review.id}
+                reviewId={review.id}
+                pfp={review.user.avatar_url}
+                username={review.user.username}
+                text={review.text}
+                museumId={exhibition?.museum_id}
+                exhibitionId={exhibition?.id}
+                museumName={exhibition?.museum.name}
+                exhibitionName={exhibition?.title}
+                coverPhoto={exhibition?.cover_photo_url}
+              />
+            ))
+          ) : (
+            <Text style={{ color: "white" }}>
+              No reviews available be the first person to review this
+            </Text>
+          )}
+        </View>
+      </ScrollView>
+      <TouchableOpacity style={styles.fab} onPress={writeReviewPressed}>
+        <Text style={styles.fabIcon}>+</Text>
+      </TouchableOpacity>
+    </View>
   );
 };
 
@@ -318,6 +377,35 @@ const styles = StyleSheet.create({
     height: "100%",
     width: "100%",
     resizeMode: "cover",
+  },
+  fab: {
+    position: "absolute",
+    width: 56,
+    height: 56,
+    alignItems: "center",
+    justifyContent: "center",
+    right: 20,
+    bottom: 20,
+    backgroundColor: "#03A9F4",
+    borderRadius: 28,
+    elevation: 8,
+  },
+  fabIcon: {
+    fontSize: 24,
+    color: "white",
+  },
+  exhibitionTitle: {
+    fontSize: 24,
+    color: colors.text_pink,
+  },
+  exhibitionDates: {
+    fontSize: 15,
+    color: colors.plum_light,
+  },
+  exhibitionDescription: {
+    fontSize: 15,
+    color: colors.text_pink,
+    lineHeight: 25,
   },
 });
 

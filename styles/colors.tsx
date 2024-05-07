@@ -9,4 +9,5 @@ export default {
   white: "#FFF",
   light_green: "#2A8535",
   dark_green: "#287F32",
+  dark_blue: "#1750B4",
 };

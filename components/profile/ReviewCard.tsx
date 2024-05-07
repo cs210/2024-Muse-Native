@@ -79,8 +79,8 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
         <Image
           source={{ uri: pfp }}
           style={{
-            width: 50,
-            height: 50,
+            width: 35,
+            height: 35,
             borderRadius: 25,
           }}
         />
@@ -88,7 +88,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
           <Text style={styles.museumText}>{username}</Text>
         </View>
       </View>
-      <Text>TEXT: {text}</Text>
+      <Text style={styles.reviewText}>{text}</Text>
     </TouchableOpacity>
   );
 };
@@ -110,8 +110,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   museumText: {
-    color: "white",
+    color: colors.white,
+    fontFamily: "Inter_700Bold",
   },
+  reviewText: {
+    color: colors.white,
+    fontFamily: "Inter_400Regular",
+    fontSize: 15,
+  }
 });
 
 export default ReviewCard;
