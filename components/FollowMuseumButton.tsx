@@ -1,70 +1,92 @@
-import React, { useState, useEffect } from "react";
-import { Button } from "react-native";
+import colors from "@/styles/colors";
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ActivityIndicator,
+  StyleSheet,
+} from "react-native";
 import { supabase } from "@/utils/supabase";
 
-interface FollowButtonProps {
-  userId: string; // Assuming user_id is a string. Adjust the type if needed.
-  museumId: string; // Assuming museum_id is a number. Adjust the type if needed.
+interface FollowMuseumButtonProps {
+  user_id: string;
+  museum_id: string;
 }
 
-const FollowMuseumButton: React.FC<FollowButtonProps> = ({
-  userId,
-  museumId,
+const FollowMuseumButton: React.FC<FollowMuseumButtonProps> = ({
+  user_id,
+  museum_id,
 }) => {
-  const [isFollowing, setIsFollowing] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [isFollowing, setIsFollowing] = useState<boolean | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    checkFollowingStatus();
-  }, []);
+    checkFollowStatus();
+  }, [user_id, museum_id]);
 
-  const checkFollowingStatus = async () => {
-    // TODO, this in museum
-    const { data: user, error: authError } = await supabase.auth.getUser();
+  const checkFollowStatus = async () => {
     try {
       const { data, error } = await supabase
         .from("user_follows_museums")
         .select("*")
-        .eq("user_id", user.user?.id)
-        .eq("museum_id", user.user?.id);
+        .eq("user_id", user_id)
+        .eq("museum_id", museum_id)
+        .single();
 
-      if (error && error.message !== "No rows found") {
-        throw error;
-      }
-
+      if (error) throw error;
       setIsFollowing(!!data);
     } catch (error) {
-      alert("Error checking follows status: " + error.message);
+      console.error("Error fetching follow status:", error.message);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleFollow = async () => {
+  const toggleFollow = async () => {
     setLoading(true);
     if (isFollowing) {
-      // Unfollow the museum
-      await supabase
+      // Unfollow logic
+      const { error } = await supabase
         .from("user_follows_museums")
         .delete()
-        .match({ user_id: userId, museum_id: museumId });
+        .match({ user_id, museum_id });
+
+      if (error) {
+        console.error("Error unfollowing:", error.message);
+      } else {
+        setIsFollowing(false);
+      }
     } else {
-      // Follow the museum
-      await supabase
-        .from("users_follow_museums")
-        .insert([{ user_id: userId, museum_id: museumId }]);
+      // Follow logic
+      const { error } = await supabase
+        .from("user_follows_museums")
+        .insert([{ user_id, museum_id }]);
+
+      if (error) {
+        console.error("Error following:", error.message);
+      } else {
+        setIsFollowing(true);
+      }
     }
-    setIsFollowing(!isFollowing);
     setLoading(false);
   };
 
+  if (loading) return <ActivityIndicator />;
+
   return (
-    <Button
-      title={isFollowing ? "Following" : "Follow"}
-      onPress={handleFollow}
-      disabled={loading}
-    />
+    <View style={styles.container}>
+      <TouchableOpacity onPress={toggleFollow} style={styles.button}>
+        <Text>{isFollowing ? "Unfollow" : "Follow"}</Text>
+      </TouchableOpacity>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: colors.plum_light,
+  },
+});
 
 export default FollowMuseumButton;

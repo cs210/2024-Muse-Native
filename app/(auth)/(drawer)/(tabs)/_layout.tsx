@@ -37,7 +37,7 @@ const Layout = () => {
             />
           </TouchableOpacity>
         ),
-        headerLeft: () => <DrawerToggleButton tintColor={colors.text_pink} />,
+        // headerLeft: () => <DrawerToggleButton tintColor={colors.text_pink} />,
       }}
     >
       <Tabs.Screen
