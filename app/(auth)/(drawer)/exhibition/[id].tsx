@@ -10,8 +10,6 @@ import {
 import { router, useLocalSearchParams } from "expo-router";
 import colors from "@/styles/colors";
 import ReviewCard from "@/components/profile/ReviewCard";
-import { SafeAreaView } from "react-native-safe-area-context";
-import FavoriteCard from "@/components/profile/FavoriteCard";
 import { useEffect, useState } from "react";
 import { supabase } from "@/utils/supabase";
 
@@ -66,6 +64,7 @@ const exhibition = () => {
 
   // Get the user Exhibition
   useEffect(() => {
+    console.log("ID  " + id);
     const getExhibitionData = async () => {
       setLoading(true);
       try {
@@ -181,24 +180,26 @@ const exhibition = () => {
       </View>
       {/* Posts */}
       <View style={styles.reviewsContainer}>
-        {reviews.map((review) => (
-          // Museum Name
-          // User Photo
-          // pass museum id
-          // pass title: string;
-          <ReviewCard
-            key={review.id}
-            reviewId={review.id}
-            pfp={review.user.avatar_url}
-            username={review.user.username}
-            text={review.text}
-            museumId={exhibition?.museum_id}
-            exhibitionId={exhibition?.id}
-            museumName={exhibition?.museum.name}
-            exhibitionName={exhibition?.title}
-            coverPhoto={exhibition?.cover_photo_url}
-          />
-        ))}
+        {reviews && reviews.length > 0 ? (
+          reviews.map((review) => (
+            <ReviewCard
+              key={review.id}
+              reviewId={review.id}
+              pfp={review.user.avatar_url}
+              username={review.user.username}
+              text={review.text}
+              museumId={exhibition?.museum_id}
+              exhibitionId={exhibition?.id}
+              museumName={exhibition?.museum.name}
+              exhibitionName={exhibition?.title}
+              coverPhoto={exhibition?.cover_photo_url}
+            />
+          ))
+        ) : (
+          <Text style={{ color: "white" }}>
+            No reviews available be the first person to review this
+          </Text>
+        )}
       </View>
     </ScrollView>
   );

@@ -1,5 +1,5 @@
 import colors from "@/styles/colors";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, ScrollView } from "react-native";
 import { supabase } from "@/utils/supabase";
 import { useEffect, useState } from "react";
 import review from "../../review/[id]";
@@ -19,11 +19,23 @@ interface Review {
     avatar_url: string;
     username: string;
   };
+  exhibition: {
+    title: string;
+    museum_id: string;
+    cover_photo_url: string;
+    museum: {
+      name: string; // Adding the museum name to the interface
+    };
+  };
 }
 
 async function fetchReviewsFromFollowedUsers() {
   const { data: user, error: authError } = await supabase.auth.getUser();
-  // First, get the list of user IDs that the current user follows
+  if (authError) {
+    console.error("Authentication error:", authError);
+    return [];
+  }
+
   const { data: followedUsers, error: followError } = await supabase
     .from("user_follows_users")
     .select("following_id")
@@ -34,28 +46,47 @@ async function fetchReviewsFromFollowedUsers() {
     return [];
   }
 
-  // Extract the user IDs from the followed users
-  console.log(followedUsers);
   const followedUserIds = followedUsers.map((user) => user.following_id);
 
-  // Now, fetch reviews where the user_id is in the list of followed user IDs
+  if (followedUserIds.length === 0) {
+    console.log("No followed users found.");
+    return [];
+  }
+
   const { data: reviews, error: reviewsError } = await supabase
     .from("reviews")
     .select(
       `
-      id,
-      exhibition_id,
-      user_id,
-      text,
-      created_at,
-      user: user_id (avatar_url, username)  // Join with profiles table and get avatar_url
-    `
+  id,
+  exhibition_id,
+  user_id,
+  text,
+  created_at,
+  user: user_id (
+    avatar_url,
+    username
+  ),
+  exhibition: exhibition_id (
+    museum_id,
+    title,
+    cover_photo_url,
+    museum: museum_id (
+      name
+    )
+  )
+`
     )
     .in("user_id", followedUserIds);
 
   if (reviewsError) {
     console.error("Error fetching reviews:", reviewsError);
     return [];
+  }
+
+  if (reviews.some((review) => review.exhibition === null)) {
+    console.warn(
+      "Some reviews have null exhibitions. Check data integrity and RLS policies."
+    );
   }
 
   return reviews;
@@ -69,75 +100,35 @@ const UsersScreen = () => {
   }, []);
 
   return (
-    <View style={styles.container}>
-      {reviews.map((review) => (
-        <ReviewCard
-          key={review.id}
-          reviewId={review.id}
-          pfp={review.user.avatar_url}
-          username={review.user.username}
-          text={review.text}
-        />
-      ))}
-    </View>
+    <ScrollView contentContainerStyle={styles.container}>
+      <View style={styles.reviewsContainer}>
+        {reviews.map((review) => (
+          <ReviewCard
+            key={review.id}
+            reviewId={review.id}
+            pfp={review.user.avatar_url}
+            username={review.user.username}
+            text={review.text}
+            exhibitionId={review.exhibition_id}
+            exhibitionName={review.exhibition.title}
+            museumId={review.exhibition.museum_id}
+            coverPhoto={review.exhibition.cover_photo_url}
+            museumName={review.exhibition.museum.name}
+          />
+        ))}
+      </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 10,
-    flex: 1,
-    padding: 12,
     backgroundColor: colors.background,
+    gap: 10,
   },
-  titleText: {
-    color: colors.text_pink,
-    fontFamily: "Inter_400Regular",
-    fontSize: 20,
-  },
-  profileContainer: {
+  reviewsContainer: {
+    gap: 12,
     padding: 12,
-    marginVertical: 5,
-    borderRadius: 10,
-    flexDirection: "row",
-    height: 75,
-    gap: 11,
-    backgroundColor: colors.plum,
-  },
-  profilePicContainer: {
-    width: 200,
-    height: 200,
-    alignSelf: "center",
-    borderRadius: 100,
-  },
-  nameUserContainer: {
-    // backgroundColor: colors.plum_light,
-    flexDirection: "column",
-    justifyContent: "center",
-    gap: 2,
-  },
-  nameContainer: {
-    // backgroundColor: colors.plum_light,
-    flexDirection: "row",
-    gap: 3,
-  },
-  usernameText: {
-    color: colors.text_pink,
-    fontFamily: "Inter_400Regular",
-    fontSize: 14,
-  },
-  nameText: {
-    color: colors.text_pink,
-    fontFamily: "Inter_700Bold",
-    fontSize: 14,
-  },
-  followButtonContainer: {
-    justifyContent: "center",
-    marginRight: 10,
-    marginLeft: "auto",
-  },
-  noButton: {
-    display: "none",
   },
 });
 

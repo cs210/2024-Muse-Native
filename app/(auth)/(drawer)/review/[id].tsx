@@ -1,17 +1,45 @@
-import { View, Text, ScrollView, StyleSheet, Image } from "react-native";
-import { Stack, useLocalSearchParams, Link } from "expo-router";
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+} from "react-native";
+import { Stack, useLocalSearchParams, Link, router } from "expo-router";
 
 import colors from "@/styles/colors";
+import { useCallback } from "react";
 // TODO: Background when scrolling
 const review = () => {
   const { id } = useLocalSearchParams();
   const review = JSON.parse(id);
-  console.log("IDL " + id);
+
+  const museumPressed = () => {
+    router.push({
+      pathname: "/(auth)/(drawer)/museum/[id]",
+      params: { id: review.museumId },
+    });
+  };
+
+  const handleExhibitionPress = useCallback(() => {
+    console.log("review ID: " + review?.reviewId);
+    if (review?.reviewId) {
+      router.push({
+        pathname: "/(auth)/(drawer)/exhibition/[id]",
+        params: { id: review.exhibitionId },
+      });
+    }
+  }, [review]); // Dependency array includes `review`
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* Info */}
       <View style={styles.museumInfo}>
-        <Link href={"/(auth)/(drawer)/exhibition/2"}>
+        <TouchableOpacity
+          style={{ borderWidth: 2, alignSelf: "flex-start" }}
+          onPress={handleExhibitionPress}
+        >
           <Image
             source={{ uri: review.coverPhoto }}
             style={{
@@ -20,15 +48,21 @@ const review = () => {
               borderRadius: 10,
             }}
           />
-        </Link>
+        </TouchableOpacity>
         {/* Visit Info */}
         <View style={styles.museumInfoTextCont}>
-          <Link href={"/(auth)/(drawer)/exhibition/2"}>
-            <Text style={styles.exhibitionText}>{review.exhibitionName}</Text>
-          </Link>
-          <Link href={"/(auth)/(drawer)/museum"}>
+          <TouchableOpacity
+            style={{ alignSelf: "flex-start" }}
+            onPress={handleExhibitionPress}
+          >
+            <Text style={styles.exhibitionText}>{review?.exhibitionName}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{ borderWidth: 2, alignSelf: "flex-start" }}
+            onPress={museumPressed}
+          >
             <Text style={styles.museumText}>{review.museumName} </Text>
-          </Link>
+          </TouchableOpacity>
         </View>
       </View>
       {/* HEADER */}

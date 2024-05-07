@@ -7,10 +7,12 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, router } from "expo-router";
 import colors from "@/styles/colors";
 import { supabase } from "@/utils/supabase";
+import { LinearGradient } from "expo-linear-gradient";
 import { useState, useEffect } from "react";
+import FollowMuseumButton from "@/components/FollowMuseumButton";
 // Get the full height of the screen
 const screenHeight = Dimensions.get("window").height;
 
@@ -30,6 +32,7 @@ interface Exhibition {
   end_date: string;
   museum_id: string;
   description?: string;
+  profilePhotoUrl: string;
   cover_photo_url?: string;
 }
 
@@ -37,8 +40,22 @@ const museum: React.FC = () => {
   const { id } = useLocalSearchParams();
   const [museum, setMuseum] = useState<Museum | null>(null);
   const [exhibitions, setExhibitions] = useState<Exhibition[]>([]);
+  const [userId, setUserId] = useState("");
+
+  const handleExhibitionPress = (exhibition: Exhibition) => {
+    if (exhibition?.id) {
+      router.push({
+        pathname: "/(auth)/(drawer)/exhibition/[id]",
+        params: { id: exhibition.id },
+      });
+    }
+  }; // Dependency array includes `review`
 
   async function fetchMuseumById(museumId: string | string[]) {
+    const { data: user, error: authError } = await supabase.auth.getUser();
+
+    setUserId(user.user?.id || "user not found");
+
     const { data, error } = await supabase
       .from("museums")
       .select("*")
@@ -74,31 +91,42 @@ const museum: React.FC = () => {
     }
   }, [id]); // Dependency on 'id' ensures fetch is re-run if 'id' changes
 
+  if (!museum) return;
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* Profile Container */}
       <View style={styles.container2}>
         <View style={styles.imageContainer}>
           <Image
-            source={require("../../../../images/cantor.jpg")}
+            source={{ uri: museum?.coverPhotoUrl }}
             style={styles.coverImage}
           />
-          <View style={styles.gradientOverlay} />
+          <LinearGradient
+            // Background Linear Gradient
+            colors={["transparent", "rgba(0,0,0,0.5)"]}
+            style={styles.background}
+          />
         </View>
         <View style={styles.infoContainer}>
           <View style={styles.museumInfo}>
-            <TouchableOpacity style={styles.logoContainer}>
+            <View style={styles.logoContainer}>
               <Image
-                source={require("../../../../images/cantor.jpg")}
+                source={{ uri: museum?.profilePhotoUrl }}
                 style={styles.museumLogo}
               />
-            </TouchableOpacity>
-            <Text style={{ color: "white", fontSize: 20 }}>
+            </View>
+            <Text
+              style={{
+                color: colors.text_darker_pink,
+                fontSize: 20,
+                fontWeight: "bold",
+              }}
+            >
               {" "}
               {museum?.username}{" "}
             </Text>
           </View>
-          <Text> Follow </Text>
+          <FollowMuseumButton user_id={userId} museum_id={museum.id} />
         </View>
       </View>
       {/* TEXT */}
@@ -106,17 +134,28 @@ const museum: React.FC = () => {
       <Text style={{ color: "white" }}> What's On </Text>
 
       {exhibitions.map((exhibition) => (
-        <Image
+        <TouchableOpacity
+          onPress={() => handleExhibitionPress(exhibition)}
           key={exhibition.id}
-          source={{ uri: exhibition.cover_photo_url }}
-          style={{ height: 100, width: 200 }}
-        />
+        >
+          <Image
+            source={{ uri: exhibition.cover_photo_url }}
+            style={{ height: 100, width: 200 }}
+          />
+        </TouchableOpacity>
       ))}
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  background: {
+    position: "absolute",
+    height: 300,
+    left: 0,
+    right: 0,
+    top: 0,
+  },
   whatsOnScroll: {
     display: "flex",
     flexDirection: "row",

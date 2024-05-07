@@ -26,7 +26,7 @@ import { router } from "expo-router";
 
 // Define the props for the component using TypeScript
 interface ReviewCardProps {
-  reviewId: number; // This prop will hold the review ID passed from the parent
+  reviewId: string; // This prop will hold the review ID passed from the parent
   pfp: string;
   username: string;
   museumId: string;
