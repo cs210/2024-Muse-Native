@@ -15,6 +15,9 @@ import { router } from "expo-router";
 interface ReviewCardProps {
   reviewId: number; // This prop will hold the review ID passed from the parent
   pfp: string;
+  username: string;
+  museumId: string;
+  text: string;
 }
 
 interface Review {
@@ -32,7 +35,13 @@ interface Review {
 
 const screenHeight = Dimensions.get("window").height;
 
-const ReviewCard: React.FC<ReviewCardProps> = ({ reviewId, pfp }) => {
+const ReviewCard: React.FC<ReviewCardProps> = ({
+  reviewId,
+  pfp,
+  username,
+  text,
+  museumId,
+}) => {
   const navigation = useNavigation();
 
   // ! Important Code:
@@ -56,11 +65,10 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ reviewId, pfp }) => {
           }}
         />
         <View>
-          <Text style={styles.museumText}>Cantor Arts Center</Text>
-          <Text>Day Jobs</Text>
+          <Text style={styles.museumText}>{username}</Text>
         </View>
       </View>
-      <Text>Amazing. Inspiring. Admirable. Life-Changing.</Text>
+      <Text>{text}</Text>
     </TouchableOpacity>
   );
 };
@@ -77,7 +85,7 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: "row",
-    borderWidth: 2,
+    // borderWidth: 2,
     gap: 8,
     alignItems: "center",
   },

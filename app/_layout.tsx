@@ -36,6 +36,7 @@ const InitialLayout = () => {
 
     // Redirect to home page after signing in
     if (session && !inAuthGroup) {
+      console.log("inAuth");
       const fetchUser = async () => {
         const {
           data: { user },
@@ -69,17 +70,15 @@ const InitialLayout = () => {
         if (data.length > 0) {
           router.replace("/(auth)/(drawer)/setup");
         } else {
+          console.log("DATA LENGTH LOADED line 73");
           // router.replace("/(auth)/(drawer)/(tabs)/home");
+          //TODO: CHANGE BACK
           router.replace("/(auth)/(drawer)/(tabs)/home");
         }
       };
 
       fetchUser();
       checkUserNameNull();
-
-      // IF USERNAME == NULL GOTO SETUP
-      // ELSE:
-      // router.replace("/(auth)/(drawer)/(tabs)/profile");
     } else if (!session) {
       // Give time for custom fonts to load
       setTimeout(() => {

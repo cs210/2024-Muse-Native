@@ -41,7 +41,7 @@ const MuseumPost: React.FC<MuseumPostProps> = ({
   const handleMuseumPress = () => {
     router.push({
       pathname: "/(auth)/(drawer)/museum/[id]",
-      params: { id: { id } },
+      params: { id: museumId },
     });
   };
 
@@ -74,7 +74,7 @@ const MuseumPost: React.FC<MuseumPostProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    borderWidth: 2,
+    // borderWidth: 2,
     flex: 1,
     backgroundColor: colors.background,
     flexDirection: "column", // Aligns children in a column
