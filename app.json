@@ -17,8 +17,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.pcivita.supaapp",
-      "newArchEnabled": true
+      "bundleIdentifier": "com.pcivita.supaapp"
     },
     "android": {
       "adaptiveIcon": {
