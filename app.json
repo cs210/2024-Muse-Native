@@ -17,7 +17,8 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.pcivita.supaapp"
+      "bundleIdentifier": "com.pcivita.supaapp",
+      "newArchEnabled": true
     },
     "android": {
       "adaptiveIcon": {
@@ -33,7 +34,8 @@
     },
     "plugins": [
       "expo-router",
-      "expo-font"
+      "expo-font",
+      "expo-build-properties"
     ],
     "experiments": {
       "typedRoutes": true
