@@ -8,7 +8,6 @@ import {
   Dimensions,
 } from "react-native";
 import colors from "@/styles/colors";
-import { useNavigation } from "@react-navigation/native";
 import { router } from "expo-router";
 
 // interface Review {
@@ -52,8 +51,6 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
   coverPhoto,
   user_id,
 }) => {
-  const navigation = useNavigation();
-
   // ! Important Code:
   const handlePress = () => {
     // Navigate and pass the review ID to the destination screen
@@ -82,16 +79,21 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
         <Image
           source={{ uri: pfp }}
           style={{
-            width: 35,
-            height: 35,
+            width: 50,
+            height: 50,
             borderRadius: 25,
           }}
         />
         <View>
-          <Text style={styles.museumText}>{username}</Text>
+          <Text style={styles.museumText}>{username.toUpperCase()}</Text>
+          <Text style={styles.exhibitionText}>
+            {exhibitionName.toUpperCase()}
+          </Text>
         </View>
       </View>
-      <Text style={styles.reviewText}>{text}</Text>
+      <Text style={styles.reviewText} numberOfLines={2} ellipsizeMode="tail">
+        {text}
+      </Text>
     </TouchableOpacity>
   );
 };
@@ -101,9 +103,9 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     height: screenHeight / 6,
-    padding: 12,
+    padding: 20,
     borderRadius: 10,
-    backgroundColor: colors.plum,
+    backgroundColor: colors.review_purple,
     gap: 10,
   },
   header: {
@@ -113,11 +115,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   museumText: {
-    color: colors.white,
+    color: colors.plum_light,
     fontFamily: "Inter_700Bold",
   },
+  exhibitionText: {
+    color: colors.plum_light,
+  },
   reviewText: {
-    color: colors.white,
+    color: colors.plum_light,
     fontFamily: "Inter_400Regular",
     fontSize: 15,
   },

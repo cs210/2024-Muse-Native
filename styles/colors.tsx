@@ -10,4 +10,5 @@ export default {
   light_green: "#2A8535",
   dark_green: "#287F32",
   dark_blue: "#1750B4",
+  review_purple: "#5A324F",
 };

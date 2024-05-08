@@ -146,6 +146,7 @@ const UsersScreen = () => {
               museumId={review.exhibition.museum_id}
               coverPhoto={review.exhibition.cover_photo_url}
               museumName={review.exhibition.museum.name}
+              user_id={review.user_id}
             />
           ))}
         </View>
@@ -164,8 +165,8 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   reviewsContainer: {
-    gap: 12,
-    padding: 12,
+    gap: 20,
+    padding: 20,
   },
 });
 
