@@ -66,7 +66,7 @@ const exhibition = () => {
   const [userId, setUserId] = useState("");
 
   const channels = supabase
-    .channel("custom-update-channel")
+    .channel("custom-update-channel-1")
     .on(
       "postgres_changes",
       {

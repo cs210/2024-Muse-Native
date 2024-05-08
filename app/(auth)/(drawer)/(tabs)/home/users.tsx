@@ -24,17 +24,13 @@ interface Review {
   };
 }
 
-async function fetchReviewsFromFollowedUsers() {
-  const { data: user, error: authError } = await supabase.auth.getUser();
-  if (authError) {
-    console.error("Authentication error:", authError);
-    return [];
-  }
-
+async function fetchReviewsFromFollowedUsers(userId: string) {
   const { data: followedUsers, error: followError } = await supabase
     .from("user_follows_users")
     .select("following_id")
-    .eq("follower_id", user.user?.id);
+    .eq("follower_id", userId);
+
+  console.log("followedUsers: ", followedUsers);
 
   if (followError) {
     console.error("Error fetching followed users:", followError);
@@ -43,6 +39,7 @@ async function fetchReviewsFromFollowedUsers() {
 
   const followedUserIds = followedUsers.map((user) => user.following_id);
 
+  console.log("FollowedUserIDS: ", followedUserIds);
   if (followedUserIds.length === 0) {
     console.log("No followed users found.");
     return [];
@@ -89,35 +86,79 @@ async function fetchReviewsFromFollowedUsers() {
 
 const UsersScreen = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [userId, setUserId] = useState("");
+  const [reviewsUpdate, setReviewsUpdate] = useState<boolean>(false);
+
+  const channels = supabase
+    .channel("custom-update-channel-2")
+    .on(
+      "postgres_changes",
+      {
+        event: "*",
+        schema: "public",
+        table: "user_follows_users",
+        filter: "follower_id=eq.".concat(userId),
+      },
+      (payload) => {
+        console.log("Change received!", payload);
+        setReviewsUpdate(!reviewsUpdate);
+      }
+    )
+    .subscribe();
 
   useEffect(() => {
-    fetchReviewsFromFollowedUsers().then(setReviews).catch(console.error);
-  }, []);
+    const getUserId = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (session) {
+        // console.log("User ID:", session.user.id);
+        const userId = session.user.id;
+        setUserId(userId);
+      }
+    };
+    getUserId();
+    console.log("USER ID:", userId);
+  }, [userId]);
+
+  useEffect(() => {
+    console.log("HELLO?");
+    if (userId != "") {
+      fetchReviewsFromFollowedUsers(userId)
+        .then(setReviews)
+        .catch(console.error);
+    }
+  }, [userId, reviewsUpdate]);
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.reviewsContainer}>
-        {reviews.map((review) => (
-          <ReviewCard
-            key={review.id}
-            reviewId={review.id}
-            pfp={review.user.avatar_url}
-            username={review.user.username}
-            text={review.text}
-            exhibitionId={review.exhibition_id}
-            exhibitionName={review.exhibition.title}
-            museumId={review.exhibition.museum_id}
-            coverPhoto={review.exhibition.cover_photo_url}
-            museumName={review.exhibition.museum.name}
-            user_id={review.user_id}
-          />
-        ))}
-      </View>
-    </ScrollView>
+    <View style={styles.outerContainer}>
+      <ScrollView contentContainerStyle={styles.container}>
+        <View style={styles.reviewsContainer}>
+          {reviews.map((review) => (
+            <ReviewCard
+              key={review.id}
+              reviewId={review.id}
+              pfp={review.user.avatar_url}
+              username={review.user.username}
+              text={review.text}
+              exhibitionId={review.exhibition_id}
+              exhibitionName={review.exhibition.title}
+              museumId={review.exhibition.museum_id}
+              coverPhoto={review.exhibition.cover_photo_url}
+              museumName={review.exhibition.museum.name}
+            />
+          ))}
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  outerContainer: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
   container: {
     backgroundColor: colors.background,
     gap: 10,

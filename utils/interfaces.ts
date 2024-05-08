@@ -43,3 +43,9 @@ export interface ExhibitionBasic {
     name: string;
   };
 }
+
+export interface FollowedUser {
+  following_id: string;
+}
+
+export interface FollowedUsers extends Array<FollowedUser>{};

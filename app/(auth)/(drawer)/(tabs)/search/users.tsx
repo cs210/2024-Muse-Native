@@ -54,7 +54,7 @@ const UsersScreen = () => {
   };
 
   const renderRow: ListRenderItem<Profile> = ({ item }) => {
-    const isSelf = userId == item.id;
+    const isSelf = (userId === item.id);
     return (
       <View style={styles.profileContainer}>
         <Image

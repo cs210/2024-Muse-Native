@@ -31,8 +31,20 @@ const WriteReviewPage = () => {
   const [userId, setUserId] = useState("");
   const { id } = useLocalSearchParams();
 
+  const getUserId = async () => {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    if (session) {
+      console.log("User ID:", session.user.id);
+      const userId = session.user.id;
+      setUserId(userId);
+    }
+  };
+
   useEffect(() => {
     const getExhibitionData = async () => {
+      getUserId();
       const exhibitionDataQuery = supabase
         .from("exhibitions")
         .select(
@@ -66,41 +78,10 @@ const WriteReviewPage = () => {
     }
   }, [id]);
 
-  useEffect(() => {
-    const getUserId = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      if (session) {
-        // console.log("User ID:", session.user.id);
-        const userId = session.user.id;
-        setUserId(userId);
-      }
-    };
-
-    if (id) {
-      getUserId();
-    } else {
-      console.log("Invalid or missing exhibition ID");
-    }
-  }, [id]);
-
   // console.log("Exhibition ID: ", id);
 
-  const getUserId = async () => {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-    if (session) {
-      // console.log("User ID:", session.user.id);
-      const userId = session.user.id;
-      setUserId(userId);
-    }
-  };
-
   const onSubmitPress = async () => {
-    getUserId();
-
+    
     const { data, error } = await supabase
       .from("reviews")
       .insert([{ user_id: userId, exhibition_id: id, text: review }])
