@@ -100,7 +100,7 @@ const WriteReviewPage = () => {
   return (
     <KeyboardAwareScrollView
       style={styles.outerContainer}
-      extraHeight={screenHeight * 0.2}
+      extraHeight={screenHeight}
       keyboardShouldPersistTaps={"handled"}
     >
       <ScrollView style={styles.container} keyboardShouldPersistTaps={"handled"}>
@@ -140,12 +140,13 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingTop: 20,
     backgroundColor: colors.background,
   },
   reviewHeader: {
-    paddingVertical: 20,
-    gap: 5,
+    paddingTop: 10,
+    paddingBottom: 30,
   },
   inputField: {
     height: 200,
@@ -160,12 +161,12 @@ const styles = StyleSheet.create({
   exhibitionTitle: {
     color: colors.text_pink,
     fontFamily: "Inter_400Regular",
-    fontSize: 25,
+    fontSize: 22,
   },
   museumName: {
     color: colors.plum_light,
     fontFamily: "Inter_400Regular",
-    fontSize: 20,
+    fontSize: 18,
   },
   submitButton: {
     alignItems: "center",
@@ -192,6 +193,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 0,
     left: 0,
+    borderRadius: 10,
   },
 });
 

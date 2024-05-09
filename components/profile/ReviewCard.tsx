@@ -173,7 +173,6 @@ const styles = StyleSheet.create({
     // borderWidth: 2,
   },
   reviewTextContainer: {
-    width: "100%",
     flex: 2,
     paddingLeft: 5,
     paddingRight: 10,
