@@ -200,19 +200,19 @@ const ProfilePage: React.FC = () => {
         </View>
         {/* Posts */}
         <View style={styles.reviewsContainer}>
-          <ReviewCard reviewId={1} />
+          {/* <ReviewCard reviewId={1} />
           <ReviewCard reviewId={2} />
           <ReviewCard reviewId={3} />
-          <ReviewCard reviewId={4} />
+          <ReviewCard reviewId={4} /> */}
           <Text style={{ color: "white" }}>
             {/* {userReviews &&
               userReviews.length > 0 &&
               userReviews[0].exhibition.title} */}
           </Text>
         </View>
-        {favoriteExhibitions.map((exhibition) => (
+        {/* {favoriteExhibitions.map((exhibition) => (
           <Text key={exhibition.id}>{exhibition.id}</Text>
-        ))}
+        ))} */}
       </ScrollView>
     </SafeAreaView>
   );

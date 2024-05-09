@@ -35,6 +35,7 @@ interface ReviewCardProps {
   exhibitionId: string;
   coverPhoto: string;
   user_id: string;
+  showImage: boolean;
 }
 
 const screenHeight = Dimensions.get("window").height;
@@ -50,6 +51,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
   exhibitionId,
   coverPhoto,
   user_id,
+  showImage,
 }) => {
   // ! Important Code:
   const handlePress = () => {
@@ -75,25 +77,58 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
 
   return (
     <TouchableOpacity onPress={handlePress} style={styles.container}>
-      <View style={styles.header}>
-        <Image
-          source={{ uri: pfp }}
-          style={{
-            width: 50,
-            height: 50,
-            borderRadius: 25,
-          }}
-        />
-        <View>
-          <Text style={styles.museumText}>{username.toUpperCase()}</Text>
-          <Text style={styles.exhibitionText}>
-            {exhibitionName.toUpperCase()}
-          </Text>
+      <View style={{ borderColor: "white", width: "80%", gap: 8 }}>
+        <View style={styles.header}>
+          <Image
+            source={{ uri: pfp }}
+            style={{
+              width: 50,
+              height: 50,
+              borderRadius: 25,
+            }}
+          />
+          <View
+            style={{
+              // borderWidth: 2,
+              borderColor: "white",
+              width: "100%",
+              flex: 1,
+            }}
+          >
+            <Text style={styles.museumText}>{username.toUpperCase()}</Text>
+            <Text
+              style={styles.exhibitionText}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {exhibitionName.toUpperCase()}
+            </Text>
+          </View>
         </View>
+        <Text style={styles.reviewText} numberOfLines={2} ellipsizeMode="tail">
+          {text}
+        </Text>
       </View>
-      <Text style={styles.reviewText} numberOfLines={2} ellipsizeMode="tail">
-        {text}
-      </Text>
+      <View
+        style={{
+          // borderWidth: 2,
+          borderColor: "white",
+          width: "auto",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        {showImage && (
+          <Image
+            source={{ uri: coverPhoto }}
+            style={{
+              width: 50,
+              height: 50,
+              borderRadius: 5,
+            }}
+          />
+        )}
+      </View>
     </TouchableOpacity>
   );
 };
@@ -101,6 +136,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: "row",
     width: "100%",
     height: screenHeight / 6,
     padding: 20,
@@ -111,6 +147,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     // borderWidth: 2,
+    width: "auto",
     gap: 8,
     alignItems: "center",
   },
@@ -120,6 +157,7 @@ const styles = StyleSheet.create({
   },
   exhibitionText: {
     color: colors.plum_light,
+    // borderWidth: 2,
   },
   reviewText: {
     color: colors.plum_light,

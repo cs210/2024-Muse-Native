@@ -10,6 +10,7 @@ import { Stack, useLocalSearchParams, Link, router } from "expo-router";
 
 import colors from "@/styles/colors";
 import { useCallback } from "react";
+import { supabase } from "@/utils/supabase";
 // TODO: Background when scrolling
 const review = () => {
   const { id } = useLocalSearchParams();
@@ -22,13 +23,21 @@ const review = () => {
     });
   };
 
-  const handleProfileClicked = useCallback(() => {
+  const handleProfileClicked = useCallback(async () => {
     if (review.user_id) {
-      console.log(review.user_id);
-      router.push({
-        pathname: "/(auth)/(drawer)/user/[id]",
-        params: { id: review.user_id },
-      });
+      const { data: user, error: authError } = await supabase.auth.getUser();
+      if (review.user_id === user.user?.id) {
+        console.log("IM IN PROFILE");
+        router.push({
+          pathname: "/(auth)/(drawer)/(tabs)/profile",
+          params: { id: review.user_id },
+        });
+      } else {
+        router.push({
+          pathname: "/(auth)/(drawer)/user/[id]",
+          params: { id: review.user_id },
+        });
+      }
     }
   }, [review]); // Dependency array includes `review`
 
@@ -60,18 +69,35 @@ const review = () => {
           />
         </TouchableOpacity>
         {/* Visit Info */}
-        <View style={styles.museumInfoTextCont}>
+        <View
+          style={[
+            styles.museumInfoTextCont,
+            { borderWidth: 2, borderColor: "white", width: "65%" },
+          ]}
+        >
           <TouchableOpacity
             style={{ alignSelf: "flex-start" }}
             onPress={handleExhibitionPress}
           >
-            <Text style={styles.exhibitionText}>{review?.exhibitionName}</Text>
+            <Text
+              style={styles.exhibitionText}
+              numberOfLines={3}
+              ellipsizeMode="tail"
+            >
+              {review?.exhibitionName}
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={{ borderWidth: 2, alignSelf: "flex-start" }}
             onPress={museumPressed}
           >
-            <Text style={styles.museumText}>{review.museumName} </Text>
+            <Text
+              style={styles.museumText}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {review.museumName}{" "}
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -86,6 +112,7 @@ const review = () => {
             flexDirection: "row",
             justifyContent: "center",
             alignItems: "center",
+            gap: 8,
           }}
         >
           <Image
@@ -124,7 +151,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   username: {
-    color: colors.text_pink,
+    color: colors.plum_light,
     fontFamily: "Inter_400Regular",
     fontSize: 17,
     fontWeight: "bold",
