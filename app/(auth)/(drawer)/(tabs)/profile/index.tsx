@@ -29,8 +29,6 @@ interface ReviewCardProps {
 interface Profile {
   id: string;
   username: string;
-  follower_ids: string[]; // Array of user IDs who follow this user
-  following_ids: string[]; // Array of user IDs this user follows
   avatar_url: string;
   favorite_exhibitions: string[]; // Array of favorite exhibition IDs
 }
@@ -80,6 +78,8 @@ const ProfilePage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [userId, setUserId] = useState("");
   const [reviewsUpdate, setReviewsUpdate] = useState<boolean>(false);
+  const [followCountUpdate, setFollowCountUpdate] = useState<boolean>(false);
+  const [followedUserIds, setFollowedUserIds] = useState([""]);
 
   const channels = supabase
     .channel("custom-update-channel-5")
@@ -94,6 +94,19 @@ const ProfilePage: React.FC = () => {
       (payload) => {
         console.log("Change received!", payload);
         setReviewsUpdate(!reviewsUpdate);
+      }
+    )
+    .on(
+      "postgres_changes",
+      {
+        event: "*",
+        schema: "public",
+        table: "user_follows_users",
+        filter: "follower_id=eq.".concat(userId),
+      },
+      (payload) => {
+        console.log("Change received!", payload);
+        setFollowCountUpdate(!followCountUpdate);
       }
     )
     .subscribe();
@@ -119,9 +132,7 @@ const ProfilePage: React.FC = () => {
 
       const { data, error } = await supabase
         .from("profiles")
-        .select(
-          "id, username, follower_ids, following_ids, avatar_url, favorite_exhibitions"
-        )
+        .select("id, username, avatar_url, favorite_exhibitions")
         .eq("id", user.user.id)
         .single();
 
@@ -134,9 +145,30 @@ const ProfilePage: React.FC = () => {
         fetchFavoriteExhibitions(data.id);
         setUserId(user.user.id);
       }
+
+      const { data: followedUsers, error: followError } = await supabase
+        .from("user_follows_users")
+        .select("following_id")
+        .eq("follower_id", userId);
+
+      console.log("followedUsers: ", followedUsers);
+
+      if (followError) {
+        console.error("Error fetching followed users:", followError);
+        return [];
+      }
+
+      const followedUserList = followedUsers.map((user) => user.following_id);
+
+      console.log("FollowedUserIDS: ", followedUserIds);
+      if (!followedUserIds) {
+        console.log("No followed users found.");
+      } else {
+        setFollowedUserIds(followedUserList);
+      }
     };
     getUserData();
-  }, [userId]);
+  }, [userId, followCountUpdate]);
 
   const fetchFavoriteExhibitions = async (userId: string) => {
     const { data, error } = await supabase
@@ -215,13 +247,16 @@ const ProfilePage: React.FC = () => {
       pathname: "/(auth)/(drawer)/(tabs)/profile/following",
       // TODO: Fix this red squiggly
       // !
-      params: { following: userProfile.following_ids, userId: userProfile.id },
+      params: { following: followedUserIds, userId: userProfile.id },
     });
   };
 
   return (
     <SafeAreaView style={styles.safeContainer}>
-      <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Profile Container */}
         <View style={styles.profileContainer}>
           <Image
@@ -237,16 +272,11 @@ const ProfilePage: React.FC = () => {
         {/*Followers / Following */}
         <View style={styles.followersContainer}>
           <TouchableOpacity style={styles.follow} onPress={goToFollowing}>
-            <Text style={styles.userNameText}>
-              {userProfile?.following_ids.length}
-            </Text>
+            <Text style={styles.userNameText}>{followedUserIds.length}</Text>
             <Text style={styles.userNameText}> Following </Text>
           </TouchableOpacity>
           <View style={styles.follow}>
-            <Text style={styles.userNameText}>
-              {" "}
-              {userProfile?.follower_ids.length}{" "}
-            </Text>
+            <Text style={styles.userNameText}>1</Text>
             <Text style={styles.userNameText}>Followers</Text>
           </View>
         </View>

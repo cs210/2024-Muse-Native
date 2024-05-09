@@ -25,13 +25,33 @@ interface Profile {
   favorite_exhibitions: string[]; // Array of favorite exhibition IDs
 }
 
+// interface Review {
+//   id: string;
+//   created_at: string;
+//   exhibition_id: string;
+//   text: string;
+//   exhibition: {
+//     title: string;
+//   };
+// }
+
 interface Review {
   id: string;
-  created_at: string;
   exhibition_id: string;
+  user_id: string;
   text: string;
+  created_at: Date;
+  user: {
+    avatar_url: string;
+    username: string;
+  };
   exhibition: {
     title: string;
+    museum_id: string;
+    cover_photo_url: string;
+    museum: {
+      name: string;
+    };
   };
 }
 
@@ -111,7 +131,27 @@ const ProfilePage: React.FC = () => {
       setLoading(true);
       const { data: userReviews, error } = await supabase
         .from("reviews")
-        .select(`*, exhibition:exhibition_id(title)`)
+        .select(
+          `
+      id,
+      exhibition_id,
+      user_id,
+      text,
+      created_at,
+      user: user_id (
+        avatar_url,
+        username
+      ),
+      exhibition: exhibition_id (
+        museum_id,
+        title,
+        cover_photo_url,
+        museum: museum_id (
+          name
+        )
+      )
+    `
+        )
         .eq("user_id", userProfile.id);
 
       if (error) {
@@ -172,17 +212,41 @@ const ProfilePage: React.FC = () => {
         <View style={styles.favoritesContainer}>
           <Text style={styles.userNameText}> Favorites </Text>
           <View style={styles.favoriteScroll}>
-            {favoriteExhibitions.map((exhibition) => (
-              <FavoriteCard key={exhibition.id} exhibitionId={exhibition.id} />
-            ))}
+            {favoriteExhibitions.length === 0 ? (
+              <Text style={{ color: "white", fontSize: 17, marginBottom: 20 }}>
+                Displaying your favorite exhibitions is still under development,
+                sorry for the inconvenience... If you want to check out how it
+                would look, feel free to go to Jake or Pedro's profile!
+              </Text>
+            ) : (
+              favoriteExhibitions.map((exhibition) => (
+                <FavoriteCard
+                  key={exhibition.id}
+                  exhibitionId={exhibition.id}
+                />
+              ))
+            )}
           </View>
         </View>
+        <Text style={styles.userNameText}> Reviews </Text>
         {/* Posts */}
         <View style={styles.reviewsContainer}>
-          {/* <ReviewCard reviewId={1} />
-          <ReviewCard reviewId={2} />
-          <ReviewCard reviewId={3} />
-          <ReviewCard reviewId={4} /> */}
+          {userReviews.toReversed().map((review) => (
+            <ReviewCard
+              key={review.id}
+              reviewId={review.id}
+              pfp={userProfile.avatar_url}
+              username={userProfile.username}
+              text={review.text}
+              exhibitionId={review.exhibition_id}
+              exhibitionName={review.exhibition.title}
+              museumId={review.exhibition.museum_id}
+              coverPhoto={review.exhibition.cover_photo_url}
+              museumName={review.exhibition.museum.name}
+              user_id={userProfile?.id}
+              showImage={true}
+            />
+          ))}
           <Text style={{ color: "white" }}>
             {/* {userReviews &&
               userReviews.length > 0 &&
@@ -210,8 +274,8 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   profileContainer: {
-    borderColor: "white",
-    borderWidth: 2,
+    // borderColor: "white",
+    // borderWidth: 2,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -219,8 +283,8 @@ const styles = StyleSheet.create({
   },
 
   followersContainer: {
-    borderColor: "white",
-    borderWidth: 2,
+    // borderColor: "white",
+    // borderWidth: 2,
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-evenly",
@@ -228,8 +292,8 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   favoritesContainer: {
-    borderColor: "white",
-    borderWidth: 2,
+    // borderColor: "white",
+    // borderWidth: 2,
     display: "flex",
     flexDirection: "column",
     alignItems: "flex-start",
@@ -241,8 +305,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 4,
     alignItems: "center",
-    borderColor: "white",
-    borderWidth: 2,
+    // borderColor: "white",
+    // borderWidth: 2,
   },
   text: {
     color: colors.text_pink,
@@ -265,8 +329,8 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "space-evenly",
     alignItems: "center",
-    borderColor: "white",
-    borderWidth: 2,
+    // borderColor: "white",
+    // borderWidth: 2,
   },
   reviewsContainer: {
     gap: 12,

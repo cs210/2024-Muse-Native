@@ -14,30 +14,25 @@ import {
 const followers = () => {
   const { following, userId } = useLocalSearchParams();
 
-  // const renderRow: ListRenderItem<Profile> = ({ item }) => {
-  //   return (
-  //     <View style={styles.profileContainer}>
-  //       <Image
-  //         source={{ uri: item.avatar_url }}
-  //         style={{ height: 50, width: 50, borderRadius: 25 }}
-  //       />
-  //       <View style={styles.nameUserContainer}>
-  //         <View style={styles.nameContainer}>
-  //           <Text style={styles.nameText}>{item.first_name}</Text>
-  //           <Text style={styles.nameText}>{item.last_name}</Text>
-  //         </View>
-  //         <Text style={styles.usernameText}>{item.username}</Text>
-  //       </View>
-  //       <View style={styles.followButtonContainer}>
-  //         <FollowButton currentUserId={userId} profileUserId={item.id} />
-  //       </View>
-  //     </View>
-  //   );
-  // };
   return (
     <View style={styles.container}>
       {/* <FlatList data={following} renderItem={renderRow} /> */}
-      <Text>{following}</Text>
+      <Text
+        style={{
+          color: "white",
+          fontSize: 30,
+          textAlign: "center",
+          marginBottom: 20,
+        }}
+      >
+        Looks like you got us... This screen is still under construction. Sorry
+        about that.
+      </Text>
+      <Text style={{ color: "white" }}>
+        {" "}
+        It will eventually show who the user follows.
+      </Text>
+      {/* <Text >{following}</Text> */}
     </View>
   );
 };
@@ -48,6 +43,8 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 12,
     backgroundColor: colors.background,
+    justifyContent: "center",
+    alignItems: "center",
   },
   titleText: {
     color: colors.text_pink,
