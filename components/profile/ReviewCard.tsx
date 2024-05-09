@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     width: "100%",
-    height: screenHeight / 5,
+    height: 175,
     paddingHorizontal: 10,
     paddingVertical: 10,
     borderRadius: 10,
