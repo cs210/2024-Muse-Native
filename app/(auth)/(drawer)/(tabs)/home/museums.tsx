@@ -105,7 +105,7 @@ const MuseumsScreen: React.FC = () => {
       <ActivityIndicator
         size="large"
         style={{ flex: 1, backgroundColor: colors.background }}
-        color={colors.text_darker_pink}
+        color={colors.text_pink}
       />
     );
   if (error) return <Text>Error: {error}</Text>;

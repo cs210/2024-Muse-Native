@@ -190,6 +190,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "Inter_400Regular",
     color: colors.text_pink,
+    lineHeight: 25,
   },
   reviewContainer: {
     paddingHorizontal: 10,

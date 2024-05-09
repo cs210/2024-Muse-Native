@@ -10,7 +10,7 @@ const HomePage = () => {
     <Tab.Navigator
       initialRouteName="museums"
       screenOptions={{
-        tabBarActiveTintColor: colors.text_darker_pink,
+        tabBarActiveTintColor: colors.text_pink,
 
         tabBarLabelStyle: {
           fontSize: 18,

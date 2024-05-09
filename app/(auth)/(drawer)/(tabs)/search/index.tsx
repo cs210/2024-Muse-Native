@@ -9,7 +9,7 @@ const Tab = createMaterialTopTabNavigator();
 const SearchPage = () => {
   return (
     <Tab.Navigator
-      initialRouteName="users"
+      initialRouteName="museums"
       screenOptions={{
         tabBarActiveTintColor: colors.text_pink,
         tabBarLabelStyle: {
@@ -25,14 +25,14 @@ const SearchPage = () => {
       }}
     >
       <Tab.Screen
-        name="users"
-        component={UsersScreen}
-        options={{ tabBarLabel: "Users" }}
-      />
-      <Tab.Screen
         name="museums"
         component={MuseumsScreen}
         options={{ tabBarLabel: "Museums" }}
+      />
+      <Tab.Screen
+        name="users"
+        component={UsersScreen}
+        options={{ tabBarLabel: "Users" }}
       />
     </Tab.Navigator>
   );

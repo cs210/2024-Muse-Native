@@ -118,7 +118,7 @@ const museum: React.FC = () => {
               </View>
               <Text
                 style={{
-                  color: colors.text_darker_pink,
+                  color: colors.text_pink,
                   fontSize: 20,
                   fontWeight: "bold",
                 }}
@@ -134,8 +134,9 @@ const museum: React.FC = () => {
           <Text
             style={{
               marginTop: 12,
-              color: colors.text_darker_pink,
+              color: colors.text_pink,
               fontSize: 15,
+              lineHeight: 25,
               paddingHorizontal: 12,
             }}
           >
