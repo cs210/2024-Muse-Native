@@ -42,7 +42,6 @@ const review = () => {
   }, [review]); // Dependency array includes `review`
 
   const handleExhibitionPress = useCallback(() => {
-    console.log("review ID: " + review?.reviewId);
     if (review?.reviewId) {
       router.push({
         pathname: "/(auth)/(drawer)/exhibition/[id]",
@@ -56,7 +55,7 @@ const review = () => {
       {/* Info */}
       <View style={styles.museumInfo}>
         <TouchableOpacity
-          style={{ borderWidth: 2, alignSelf: "flex-start" }}
+          style={{ alignSelf: "flex-start" }}
           onPress={handleExhibitionPress}
         >
           <Image
@@ -69,12 +68,7 @@ const review = () => {
           />
         </TouchableOpacity>
         {/* Visit Info */}
-        <View
-          style={[
-            styles.museumInfoTextCont,
-            { borderWidth: 2, borderColor: "white", width: "65%" },
-          ]}
-        >
+        <View style={[styles.museumInfoTextCont, { width: "65%" }]}>
           <TouchableOpacity
             style={{ alignSelf: "flex-start" }}
             onPress={handleExhibitionPress}
@@ -88,7 +82,7 @@ const review = () => {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={{ borderWidth: 2, alignSelf: "flex-start" }}
+            style={{ alignSelf: "flex-start" }}
             onPress={museumPressed}
           >
             <Text
@@ -107,7 +101,6 @@ const review = () => {
         <TouchableOpacity
           onPress={handleProfileClicked}
           style={{
-            borderWidth: 2,
             alignSelf: "flex-start",
             flexDirection: "row",
             justifyContent: "center",

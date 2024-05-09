@@ -14,7 +14,8 @@ const Layout = () => {
           backgroundColor: colors.background,
         },
         headerTintColor: "#ffeffa",
-        tabBarActiveTintColor: "#ffeffa",
+        tabBarActiveTintColor: colors.text_pink,
+        tabBarInactiveTintColor: colors.plum_light,
         headerTitleStyle: {
           fontSize: 27,
           color: "#ffeffa",

@@ -58,8 +58,8 @@ const setup = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.container}>
-        <Text style={{ fontSize: 20, color: "white" }}>
-          THIS SCREEN WILL ONLY SHOW THE FIRST TIME YOU CREATE AN ACCOUNT{" "}
+        <Text style={{ fontSize: 20, color: "white", marginBottom: 20 }}>
+          Please fill in your name and username to finish creating an account!
         </Text>
         {/* Email field */}
         <TextInput

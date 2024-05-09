@@ -1,7 +1,7 @@
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import colors from "@/styles/colors";
 import { useState, useEffect } from "react";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { supabase } from "@/utils/supabase";
 
 interface FavoriteCardProps {
@@ -12,6 +12,13 @@ const FavoriteCard: React.FC<FavoriteCardProps> = ({ exhibitionId }) => {
   const [favoriteImage, setFavoriteImage] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const goToExhibition = () => {
+    router.push({
+      pathname: "/(auth)/(drawer)/exhibition/[id]",
+      params: { id: exhibitionId },
+    });
+  };
 
   useEffect(() => {
     const fetchCoverPhoto = async () => {
@@ -45,7 +52,7 @@ const FavoriteCard: React.FC<FavoriteCardProps> = ({ exhibitionId }) => {
 
   return (
     <View>
-      <Link href={"/(auth)/(drawer)/setup"}>
+      <TouchableOpacity onPress={() => goToExhibition(exhibitionId)}>
         <Image
           source={{ uri: favoriteImage }}
           style={{
@@ -54,7 +61,7 @@ const FavoriteCard: React.FC<FavoriteCardProps> = ({ exhibitionId }) => {
             borderRadius: 10,
           }}
         />
-      </Link>
+      </TouchableOpacity>
     </View>
   );
 };

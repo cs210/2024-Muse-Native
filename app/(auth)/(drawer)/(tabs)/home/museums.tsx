@@ -78,8 +78,11 @@ const MuseumsScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.scrollContainer}>
-        {exhibitions.map((exhibition) => (
+      <ScrollView
+        style={styles.scrollContainer}
+        showsVerticalScrollIndicator={false}
+      >
+        {exhibitions.toReversed().map((exhibition) => (
           <View key={exhibition.id} style={{ height: 350 }}>
             <MuseumPost
               id={exhibition.id}
