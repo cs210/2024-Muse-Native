@@ -77,13 +77,13 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
 
   return (
     <TouchableOpacity onPress={handlePress} style={styles.container}>
-      <View style={{ borderColor: "white", width: "80%", gap: 8 }}>
+      <View style={{ borderColor: "white", width: "100%", gap: 8 }}>
         <View style={styles.header}>
           <Image
             source={{ uri: pfp }}
             style={{
-              width: 50,
-              height: 50,
+              width: 40,
+              height: 40,
               borderRadius: 25,
             }}
           />
@@ -93,9 +93,10 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
               borderColor: "white",
               width: "100%",
               flex: 1,
+              gap: 2,
             }}
           >
-            <Text style={styles.museumText}>{username.toUpperCase()}</Text>
+            <Text style={styles.usernameText}>{username}</Text>
             <Text
               style={styles.exhibitionText}
               numberOfLines={1}
@@ -105,9 +106,29 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
             </Text>
           </View>
         </View>
-        <Text style={styles.reviewText} numberOfLines={2} ellipsizeMode="tail">
-          {text}
-        </Text>
+        <View style={styles.reviewExhibitionContainer}>
+          <View style={styles.reviewTextContainer}>
+            <Text
+              style={styles.reviewText}
+              numberOfLines={5}
+              ellipsizeMode="tail"
+            >
+              {text}
+            </Text>
+          </View>
+          <View style={styles.exhibitionImageContainer}>
+            {showImage && (
+              <Image
+                source={{ uri: coverPhoto }}
+                style={{
+                  width: 95,
+                  height: 95,
+                  borderRadius: 5,
+                }}
+              />
+            )}
+          </View>
+        </View>
       </View>
       <View
         style={{
@@ -117,18 +138,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
           justifyContent: "center",
           alignItems: "center",
         }}
-      >
-        {showImage && (
-          <Image
-            source={{ uri: coverPhoto }}
-            style={{
-              width: 50,
-              height: 50,
-              borderRadius: 5,
-            }}
-          />
-        )}
-      </View>
+      ></View>
     </TouchableOpacity>
   );
 };
@@ -138,8 +148,9 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     width: "100%",
-    height: screenHeight / 6,
-    padding: 20,
+    height: screenHeight / 5,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
     borderRadius: 10,
     backgroundColor: colors.review_purple,
     gap: 10,
@@ -151,18 +162,34 @@ const styles = StyleSheet.create({
     gap: 8,
     alignItems: "center",
   },
-  museumText: {
-    color: colors.plum_light,
+  usernameText: {
+    color: colors.text_pink,
     fontFamily: "Inter_700Bold",
+    textTransform: "lowercase",
   },
   exhibitionText: {
     color: colors.plum_light,
+    width: 250,
     // borderWidth: 2,
   },
+  reviewTextContainer: {
+    width: "100%",
+    flex: 2,
+    paddingHorizontal: 5,
+    // borderWidth: 1,
+    borderColor: colors.white,
+  },
   reviewText: {
-    color: colors.plum_light,
+    color: colors.text_pink,
     fontFamily: "Inter_400Regular",
-    fontSize: 15,
+    fontSize: 16,
+  },
+  exhibitionImageContainer: {
+    marginRight: 0,
+    marginLeft: "auto",
+  },
+  reviewExhibitionContainer: {
+    flexDirection: "row",
   },
 });
 

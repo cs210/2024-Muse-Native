@@ -118,11 +118,9 @@ const UsersScreen = () => {
       }
     };
     getUserId();
-    console.log("USER ID:", userId);
   }, [userId]);
 
   useEffect(() => {
-    console.log("HELLO?");
     if (userId != "") {
       fetchReviewsFromFollowedUsers(userId)
         .then(setReviews)
@@ -132,7 +130,10 @@ const UsersScreen = () => {
 
   return (
     <View style={styles.outerContainer}>
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={styles.reviewsContainer}>
           {reviews.map((review) => (
             <ReviewCard
@@ -166,8 +167,9 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   reviewsContainer: {
-    gap: 20,
-    padding: 20,
+    marginTop: 4,
+    gap: 12,
+    padding: 12,
   },
 });
 

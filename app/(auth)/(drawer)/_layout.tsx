@@ -33,8 +33,68 @@ const Layout = () => {
           // drawerLabel: "Review",
           headerTintColor: colors.text_pink,
           headerShadowVisible: false,
+          headerBackTitleVisible: false,
           headerStyle: {
             backgroundColor: colors.background,
+          },
+          headerTitleStyle: {
+            fontSize: 18,
+            color: colors.text_pink,
+            fontFamily: "Inter_400Regular",
+          },
+        }}
+      />
+      <Stack.Screen
+        name="exhibition/[id]"
+        options={{
+          title: "Exhibition",
+          // drawerLabel: "Review",
+          headerTintColor: colors.text_pink,
+          headerShadowVisible: false,
+          headerBackTitleVisible: false,
+          headerStyle: {
+            backgroundColor: colors.background,
+          },
+          headerTitleStyle: {
+            fontSize: 18,
+            color: colors.text_pink,
+            fontFamily: "Inter_400Regular",
+          },
+        }}
+      />
+      <Stack.Screen
+        name="museum/[id]"
+        options={{
+          title: "Museum",
+          // drawerLabel: "Review",
+          headerTintColor: colors.text_pink,
+          headerShadowVisible: false,
+          headerBackTitleVisible: false,
+          headerStyle: {
+            backgroundColor: colors.background,
+          },
+          headerTitleStyle: {
+            fontSize: 18,
+            color: colors.text_pink,
+            fontFamily: "Inter_400Regular",
+          },
+        }}
+      />
+       <Stack.Screen
+        name="write-review/WriteReview"
+        options={{
+          title: "Write a Review",
+          // drawerLabel: "Review",
+          headerTintColor: colors.text_pink,
+          headerShadowVisible: false,
+          headerBackTitleVisible: false,
+          headerStyle: {
+            backgroundColor: colors.background,
+          },
+          headerTitleStyle: {
+            fontSize: 18,
+            color: colors.text_pink,
+            fontFamily: "Inter_400Regular",
           },
         }}
       />

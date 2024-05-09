@@ -18,8 +18,28 @@ const FollowMuseumButton: React.FC<FollowMuseumButtonProps> = ({
   user_id,
   museum_id,
 }) => {
-  const [isFollowing, setIsFollowing] = useState<boolean | null>(null);
+  const [isFollowing, setIsFollowing] = useState<boolean>(false);
   const [loading, setLoading] = useState(true);
+
+  const channels = supabase
+    .channel("custom-update-channel-4")
+    .on(
+      "postgres_changes",
+      {
+        event: "*",
+        schema: "public",
+        table: "user_follows_museums",
+        filter: "user_id=eq."
+          .concat(user_id)
+          .concat(", museum_id=eq.")
+          .concat(museum_id),
+      },
+      (payload) => {
+        console.log("Change received!", payload);
+        setIsFollowing(!isFollowing);
+      }
+    )
+    .subscribe();
 
   useEffect(() => {
     checkFollowStatus();
@@ -101,7 +121,7 @@ const styles = StyleSheet.create({
   followingButton: {
     height: 30,
     width: 100,
-    backgroundColor: colors.plum_light,
+    backgroundColor: colors.light_background,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 8,

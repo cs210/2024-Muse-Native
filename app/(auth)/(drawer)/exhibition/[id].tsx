@@ -208,7 +208,10 @@ const exhibition = () => {
 
   return (
     <View style={styles.outerContainer}>
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Profile Container */}
         <View style={styles.container2}>
           <View style={styles.imageContainer}>
@@ -231,7 +234,7 @@ const exhibition = () => {
         </View>
 
         {/* TEXT */}
-        <View style={{ padding: 12, gap: 12 }}>
+        <View style={styles.exhibitionContainer}>
           <Text style={styles.exhibitionTitle}>{exhibition?.title} </Text>
           <Text style={styles.exhibitionDates}>
             {format(exhibition?.start_date, "MMM d, yyyy")} -{" "}
@@ -264,8 +267,8 @@ const exhibition = () => {
               />
             ))
           ) : (
-            <Text style={{ color: "white" }}>
-              No reviews available be the first person to review this
+            <Text style={styles.noReviewsStyle}>
+              No reviews available. Be the first to review this!
             </Text>
           )}
         </View>
@@ -351,8 +354,9 @@ const styles = StyleSheet.create({
     borderWidth: 2,
   },
   reviewsContainer: {
-    gap: 12,
+    gap: 10,
     padding: 12,
+    marginBottom: 60,
   },
   container2: {
     position: "relative",
@@ -412,6 +416,10 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: "white",
   },
+  exhibitionContainer: {
+    paddingHorizontal: 12,
+    gap: 12,
+  },
   exhibitionTitle: {
     fontSize: 24,
     color: colors.text_pink,
@@ -424,6 +432,12 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: colors.text_pink,
     lineHeight: 25,
+  },
+  noReviewsStyle: {
+    textAlign: "center",
+    color: colors.text_pink,
+    fontFamily: "Inter_400Regular",
+    // marginBottom: 75,
   },
 });
 

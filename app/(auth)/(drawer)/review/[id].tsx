@@ -51,86 +51,90 @@ const review = () => {
   }, [review]); // Dependency array includes `review`
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      {/* Info */}
-      <View style={styles.museumInfo}>
-        <TouchableOpacity
-          style={{ alignSelf: "flex-start" }}
-          onPress={handleExhibitionPress}
-        >
-          <Image
-            source={{ uri: review.coverPhoto }}
-            style={{
-              width: 100,
-              height: 100,
-              borderRadius: 10,
-            }}
-          />
-        </TouchableOpacity>
-        {/* Visit Info */}
-        <View style={[styles.museumInfoTextCont, { width: "65%" }]}>
+    <View style={styles.outerContainer}>
+      <ScrollView contentContainerStyle={styles.container}>
+        {/* Info */}
+        <View style={styles.museumInfo}>
           <TouchableOpacity
             style={{ alignSelf: "flex-start" }}
             onPress={handleExhibitionPress}
           >
-            <Text
-              style={styles.exhibitionText}
-              numberOfLines={3}
-              ellipsizeMode="tail"
-            >
-              {review?.exhibitionName}
-            </Text>
+            <Image
+              source={{ uri: review.coverPhoto }}
+              style={{
+                width: 100,
+                height: 100,
+                borderRadius: 10,
+              }}
+            />
           </TouchableOpacity>
-          <TouchableOpacity
-            style={{ alignSelf: "flex-start" }}
-            onPress={museumPressed}
-          >
-            <Text
-              style={styles.museumText}
-              numberOfLines={1}
-              ellipsizeMode="tail"
+          {/* Visit Info */}
+          <View style={[styles.museumInfoTextCont, { width: "65%" }]}>
+            <TouchableOpacity
+              style={{ alignSelf: "flex-start" }}
+              onPress={handleExhibitionPress}
             >
-              {review.museumName}{" "}
-            </Text>
-          </TouchableOpacity>
+              <Text
+                style={styles.exhibitionText}
+                numberOfLines={3}
+                ellipsizeMode="tail"
+              >
+                {review?.exhibitionName}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{ alignSelf: "flex-start" }}
+              onPress={museumPressed}
+            >
+              <Text
+                style={styles.museumText}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                {review.museumName}{" "}
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-      {/* HEADER */}
+        {/* HEADER */}
 
-      <View style={styles.header}>
-        <TouchableOpacity
-          onPress={handleProfileClicked}
-          style={{
-            alignSelf: "flex-start",
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: 8,
-          }}
-        >
-          <Image
-            source={{ uri: review.pfp }}
-            style={{
-              width: 30,
-              height: 30,
-              borderRadius: 15,
-            }}
-          />
+        <View style={styles.reviewContainer}>
+          <View style={styles.header}>
+            <TouchableOpacity
+              onPress={handleProfileClicked}
+              style={{
+                alignSelf: "flex-start",
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: 5,
+              }}
+            >
+              <Image
+                source={{ uri: review.pfp }}
+                style={{
+                  width: 30,
+                  height: 30,
+                  borderRadius: 15,
+                }}
+              />
 
-          <Text style={styles.username}> {review.username} </Text>
-        </TouchableOpacity>
-      </View>
-
-      <Text style={styles.reviewText}>{review.text}</Text>
-
-      <View style={styles.visited}>
-        {/* <Text style={styles.subtext}> Visited </Text> */}
-      </View>
-    </ScrollView>
+              <Text style={styles.username}> {review.username} </Text>
+            </TouchableOpacity>
+          </View>
+          <Text style={styles.reviewText}>{review.text}</Text>
+          <View style={styles.visited}></View>
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  outerContainer: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
   container: {
     flex: 1,
     gap: 8,
@@ -140,11 +144,10 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: "row",
-    marginTop: 30,
     alignItems: "center",
   },
   username: {
-    color: colors.plum_light,
+    color: colors.text_pink,
     fontFamily: "Inter_400Regular",
     fontSize: 17,
     fontWeight: "bold",
@@ -158,6 +161,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     // borderWidth: 2,
     gap: 16,
+    marginBottom: 30,
   },
   exhibitionText: {
     color: colors.plum_light,
@@ -165,7 +169,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   museumText: {
-    color: colors.plum_light,
+    color: colors.plum,
     fontSize: 20,
   },
   visited: {
@@ -182,8 +186,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   reviewText: {
+    marginTop: 10,
     fontSize: 16,
-    color: colors.plum_light,
+    color: colors.text_pink,
+  },
+  reviewContainer: {
+    paddingHorizontal: 10,
   },
 });
 export default review;

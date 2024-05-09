@@ -93,99 +93,94 @@ const museum: React.FC = () => {
 
   if (!museum) return;
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      {/* Profile Container */}
-      <View style={styles.container2}>
-        <View style={styles.imageContainer}>
-          <Image
-            source={{ uri: museum?.coverPhotoUrl }}
-            style={styles.coverImage}
-          />
-          <LinearGradient
-            // Background Linear Gradient
-            colors={["transparent", "rgba(0,0,0,0.75)"]}
-            style={styles.background}
-          />
-        </View>
-        <View style={styles.infoContainer}>
-          <View style={styles.museumInfo}>
-            <View style={styles.logoContainer}>
-              <Image
-                source={{ uri: museum?.profilePhotoUrl }}
-                style={styles.museumLogo}
-              />
-            </View>
-            <Text
-              style={{
-                color: colors.text_darker_pink,
-                fontSize: 20,
-                fontWeight: "bold",
-              }}
-            >
-              {museum?.username}
-            </Text>
-          </View>
-          <FollowMuseumButton user_id={userId} museum_id={museum.id} />
-        </View>
-      </View>
-      {/* TEXT */}
-      <View>
-        <Text
-          style={{
-            marginTop: 12,
-            color: colors.text_darker_pink,
-            fontSize: 15,
-            paddingHorizontal: 12,
-          }}
-        >
-          {museum?.bio}
-        </Text>
-      </View>
-      <View>
-        <Text
-          style={{
-            color: colors.text_pink,
-            fontSize: 20,
-            paddingHorizontal: 12,
-            fontWeight: "bold",
-            marginTop: 16,
-          }}
-        >
-          {" "}
-          What's On{" "}
-        </Text>
-      </View>
-      {exhibitions.map((exhibition) => (
-        <View
-          style={{ width: "100%", padding: 20, gap: 12 }}
-          key={exhibition.id}
-        >
-          <TouchableOpacity
-            onPress={() => handleExhibitionPress(exhibition)}
-            key={exhibition.id}
-          >
+    <View style={styles.outerContainer}>
+      <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+        {/* Profile Container */}
+        <View style={styles.container2}>
+          <View style={styles.imageContainer}>
             <Image
-              source={{ uri: exhibition.cover_photo_url }}
-              style={{ height: 200, width: "100%", borderRadius: 20 }}
+              source={{ uri: museum?.coverPhotoUrl }}
+              style={styles.coverImage}
             />
-          </TouchableOpacity>
+            <LinearGradient
+              // Background Linear Gradient
+              colors={["transparent", "rgba(0,0,0,0.75)"]}
+              style={styles.background}
+            />
+          </View>
+          <View style={styles.infoContainer}>
+            <View style={styles.museumInfo}>
+              <View style={styles.logoContainer}>
+                <Image
+                  source={{ uri: museum?.profilePhotoUrl }}
+                  style={styles.museumLogo}
+                />
+              </View>
+              <Text
+                style={{
+                  color: colors.text_darker_pink,
+                  fontSize: 20,
+                  fontWeight: "bold",
+                }}
+              >
+                {museum?.username}
+              </Text>
+            </View>
+            <FollowMuseumButton user_id={userId} museum_id={museum.id} />
+          </View>
+        </View>
+        {/* TEXT */}
+        <View>
           <Text
             style={{
-              fontWeight: "bold",
-              fontSize: 17,
-              color: colors.plum_light,
+              marginTop: 12,
+              color: colors.text_darker_pink,
+              fontSize: 15,
+              paddingHorizontal: 12,
             }}
           >
-            {" "}
-            {exhibition.title}{" "}
+            {museum?.bio}
           </Text>
         </View>
-      ))}
-    </ScrollView>
+        <View>
+          <Text
+            style={{
+              color: colors.text_pink,
+              fontSize: 20,
+              paddingHorizontal: 12,
+              fontWeight: "bold",
+              marginTop: 16,
+              marginBottom: 5,
+            }}
+          >
+            What's On
+          </Text>
+        </View>
+        {exhibitions.map((exhibition) => (
+          <View style={styles.exhibitionContainer} key={exhibition.id}>
+            <TouchableOpacity
+              onPress={() => handleExhibitionPress(exhibition)}
+              key={exhibition.id}
+            >
+              <Image
+                source={{ uri: exhibition.cover_photo_url }}
+                style={{ height: 200, width: "100%", borderRadius: 20 }}
+              />
+            </TouchableOpacity>
+            <Text style={styles.exhibitionText}>{exhibition.title}</Text>
+          </View>
+        ))}
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  outerContainer: {
+    flex: 1,
+    backgroundColor: colors.background,
+    paddingBottom: 20,
+  },
   background: {
     position: "absolute",
     height: 300,
@@ -298,6 +293,18 @@ const styles = StyleSheet.create({
     height: "100%",
     width: "100%",
     resizeMode: "cover",
+  },
+  exhibitionText: {
+    width: "100%",
+    color: colors.text_pink,
+    fontFamily: "Inter_400Regular",
+    fontSize: 20,
+  },
+  exhibitionContainer: {
+    width: "100%",
+    paddingHorizontal: 12,
+    gap: 12,
+    marginBottom: 20,
   },
 });
 

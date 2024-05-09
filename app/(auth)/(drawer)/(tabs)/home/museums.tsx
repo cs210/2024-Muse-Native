@@ -15,10 +15,44 @@ const MuseumsScreen: React.FC = () => {
   const [exhibitions, setExhibitions] = useState<ExhibitionAndMuseum[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [userId, setUserId] = useState("");
+  const [museumsUpdate, setMuseumsUpdate] = useState<boolean>(false);
+
+  const channels = supabase
+    .channel("custom-update-channel-3")
+    .on(
+      "postgres_changes",
+      {
+        event: "*",
+        schema: "public",
+        table: "user_follows_museums",
+        filter: "user_id=eq.".concat(userId),
+      },
+      (payload) => {
+        console.log("Change received!", payload);
+        setMuseumsUpdate(!museumsUpdate);
+      }
+    )
+    .subscribe();
+
+  useEffect(() => {
+    const getUserId = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (session) {
+        // console.log("User ID:", session.user.id);
+        const userId = session.user.id;
+        setUserId(userId);
+      }
+    };
+    getUserId();
+    console.log("USER ID:", userId);
+  }, [userId]);
 
   useEffect(() => {
     fetchExhibitions();
-  }, []);
+  }, [museumsUpdate]);
 
   const fetchExhibitions = async () => {
     try {
@@ -101,11 +135,11 @@ const MuseumsScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 12,
     backgroundColor: colors.background,
   },
   scrollContainer: {
     flex: 1,
+    marginTop: 4,
     padding: 12,
     backgroundColor: colors.background,
   },

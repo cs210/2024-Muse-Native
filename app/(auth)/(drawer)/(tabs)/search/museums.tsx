@@ -65,36 +65,37 @@ const MuseumsScreen = () => {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      {/* {museums.length > 0 ? (
-        <Text style={styles.titleText}>{museums[0].name}</Text>
-      ) : (
-        <Text style={styles.titleText}>No museums found.</Text>
-      )} */}
-      {museums.map((museum) => (
-        <TouchableOpacity
-          key={museum.id}
-          onPress={() => handleMuseumPressed(museum.id)}
-        >
-          <View style={styles.profileContainer}>
-            <View style={{ flexDirection: "row", gap: 12 }}>
-              <Image
-                source={{ uri: museum.profilePhotoUrl }}
-                style={{ height: 50, width: 50, borderRadius: 25 }}
-              />
-              <View style={styles.nameUserContainer}>
-                <Text style={styles.nameText}>{museum.username}</Text>
+    <View style={styles.outerContainer}>
+      <ScrollView contentContainerStyle={styles.container}>
+        {museums.map((museum) => (
+          <TouchableOpacity
+            key={museum.id}
+            onPress={() => handleMuseumPressed(museum.id)}
+          >
+            <View style={styles.profileContainer}>
+              <View style={{ flexDirection: "row", gap: 12 }}>
+                <Image
+                  source={{ uri: museum.profilePhotoUrl }}
+                  style={{ height: 50, width: 50, borderRadius: 25 }}
+                />
+                <View style={styles.nameUserContainer}>
+                  <Text style={styles.nameText}>{museum.username}</Text>
+                </View>
               </View>
+              <FollowMuseumButton user_id={userId} museum_id={museum.id} />
             </View>
-            <FollowMuseumButton user_id={userId} museum_id={museum.id} />
-          </View>
-        </TouchableOpacity>
-      ))}
-    </ScrollView>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  outerContainer: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
   container: {
     paddingVertical: 10,
     flex: 1,

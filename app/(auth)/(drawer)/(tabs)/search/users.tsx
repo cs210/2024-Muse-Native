@@ -56,8 +56,10 @@ const UsersScreen = () => {
   };
 
   useEffect(() => {
-    loadProfiles();
-  }, []);
+    if (userId != "") {
+      loadProfiles();
+    }
+  }, [userId]);
 
   const loadProfiles = async () => {
     const { data: profiles, error } = await supabase
@@ -85,11 +87,11 @@ const UsersScreen = () => {
           style={{ height: 50, width: 50, borderRadius: 25 }}
         />
         <View style={styles.nameUserContainer}>
+          <Text style={styles.usernameText}>{item.username}</Text>
           <View style={styles.nameContainer}>
             <Text style={styles.nameText}>{item.first_name}</Text>
             <Text style={styles.nameText}>{item.last_name}</Text>
           </View>
-          <Text style={styles.usernameText}>{item.username}</Text>
         </View>
         <View style={isSelf ? styles.noButton : styles.followButtonContainer}>
           <FollowButton currentUserId={userId} profileUserId={item.id} />
@@ -144,12 +146,13 @@ const styles = StyleSheet.create({
   },
   usernameText: {
     color: colors.text_pink,
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Inter_700Bold",
     fontSize: 14,
+    textTransform: "lowercase",
   },
   nameText: {
     color: colors.text_pink,
-    fontFamily: "Inter_700Bold",
+    fontFamily: "Inter_400Regular",
     fontSize: 14,
   },
   followButtonContainer: {

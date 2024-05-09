@@ -20,7 +20,7 @@ const HomePage = () => {
         tabBarStyle: {
           backgroundColor: colors.background,
         },
-        tabBarIndicatorStyle: { backgroundColor: "transparent" },
+        tabBarIndicatorStyle: { backgroundColor: colors.text_pink },
       }}
     >
       <Tab.Screen

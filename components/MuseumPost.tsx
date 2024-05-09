@@ -69,11 +69,9 @@ const MuseumPost: React.FC<MuseumPostProps> = ({
             style={styles.exhibitionImage}
             resizeMode="cover"
             onLoadStart={() => {
-              console.log("loading Started");
               setLoading(true);
             }}
             onLoadEnd={() => {
-              console.log("loading Ended");
               setLoading(false);
             }}
           />
@@ -86,7 +84,9 @@ const MuseumPost: React.FC<MuseumPostProps> = ({
           )}
         </View>
       </TouchableOpacity>
-      <Text style={styles.exhibitionText}>{title}</Text>
+      <View style={styles.exhibitionTextContainer}>
+        <Text style={styles.exhibitionText}>{title}</Text>
+      </View>
     </View>
   );
 };
@@ -97,13 +97,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
     flexDirection: "column", // Aligns children in a column
+    marginBottom: 20,
   },
   museumContainer: {
     backgroundColor: colors.background,
     flexDirection: "row",
     alignItems: "center",
     alignSelf: "flex-start",
-    marginBottom: 27,
+    marginBottom: 10,
     marginLeft: 3,
     width: "auto",
   },
@@ -132,13 +133,15 @@ const styles = StyleSheet.create({
     height: "100%", // Ensures the image's height is the same as the container
     borderRadius: 20,
   },
+  exhibitionTextContainer: {
+    paddingLeft: 5,
+    paddingTop: 10,
+  },
   exhibitionText: {
     width: "100%",
-    height: "20%",
     color: colors.text_pink,
     fontFamily: "Inter_400Regular",
     fontSize: 20,
-    paddingLeft: 5,
   },
   linkStyle: {
     flex: 1,

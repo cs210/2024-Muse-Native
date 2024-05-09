@@ -18,7 +18,7 @@ const Layout = () => {
         tabBarInactiveTintColor: colors.plum_light,
         headerTitleStyle: {
           fontSize: 27,
-          color: "#ffeffa",
+          color: colors.text_pink,
           textAlign: "center",
           fontFamily: "NotoSerif_400Regular",
           marginTop: -5,

@@ -200,7 +200,7 @@ const ProfilePage: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.safeContainer}>
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
         {/* Profile Container */}
         <View style={styles.profileContainer}>
           <Image
