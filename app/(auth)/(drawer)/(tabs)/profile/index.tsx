@@ -149,7 +149,7 @@ const ProfilePage: React.FC = () => {
       const { data: followedUsers, error: followError } = await supabase
         .from("user_follows_users")
         .select("following_id")
-        .eq("follower_id", userId);
+        .eq("follower_id", user.user.id);
 
       console.log("followedUsers: ", followedUsers);
 
@@ -167,7 +167,9 @@ const ProfilePage: React.FC = () => {
         setFollowedUserIds(followedUserList);
       }
     };
-    getUserData();
+
+      getUserData();
+
   }, [userId, followCountUpdate]);
 
   const fetchFavoriteExhibitions = async (userId: string) => {
