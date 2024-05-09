@@ -1,0 +1,6 @@
+module Pods_supaapp {
+  umbrella header "Pods-supaapp-umbrella.h"
+
+  export *
+  module * { export * }
+}

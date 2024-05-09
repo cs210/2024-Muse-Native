@@ -31,11 +31,10 @@ const FollowMuseumButton: React.FC<FollowMuseumButtonProps> = ({
         .from("user_follows_museums")
         .select("*")
         .eq("user_id", user_id)
-        .eq("museum_id", museum_id)
-        .single();
+        .eq("museum_id", museum_id);
 
       if (error) throw error;
-      setIsFollowing(!!data);
+      setIsFollowing(data.length > 0); // Check if the array is not empty
     } catch (error) {
       console.error("Error fetching follow status:", error.message);
     } finally {
@@ -75,17 +74,37 @@ const FollowMuseumButton: React.FC<FollowMuseumButtonProps> = ({
   if (loading) return <ActivityIndicator />;
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity onPress={toggleFollow} style={styles.button}>
-        <Text>{isFollowing ? "Unfollow" : "Follow"}</Text>
+    <View style={isFollowing ? styles.followingButton : styles.followButton}>
+      <TouchableOpacity onPress={toggleFollow}>
+        <Text style={styles.followButtonText}>
+          {isFollowing ? "Following" : "Follow"}
+        </Text>
       </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  followButton: {
+    height: 30,
+    width: 100,
+    backgroundColor: colors.dark_green,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 8,
+  },
+  followButtonText: {
+    color: colors.white,
+    fontFamily: "Inter_700Bold",
+    fontSize: 15,
+  },
+  followingButton: {
+    height: 30,
+    width: 100,
     backgroundColor: colors.plum_light,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 8,
   },
 });
 

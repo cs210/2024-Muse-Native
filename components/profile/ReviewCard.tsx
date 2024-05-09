@@ -35,6 +35,7 @@ interface ReviewCardProps {
   exhibitionId: string;
   coverPhoto: string;
   user_id: string;
+  showImage: boolean;
 }
 
 const screenHeight = Dimensions.get("window").height;
@@ -50,6 +51,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
   exhibitionId,
   coverPhoto,
   user_id,
+  showImage,
 }) => {
   // ! Important Code:
   const handlePress = () => {
@@ -116,14 +118,16 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
           alignItems: "center",
         }}
       >
-        <Image
-          source={{ uri: coverPhoto }}
-          style={{
-            width: 50,
-            height: 50,
-            borderRadius: 5,
-          }}
-        />
+        {showImage && (
+          <Image
+            source={{ uri: coverPhoto }}
+            style={{
+              width: 50,
+              height: 50,
+              borderRadius: 5,
+            }}
+          />
+        )}
       </View>
     </TouchableOpacity>
   );

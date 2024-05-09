@@ -103,7 +103,7 @@ const museum: React.FC = () => {
           />
           <LinearGradient
             // Background Linear Gradient
-            colors={["transparent", "rgba(0,0,0,0.5)"]}
+            colors={["transparent", "rgba(0,0,0,0.75)"]}
             style={styles.background}
           />
         </View>
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     borderColor: "white",
     gap: 100,
-    borderWidth: 2,
+    // borderWidth: 2,
   },
   container: {
     backgroundColor: colors.background,
@@ -169,7 +169,6 @@ const styles = StyleSheet.create({
   },
   museumInfo: {
     flexDirection: "row",
-
     justifyContent: "space-between",
     alignItems: "center",
     alignSelf: "flex-start",
@@ -181,7 +180,7 @@ const styles = StyleSheet.create({
     gap: 4,
     alignItems: "center",
     borderColor: "white",
-    borderWidth: 2,
+    // borderWidth: 2,
   },
   text: {
     color: colors.text_pink,
@@ -205,7 +204,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     alignItems: "center",
     borderColor: "white",
-    borderWidth: 2,
+    // borderWidth: 2,
   },
   reviewsContainer: {
     gap: 12,
@@ -241,10 +240,12 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     width: "100%",
-    borderWidth: 2,
+    // borderWidth: 2,
     display: "flex",
     flexDirection: "row",
     paddingHorizontal: 12,
+    paddingVertical: 4,
+
     justifyContent: "space-between",
     alignItems: "center",
   },
@@ -253,7 +254,7 @@ const styles = StyleSheet.create({
     width: 75,
     overflow: "hidden",
     borderRadius: 75,
-    borderWidth: 2,
+    // borderWidth: 2,
   },
   museumLogo: {
     height: "100%",

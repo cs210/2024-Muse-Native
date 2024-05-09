@@ -53,11 +53,12 @@ const MuseumsScreen: React.FC = () => {
 
       if (exhibitionsError) throw new Error(exhibitionsError.message);
 
-      const processedExhibitions = exhibitions.map((exhibition) => ({
-        ...exhibition,
-        museum: exhibition.museum[0], // Take the first object from the museum array
-      }));
-      setExhibitions(processedExhibitions);
+      // const processedExhibitions = exhibitions.map((exhibition) => ({
+      //   ...exhibition,
+      //   museum: exhibition.museum, // directly use the museum object
+      // }));
+
+      setExhibitions(exhibitions);
       setLoading(false);
     } catch (err: any) {
       setError(err.message);
