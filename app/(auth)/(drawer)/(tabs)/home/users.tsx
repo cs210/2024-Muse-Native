@@ -135,7 +135,7 @@ const UsersScreen = () => {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.reviewsContainer}>
-          {reviews.map((review) => (
+          {reviews.toReversed().map((review) => (
             <ReviewCard
               key={review.id}
               reviewId={review.id}

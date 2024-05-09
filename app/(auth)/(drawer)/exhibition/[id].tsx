@@ -250,7 +250,7 @@ const exhibition = () => {
         {/* Posts */}
         <View style={styles.reviewsContainer}>
           {reviews && reviews.length > 0 ? (
-            reviews.map((review) => (
+            reviews.toReversed().map((review) => (
               <ReviewCard
                 key={review.id}
                 reviewId={review.id}
@@ -354,7 +354,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
   },
   reviewsContainer: {
-    gap: 10,
+    gap: 12,
     padding: 12,
     marginBottom: 60,
   },

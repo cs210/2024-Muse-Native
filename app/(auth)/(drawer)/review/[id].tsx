@@ -188,6 +188,7 @@ const styles = StyleSheet.create({
   reviewText: {
     marginTop: 10,
     fontSize: 16,
+    fontFamily: "Inter_400Regular",
     color: colors.text_pink,
   },
   reviewContainer: {

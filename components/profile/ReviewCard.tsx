@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "100%",
     height: screenHeight / 5,
-    paddingHorizontal: 15,
+    paddingHorizontal: 10,
     paddingVertical: 10,
     borderRadius: 10,
     backgroundColor: colors.review_purple,
@@ -175,7 +175,8 @@ const styles = StyleSheet.create({
   reviewTextContainer: {
     width: "100%",
     flex: 2,
-    paddingHorizontal: 5,
+    paddingLeft: 5,
+    paddingRight: 10,
     // borderWidth: 1,
     borderColor: colors.white,
   },

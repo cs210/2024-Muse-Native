@@ -13,6 +13,7 @@ import ReviewCard from "@/components/profile/ReviewCard";
 import { supabase } from "@/utils/supabase";
 import { useEffect, useState } from "react";
 import { router } from "expo-router";
+import review from "../../review/[id]";
 
 // TODO: Unhardcode
 // TODO: Add Lists Feature Eventually
@@ -77,6 +78,25 @@ const ProfilePage: React.FC = () => {
   >([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [userId, setUserId] = useState("");
+  const [reviewsUpdate, setReviewsUpdate] = useState<boolean>(false);
+
+  const channels = supabase
+    .channel("custom-update-channel-5")
+    .on(
+      "postgres_changes",
+      {
+        event: "*",
+        schema: "public",
+        table: "reviews",
+        filter: "user_id=eq.".concat(userId),
+      },
+      (payload) => {
+        console.log("Change received!", payload);
+        setReviewsUpdate(!reviewsUpdate);
+      }
+    )
+    .subscribe();
 
   // Get the user Data
   useEffect(() => {
@@ -112,10 +132,11 @@ const ProfilePage: React.FC = () => {
       } else {
         setUserProfile(data);
         fetchFavoriteExhibitions(data.id);
+        setUserId(user.user.id);
       }
     };
     getUserData();
-  }, []);
+  }, [userId]);
 
   const fetchFavoriteExhibitions = async (userId: string) => {
     const { data, error } = await supabase
@@ -185,7 +206,7 @@ const ProfilePage: React.FC = () => {
     };
 
     getUserReviews();
-  }, [userProfile]); // This useEffect runs only when userProfile changes.
+  }, [userProfile, reviewsUpdate]); // This useEffect runs only when userProfile changes.
 
   const goToFollowing = () => {
     if (!userProfile) return;
@@ -241,7 +262,7 @@ const ProfilePage: React.FC = () => {
         {/* Posts */}
         <Text style={styles.userNameText}> Reviews </Text>
         <View style={styles.reviewsContainer}>
-          {userReviews.map((review) => (
+          {userReviews.toReversed().map((review) => (
             <ReviewCard
               key={review.id}
               reviewId={review.id}
