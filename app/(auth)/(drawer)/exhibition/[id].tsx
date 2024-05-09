@@ -13,7 +13,7 @@ import ReviewCard from "@/components/profile/ReviewCard";
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/utils/supabase";
 import { Ionicons } from "@expo/vector-icons";
-
+import { format } from "date-fns";
 // Get the full height of the screen
 const screenHeight = Dimensions.get("window").height;
 
@@ -202,6 +202,10 @@ const exhibition = () => {
   if (loading) return <Text>Loading...</Text>;
   if (error) return <Text>Error: {error}</Text>;
 
+  // if (exhibition?.end_date === null) {
+  //   exhibition.end_date = "Ongoing";
+  // }
+
   return (
     <View style={styles.outerContainer}>
       <ScrollView contentContainerStyle={styles.container}>
@@ -230,7 +234,11 @@ const exhibition = () => {
         <View style={{ padding: 12, gap: 12 }}>
           <Text style={styles.exhibitionTitle}>{exhibition?.title} </Text>
           <Text style={styles.exhibitionDates}>
-            {exhibition?.start_date} - {exhibition?.end_date}
+            {format(exhibition?.start_date, "MMM d, yyyy")} -{" "}
+            {/* {format(exhibition?.end_date, "MMM, d yyyy")} */}
+            {exhibition?.end_date === null
+              ? "Ongoing"
+              : format(exhibition?.end_date, "MMM d, yyyy")}
           </Text>
           <Text style={styles.exhibitionDescription}>
             {exhibition?.description}

@@ -19,7 +19,7 @@ interface Review {
     museum_id: string;
     cover_photo_url: string;
     museum: {
-      name: string; // Adding the museum name to the interface
+      name: string;
     };
   };
 }
@@ -147,6 +147,7 @@ const UsersScreen = () => {
               coverPhoto={review.exhibition.cover_photo_url}
               museumName={review.exhibition.museum.name}
               user_id={review.user_id}
+              showImage={true}
             />
           ))}
         </View>

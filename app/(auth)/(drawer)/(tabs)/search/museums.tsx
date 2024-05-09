@@ -4,11 +4,14 @@ import {
   View,
   ActivityIndicator,
   ScrollView,
+  Image,
+  TouchableOpacity,
 } from "react-native";
 import { useEffect, useState } from "react";
 import { supabase } from "@/utils/supabase";
 import colors from "@/styles/colors";
 import FollowMuseumButton from "@/components/FollowMuseumButton";
+import { router } from "expo-router";
 
 interface Museum {
   id: string;
@@ -21,6 +24,13 @@ const MuseumsScreen = () => {
   const [loading, setLoading] = useState(false);
   const [museums, setMuseums] = useState<Museum[]>([]);
   const [userId, setUserId] = useState("");
+
+  const handleMuseumPressed = (museumid: string) => {
+    router.push({
+      pathname: "/(auth)/(drawer)/museum/[id]",
+      params: { id: museumid },
+    });
+  };
 
   useEffect(() => {
     const getMuseums = async () => {
@@ -48,26 +58,39 @@ const MuseumsScreen = () => {
 
   if (loading) {
     return (
-      <ScrollView style={styles.container}>
+      <ScrollView contentContainerStyle={styles.container}>
         <ActivityIndicator size="large" color={colors.text_pink} />
       </ScrollView>
     );
   }
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       {/* {museums.length > 0 ? (
         <Text style={styles.titleText}>{museums[0].name}</Text>
       ) : (
         <Text style={styles.titleText}>No museums found.</Text>
       )} */}
       {museums.map((museum) => (
-        <View key={museum.id}>
-          <Text>{museum.name}</Text>
-          <FollowMuseumButton museum_id={museum.id} user_id={userId} />
-        </View>
+        <TouchableOpacity
+          key={museum.id}
+          onPress={() => handleMuseumPressed(museum.id)}
+        >
+          <View style={styles.profileContainer}>
+            <View style={{ flexDirection: "row", gap: 12 }}>
+              <Image
+                source={{ uri: museum.profilePhotoUrl }}
+                style={{ height: 50, width: 50, borderRadius: 25 }}
+              />
+              <View style={styles.nameUserContainer}>
+                <Text style={styles.nameText}>{museum.username}</Text>
+              </View>
+            </View>
+            <FollowMuseumButton user_id={userId} museum_id={museum.id} />
+          </View>
+        </TouchableOpacity>
       ))}
-    </View>
+    </ScrollView>
   );
 };
 
@@ -88,6 +111,8 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     borderRadius: 10,
     flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     height: 75,
     gap: 11,
     backgroundColor: colors.plum,

@@ -27,20 +27,40 @@ interface ReviewCardProps {
 
 interface Profile {
   id: string;
-  username: string | null;
+  username: string;
   follower_ids: string[]; // Array of user IDs who follow this user
   following_ids: string[]; // Array of user IDs this user follows
   avatar_url: string;
   favorite_exhibitions: string[]; // Array of favorite exhibition IDs
 }
 
+// interface Review {
+//   id: string;
+//   created_at: string;
+//   exhibition_id: string;
+//   text: string;
+//   exhibition: {
+//     title: string;
+//   };
+// }
+
 interface Review {
   id: string;
-  created_at: string;
   exhibition_id: string;
+  user_id: string;
   text: string;
+  created_at: Date;
+  user: {
+    avatar_url: string;
+    username: string;
+  };
   exhibition: {
     title: string;
+    museum_id: string;
+    cover_photo_url: string;
+    museum: {
+      name: string;
+    };
   };
 }
 
@@ -132,7 +152,27 @@ const ProfilePage: React.FC = () => {
       setLoading(true);
       const { data: userReviews, error } = await supabase
         .from("reviews")
-        .select(`*, exhibition:exhibition_id(title)`)
+        .select(
+          `
+      id,
+      exhibition_id,
+      user_id,
+      text,
+      created_at,
+      user: user_id (
+        avatar_url,
+        username
+      ),
+      exhibition: exhibition_id (
+        museum_id,
+        title,
+        cover_photo_url,
+        museum: museum_id (
+          name
+        )
+      )
+    `
+        )
         .eq("user_id", userProfile.id);
 
       if (error) {
@@ -200,10 +240,22 @@ const ProfilePage: React.FC = () => {
         </View>
         {/* Posts */}
         <View style={styles.reviewsContainer}>
-          {/* <ReviewCard reviewId={1} />
-          <ReviewCard reviewId={2} />
-          <ReviewCard reviewId={3} />
-          <ReviewCard reviewId={4} /> */}
+          {userReviews.map((review) => (
+            <ReviewCard
+              key={review.id}
+              reviewId={review.id}
+              pfp={userProfile.avatar_url}
+              username={userProfile.username}
+              text={review.text}
+              exhibitionId={review.exhibition_id}
+              exhibitionName={review.exhibition.title}
+              museumId={review.exhibition.museum_id}
+              coverPhoto={review.exhibition.cover_photo_url}
+              museumName={review.exhibition.museum.name}
+              user_id={userProfile?.id}
+              showImage={true}
+            />
+          ))}
           <Text style={{ color: "white" }}>
             {/* {userReviews &&
               userReviews.length > 0 &&

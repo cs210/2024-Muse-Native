@@ -122,27 +122,64 @@ const museum: React.FC = () => {
                 fontWeight: "bold",
               }}
             >
-              {" "}
-              {museum?.username}{" "}
+              {museum?.username}
             </Text>
           </View>
           <FollowMuseumButton user_id={userId} museum_id={museum.id} />
         </View>
       </View>
       {/* TEXT */}
-      <Text style={{ color: "white" }}> {museum?.bio} </Text>
-      <Text style={{ color: "white" }}> What's On </Text>
-
+      <View>
+        <Text
+          style={{
+            marginTop: 12,
+            color: colors.text_darker_pink,
+            fontSize: 15,
+            paddingHorizontal: 12,
+          }}
+        >
+          {museum?.bio}
+        </Text>
+      </View>
+      <View>
+        <Text
+          style={{
+            color: colors.text_pink,
+            fontSize: 20,
+            paddingHorizontal: 12,
+            fontWeight: "bold",
+            marginTop: 16,
+          }}
+        >
+          {" "}
+          What's On{" "}
+        </Text>
+      </View>
       {exhibitions.map((exhibition) => (
-        <TouchableOpacity
-          onPress={() => handleExhibitionPress(exhibition)}
+        <View
+          style={{ width: "100%", padding: 20, gap: 12 }}
           key={exhibition.id}
         >
-          <Image
-            source={{ uri: exhibition.cover_photo_url }}
-            style={{ height: 100, width: 200 }}
-          />
-        </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => handleExhibitionPress(exhibition)}
+            key={exhibition.id}
+          >
+            <Image
+              source={{ uri: exhibition.cover_photo_url }}
+              style={{ height: 200, width: "100%", borderRadius: 20 }}
+            />
+          </TouchableOpacity>
+          <Text
+            style={{
+              fontWeight: "bold",
+              fontSize: 17,
+              color: colors.plum_light,
+            }}
+          >
+            {" "}
+            {exhibition.title}{" "}
+          </Text>
+        </View>
       ))}
     </ScrollView>
   );
@@ -172,6 +209,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     alignSelf: "flex-start",
+    gap: 12,
   },
   follow: {
     padding: 4,

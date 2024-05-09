@@ -2,7 +2,8 @@ import FollowButton from "@/components/FollowButton";
 import colors from "@/styles/colors";
 import { Profile } from "@/utils/interfaces";
 import { supabase } from "@/utils/supabase";
-import { useEffect, useState } from "react";
+import { router } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
 import {
   FlatList,
   ListRenderItem,
@@ -10,11 +11,30 @@ import {
   Text,
   Image,
   View,
+  TouchableOpacity,
 } from "react-native";
 
 const UsersScreen = () => {
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [userId, setUserId] = useState("");
+
+  const userPressed = useCallback(async (user_id: string) => {
+    if (user_id) {
+      const { data: user, error: authError } = await supabase.auth.getUser();
+      if (user_id === user.user?.id) {
+        console.log("IM IN PROFILE");
+        router.push({
+          pathname: "/(auth)/(drawer)/(tabs)/profile",
+          params: { id: user_id },
+        });
+      } else {
+        router.push({
+          pathname: "/(auth)/(drawer)/user/[id]",
+          params: { id: user_id },
+        });
+      }
+    }
+  }, []); // Dependency array includes `review`
 
   useEffect(() => {
     getCurrentUserId();
@@ -54,9 +74,12 @@ const UsersScreen = () => {
   };
 
   const renderRow: ListRenderItem<Profile> = ({ item }) => {
-    const isSelf = (userId === item.id);
+    const isSelf = userId === item.id;
     return (
-      <View style={styles.profileContainer}>
+      <TouchableOpacity
+        style={styles.profileContainer}
+        onPress={() => userPressed(item.id)}
+      >
         <Image
           source={{ uri: item.avatar_url }}
           style={{ height: 50, width: 50, borderRadius: 25 }}
@@ -71,7 +94,7 @@ const UsersScreen = () => {
         <View style={isSelf ? styles.noButton : styles.followButtonContainer}>
           <FollowButton currentUserId={userId} profileUserId={item.id} />
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
   return (
