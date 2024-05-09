@@ -239,6 +239,7 @@ const ProfilePage: React.FC = () => {
           </View>
         </View>
         {/* Posts */}
+        <Text style={styles.userNameText}> Reviews </Text>
         <View style={styles.reviewsContainer}>
           {userReviews.map((review) => (
             <ReviewCard
@@ -283,8 +284,8 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   profileContainer: {
-    borderColor: "white",
-    borderWidth: 2,
+    // borderColor: "white",
+    // borderWidth: 2,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -292,8 +293,8 @@ const styles = StyleSheet.create({
   },
 
   followersContainer: {
-    borderColor: "white",
-    borderWidth: 2,
+    // borderColor: "white",
+    // borderWidth: 2,
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-evenly",
@@ -301,8 +302,8 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   favoritesContainer: {
-    borderColor: "white",
-    borderWidth: 2,
+    // borderColor: "white",
+    // borderWidth: 2,
     display: "flex",
     flexDirection: "column",
     alignItems: "flex-start",
@@ -314,8 +315,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 4,
     alignItems: "center",
-    borderColor: "white",
-    borderWidth: 2,
+    // borderColor: "white",
+    // borderWidth: 2,
   },
   text: {
     color: colors.text_pink,
@@ -338,8 +339,8 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "space-evenly",
     alignItems: "center",
-    borderColor: "white",
-    borderWidth: 2,
+    // borderColor: "white",
+    // borderWidth: 2,
   },
   reviewsContainer: {
     gap: 12,
