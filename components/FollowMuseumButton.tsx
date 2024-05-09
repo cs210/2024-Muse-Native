@@ -21,46 +21,27 @@ const FollowMuseumButton: React.FC<FollowMuseumButtonProps> = ({
   const [isFollowing, setIsFollowing] = useState<boolean>(false);
   const [loading, setLoading] = useState(true);
 
-  const channels = supabase
-    .channel("custom-update-channel-4")
-    .on(
-      "postgres_changes",
-      {
-        event: "*",
-        schema: "public",
-        table: "user_follows_museums",
-        filter: "user_id=eq."
-          .concat(user_id)
-          .concat(", museum_id=eq.")
-          .concat(museum_id),
-      },
-      (payload) => {
-        console.log("Change received!", payload);
-        setIsFollowing(!isFollowing);
-      }
-    )
-    .subscribe();
-
   useEffect(() => {
+    const checkFollowStatus = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("user_follows_museums")
+          .select("*")
+          .eq("user_id", user_id)
+          .eq("museum_id", museum_id);
+  
+        if (error) throw error;
+        setIsFollowing(data.length > 0); // Check if the array is not empty
+      } catch (error) {
+        console.error("Error fetching follow status:", error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
     checkFollowStatus();
   }, [user_id, museum_id]);
 
-  const checkFollowStatus = async () => {
-    try {
-      const { data, error } = await supabase
-        .from("user_follows_museums")
-        .select("*")
-        .eq("user_id", user_id)
-        .eq("museum_id", museum_id);
-
-      if (error) throw error;
-      setIsFollowing(data.length > 0); // Check if the array is not empty
-    } catch (error) {
-      console.error("Error fetching follow status:", error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  
 
   const toggleFollow = async () => {
     setLoading(true);

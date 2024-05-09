@@ -24,6 +24,25 @@ const MuseumsScreen = () => {
   const [loading, setLoading] = useState(false);
   const [museums, setMuseums] = useState<Museum[]>([]);
   const [userId, setUserId] = useState("");
+  const [museumsUpdate, setMuseumsUpdate] = useState<boolean>(false);
+
+  const channels = supabase
+    .channel("custom-update-channel-6")
+    .on(
+      "postgres_changes",
+      {
+        event: "*",
+        schema: "public",
+        table: "user_follows_museums",
+        filter: "user_id=eq."
+          .concat(userId)
+      },
+      (payload) => {
+        console.log("Change received!", payload);
+        setMuseumsUpdate(!museumsUpdate);
+      }
+    )
+    .subscribe();
 
   const handleMuseumPressed = (museumid: string) => {
     router.push({
@@ -54,7 +73,7 @@ const MuseumsScreen = () => {
       }
     };
     getMuseums();
-  }, []);
+  }, [museumsUpdate]);
 
   if (loading) {
     return (
