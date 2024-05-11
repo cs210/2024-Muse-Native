@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import colors from "@/styles/colors";
 import { router } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 
 // interface Review {
 //   id: string;
@@ -77,36 +78,41 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
 
   return (
     <TouchableOpacity onPress={handlePress} style={styles.container}>
-      <View style={{ borderColor: "white", width: "100%", gap: 8 }}>
-        <View style={styles.header}>
-          <Image
-            source={{ uri: pfp }}
-            style={{
-              width: 40,
-              height: 40,
-              borderRadius: 25,
-            }}
-          />
-          <View
-            style={{
-              // borderWidth: 2,
-              borderColor: "white",
-              width: "100%",
-              flex: 1,
-              gap: 2,
-            }}
-          >
-            <Text style={styles.usernameText}>{username}</Text>
-            <Text
-              style={styles.exhibitionText}
-              numberOfLines={1}
-              ellipsizeMode="tail"
-            >
-              {exhibitionName.toUpperCase()}
-            </Text>
+      <View style={styles.exhibitionTitleContainer}>
+        <Text
+          style={styles.exhibitionText}
+          numberOfLines={1}
+          ellipsizeMode="tail"
+        >
+          {exhibitionName.toUpperCase()}
+        </Text>
+      </View>
+      <View style={styles.container2}>
+        <View style={styles.leftContainer}>
+          <View style={styles.pfpContainer}>
+            <Image
+              source={{ uri: pfp }}
+              style={{
+                width: 35,
+                height: 35,
+                borderRadius: 25,
+              }}
+            />
+          </View>
+          <View style={styles.engageContainer}>
+            <Ionicons name="heart-outline" size={25} color={colors.text_pink} />
+            <Ionicons
+              name="chatbubble-outline"
+              size={25}
+              color={colors.text_pink}
+            />
+            <Ionicons name="share-outline" size={25} color={colors.text_pink} />
           </View>
         </View>
-        <View style={styles.reviewExhibitionContainer}>
+        <View style={styles.container3}>
+          <View style={styles.header}>
+            <Text style={styles.usernameText}>{username}</Text>
+          </View>
           <View style={styles.reviewTextContainer}>
             <Text
               style={styles.reviewText}
@@ -116,51 +122,51 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
               {text}
             </Text>
           </View>
-          <View style={styles.exhibitionImageContainer}>
-            {showImage && (
-              <Image
-                source={{ uri: coverPhoto }}
-                style={{
-                  width: 95,
-                  height: 95,
-                  borderRadius: 5,
-                }}
-              />
-            )}
-          </View>
+        </View>
+        <View style={styles.exhibitionImageContainer}>
+          {showImage && (
+            <Image
+              source={{ uri: coverPhoto }}
+              style={{
+                width: 115,
+                height: "100%",
+                borderBottomRightRadius: 10,
+              }}
+            />
+          )}
         </View>
       </View>
-      <View
-        style={{
-          // borderWidth: 2,
-          borderColor: "white",
-          width: "auto",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      ></View>
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    // borderWidth: 1,
     flex: 1,
-    flexDirection: "row",
+    flexDirection: "column",
     width: "100%",
-    height: 175,
-    paddingHorizontal: 10,
-    paddingVertical: 10,
+    height: 200,
     borderRadius: 10,
     backgroundColor: colors.review_purple,
-    gap: 10,
+  },
+  container2: {
+    // borderWidth: 1,
+    flexDirection: "row",
+    flex: 1,
+    // paddingVertical: 10,
+  },
+  container3: {
+    // borderWidth: 1,
+    flex: 1,
   },
   header: {
     flexDirection: "row",
-    // borderWidth: 2,
+    // borderWidth: 1,
     width: "auto",
     gap: 8,
-    alignItems: "center",
+    marginBottom: 3,
+    paddingTop: 17,
   },
   usernameText: {
     color: colors.text_pink,
@@ -168,28 +174,60 @@ const styles = StyleSheet.create({
     textTransform: "lowercase",
   },
   exhibitionText: {
-    color: colors.plum_light,
-    width: 250,
-    // borderWidth: 2,
+    color: colors.text_darker_pink,
+    textAlign: "center",
   },
   reviewTextContainer: {
-    flex: 2,
+    flex: 1,
     paddingLeft: 5,
     paddingRight: 10,
+    paddingTop: 10,
     // borderWidth: 1,
     borderColor: colors.white,
   },
   reviewText: {
     color: colors.text_pink,
     fontFamily: "Inter_400Regular",
-    fontSize: 16,
+    fontSize: 15,
+    lineHeight: 20,
+    paddingTop: 2,
+    textAlign: "center",
   },
   exhibitionImageContainer: {
+    // borderWidth: 1,
     marginRight: 0,
     marginLeft: "auto",
   },
   reviewExhibitionContainer: {
     flexDirection: "row",
+    // borderWidth: 1,
+  },
+  engageContainer: {
+    // borderWidth: 1,
+    width: "100%",
+    paddingTop: 10,
+    gap: 18,
+    alignItems: "center",
+  },
+  leftContainer: {
+    width: 47,
+    flexDirection: "column",
+    alignItems: "center",
+    // paddingLeft: 10,
+  },
+  pfpContainer: {
+    // borderWidth: 1,
+    width: "100%",
+    paddingTop: 10,
+    alignItems: "center",
+  },
+  exhibitionTitleContainer: {
+    // borderWidth: 1,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    backgroundColor: colors.plum,
   },
 });
 
