@@ -29,7 +29,7 @@ const WriteReviewPage = () => {
     museum: { name: "Museum Name" },
   });
   const [userId, setUserId] = useState("");
-  const { id } = useLocalSearchParams();
+  const { exhibitionId } = useLocalSearchParams();
 
   const getUserId = async () => {
     const {
@@ -54,7 +54,7 @@ const WriteReviewPage = () => {
         museum: museum_id (name)
       `
         ) // Adjust the selection to include fields from the museum table
-        .eq("id", id)
+        .eq("id", exhibitionId)
         .returns<ExhibitionBasic[]>()
         .single();
 
@@ -71,20 +71,19 @@ const WriteReviewPage = () => {
       setExhibition(exhibitionData);
     };
 
-    if (id) {
+    if (exhibitionId) {
       getExhibitionData();
     } else {
       console.log("Invalid or missing exhibition ID");
     }
-  }, [id]);
+  }, [exhibitionId]);
 
   // console.log("Exhibition ID: ", id);
 
   const onSubmitPress = async () => {
-    
     const { data, error } = await supabase
       .from("reviews")
-      .insert([{ user_id: userId, exhibition_id: id, text: review }])
+      .insert([{ user_id: userId, exhibition_id: exhibitionId, text: review }])
       .select();
 
     if (error) {
@@ -103,7 +102,10 @@ const WriteReviewPage = () => {
       extraHeight={screenHeight}
       keyboardShouldPersistTaps={"handled"}
     >
-      <ScrollView style={styles.container} keyboardShouldPersistTaps={"handled"}>
+      <ScrollView
+        style={styles.container}
+        keyboardShouldPersistTaps={"handled"}
+      >
         <View style={styles.imageContainer}>
           <Image
             source={{ uri: exhibition.cover_photo_url }}

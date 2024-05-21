@@ -14,6 +14,7 @@ import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/utils/supabase";
 import { Ionicons } from "@expo/vector-icons";
 import { format } from "date-fns";
+import { Artifact } from "@/utils/interfaces";
 // Get the full height of the screen
 const screenHeight = Dimensions.get("window").height;
 
@@ -55,7 +56,8 @@ interface Review {
 const exhibition = () => {
   const { id } = useLocalSearchParams();
   //  console.log("Exhibition ID:", id);
-  const [exhibition, setExhibition] = useState<Exhibition | null>(null);
+  const [exhibition, setExhibition] = useState<Exhibition>();
+  const [artifacts, setArtifacts] = useState<Artifact[]>();
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -103,6 +105,7 @@ const exhibition = () => {
           `
           ) // Adjust the selection to include fields from the museum table
           .eq("id", id)
+          .returns<Exhibition>()
           .single();
 
         if (error) {
@@ -112,7 +115,6 @@ const exhibition = () => {
         setExhibition(data);
       } catch (error) {
         console.error("Error fetching data:", error);
-        setError(error.message);
       }
       setLoading(false);
     };
@@ -124,6 +126,29 @@ const exhibition = () => {
       setLoading(false);
     }
   }, [id]); // Include id as a dependency to re-run the effect if id changes
+
+  useEffect(() => {
+    const getArtifactsData = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("artifacts")
+          .select("*")
+          .eq("exhibition_id", id)
+          .limit(3);
+
+        if (error) throw error;
+        console.log("Artifacts data: ", data);
+
+        setArtifacts(data);
+      } catch (error) {
+        console.error("Error fetching artifacts:", error);
+      }
+    };
+
+    if (id) {
+      getArtifactsData();
+    }
+  }, [id]);
   // Fetch Reviews
   useEffect(() => {
     const fetchReviews = async () => {
@@ -193,8 +218,17 @@ const exhibition = () => {
       router.push({
         pathname: "/(auth)/(drawer)/write-review/WriteReview",
         params: {
-          id: exhibition.id,
+          exhibitionId: exhibition.id,
         },
+      });
+    }
+  };
+
+  const viewAllArtifactsPressed = () => {
+    if (exhibition) {
+      router.push({
+        pathname: "/(auth)/(drawer)/artifacts/ArtifactsList",
+        params: { exhibitionId: exhibition.id },
       });
     }
   };
@@ -243,6 +277,30 @@ const exhibition = () => {
               ? "Ongoing"
               : format(exhibition?.end_date, "MMM d, yyyy")}
           </Text>
+          <View style={styles.artifactsOuterContainer}>
+            <Text style={styles.artifactsHeader}>Artifacts</Text>
+            <View style={styles.artifactsContainer}>
+              {artifacts?.map((artifact) => (
+                <TouchableOpacity style={styles.artifactItem} key={artifact.id}>
+                  <Image
+                    source={{ uri: artifact.cover_photo_url }}
+                    style={styles.artifactImage}
+                  />
+                  <Text style={styles.artifactTitle}>{artifact.title}</Text>
+                </TouchableOpacity>
+              ))}
+              <TouchableOpacity
+                style={styles.viewAllButton}
+                onPress={viewAllArtifactsPressed}
+              >
+                <Ionicons
+                  name="chevron-forward-circle-outline"
+                  size={32}
+                  color={colors.text_pink}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
           <Text style={styles.exhibitionDescription}>
             {exhibition?.description}
           </Text>
@@ -250,22 +308,24 @@ const exhibition = () => {
         {/* Posts */}
         <View style={styles.reviewsContainer}>
           {reviews && reviews.length > 0 ? (
-            reviews.toReversed().map((review) => (
-              <ReviewCard
-                key={review.id}
-                reviewId={review.id}
-                pfp={review.user.avatar_url}
-                username={review.user.username}
-                text={review.text}
-                museumId={exhibition?.museum_id}
-                exhibitionId={exhibition?.id}
-                museumName={exhibition?.museum.name}
-                exhibitionName={exhibition?.title}
-                coverPhoto={exhibition?.cover_photo_url}
-                user_id={review.user_id}
-                showImage={false}
-              />
-            ))
+            reviews
+              .toReversed()
+              .map((review) => (
+                <ReviewCard
+                  key={review.id}
+                  reviewId={review.id}
+                  pfp={review.user.avatar_url}
+                  username={review.user.username}
+                  text={review.text}
+                  museumId={exhibition?.museum_id}
+                  exhibitionId={exhibition?.id}
+                  museumName={exhibition?.museum.name}
+                  exhibitionName={exhibition?.title}
+                  coverPhoto={exhibition?.cover_photo_url}
+                  user_id={review.user_id}
+                  showImage={false}
+                />
+              ))
           ) : (
             <Text style={styles.noReviewsStyle}>
               No reviews available. Be the first to review this!
@@ -439,6 +499,37 @@ const styles = StyleSheet.create({
     fontFamily: "Inter_400Regular",
     // marginBottom: 75,
   },
+  artifactsHeader: {
+    color: colors.text_pink,
+    fontFamily: "Inter_700Bold",
+    fontSize: 17,
+  },
+  artifactsOuterContainer: {
+    gap: 10,
+  },
+  artifactsContainer: {
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: colors.light_background,
+    backgroundColor: colors.light_background,
+    paddingVertical: 10,
+    display: "flex",
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+  },
+  artifactItem: {},
+  artifactImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 10,
+  },
+  artifactTitle: {
+    fontSize: 15,
+    color: colors.plum_light,
+  },
+  viewAllButton: {},
 });
 
 export default exhibition;

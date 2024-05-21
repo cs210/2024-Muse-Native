@@ -99,6 +99,42 @@ const Layout = () => {
         }}
       />
       <Stack.Screen
+        name="artifacts/ArtifactsList"
+        options={{
+          title: "Artifacts",
+          // drawerLabel: "Review",
+          headerTintColor: colors.text_pink,
+          headerShadowVisible: false,
+          headerBackTitleVisible: false,
+          headerStyle: {
+            backgroundColor: colors.background,
+          },
+          headerTitleStyle: {
+            fontSize: 18,
+            color: colors.text_pink,
+            fontFamily: "Inter_400Regular",
+          },
+        }}
+      />
+      <Stack.Screen
+        name="artifacts/[id]"
+        options={{
+          title: "Artifact",
+          // drawerLabel: "Review",
+          headerTintColor: colors.text_pink,
+          headerShadowVisible: false,
+          headerBackTitleVisible: false,
+          headerStyle: {
+            backgroundColor: colors.background,
+          },
+          headerTitleStyle: {
+            fontSize: 18,
+            color: colors.text_pink,
+            fontFamily: "Inter_400Regular",
+          },
+        }}
+      />
+      <Stack.Screen
         name="setup"
         options={{
           title: "Settings",

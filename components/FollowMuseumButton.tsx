@@ -33,7 +33,7 @@ const FollowMuseumButton: React.FC<FollowMuseumButtonProps> = ({
         if (error) throw error;
         setIsFollowing(data.length > 0); // Check if the array is not empty
       } catch (error) {
-        console.error("Error fetching follow status:", error.message);
+        console.error("Error fetching follow status:", error);
       } finally {
         setLoading(false);
       }

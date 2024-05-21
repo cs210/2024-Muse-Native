@@ -49,3 +49,22 @@ export interface FollowedUser {
 }
 
 export interface FollowedUsers extends Array<FollowedUser>{};
+
+export interface Artifact {
+  id: string;
+  exhibition: {
+    id: string,
+    cover_photo_url: string,
+  };
+  title: string;
+  description: string;
+  cover_photo_url: string;
+}
+
+export interface ArtifactBasic {
+  id: string;
+  exhibition_id: string;
+  title: string;
+  description: string;
+  cover_photo_url: string;
+}
