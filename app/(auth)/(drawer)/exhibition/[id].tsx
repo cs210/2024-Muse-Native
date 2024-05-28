@@ -233,6 +233,15 @@ const exhibition = () => {
     }
   };
 
+  const artifactPressed = (artifact: Artifact) => {
+    if (artifact) {
+      router.push({
+        pathname: "/(auth)/(drawer)/artifacts/[id]",
+        params: { id: artifact.id },
+      });
+    }
+  };
+
   if (loading) return <Text>Loading...</Text>;
   if (error) return <Text>Error: {error}</Text>;
 
@@ -281,12 +290,24 @@ const exhibition = () => {
             <Text style={styles.artifactsHeader}>Artifacts</Text>
             <View style={styles.artifactsContainer}>
               {artifacts?.map((artifact) => (
-                <TouchableOpacity style={styles.artifactItem} key={artifact.id}>
+                <TouchableOpacity
+                  style={styles.artifactItem}
+                  key={artifact.id}
+                  onPress={() => {
+                    artifactPressed(artifact);
+                  }}
+                >
                   <Image
                     source={{ uri: artifact.cover_photo_url }}
                     style={styles.artifactImage}
                   />
-                  <Text style={styles.artifactTitle}>{artifact.title}</Text>
+                  <Text
+                    style={styles.artifactTitle}
+                    numberOfLines={3}
+                    ellipsizeMode="tail"
+                  >
+                    {artifact.title}
+                  </Text>
                 </TouchableOpacity>
               ))}
               <TouchableOpacity
@@ -508,18 +529,20 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   artifactsContainer: {
-    borderWidth: 1,
+    // borderWidth: 1,
     borderRadius: 10,
     borderColor: colors.light_background,
     backgroundColor: colors.light_background,
-    paddingVertical: 10,
+    padding: 10,
     display: "flex",
     flexDirection: "row",
     width: "100%",
     justifyContent: "space-evenly",
-    alignItems: "center",
+    gap: 10,
   },
-  artifactItem: {},
+  artifactItem: {
+    flex: 1,
+  },
   artifactImage: {
     width: 100,
     height: 100,
@@ -528,8 +551,11 @@ const styles = StyleSheet.create({
   artifactTitle: {
     fontSize: 15,
     color: colors.plum_light,
+    width: "100%",
   },
-  viewAllButton: {},
+  viewAllButton: {
+    justifyContent: "center",
+  },
 });
 
 export default exhibition;

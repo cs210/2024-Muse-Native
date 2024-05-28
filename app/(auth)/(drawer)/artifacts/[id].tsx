@@ -9,18 +9,14 @@ import {
 } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import colors from "@/styles/colors";
-import ReviewCard from "@/components/profile/ReviewCard";
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/utils/supabase";
-import { Ionicons } from "@expo/vector-icons";
-import { format } from "date-fns";
 import { Artifact, Exhibition } from "@/utils/interfaces";
 // Get the full height of the screen
 const screenHeight = Dimensions.get("window").height;
 
 const artifact = () => {
   const { id } = useLocalSearchParams();
-  //  console.log("Exhibition ID:", id);
   const [exhibition, setExhibition] = useState<Exhibition>();
   const [artifact, setArtifact] = useState<Artifact>();
   const [loading, setLoading] = useState(true);
