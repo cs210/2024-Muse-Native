@@ -10,6 +10,7 @@ import {
 import colors from "@/styles/colors";
 import { router } from "expo-router";
 import { useState } from "react";
+import CircularProgress from "react-native-circular-progress-indicator";
 
 const windowWidth = Dimensions.get("window").width;
 const iconSize = windowWidth * 0.08; // for example, 8% of the window width
@@ -22,6 +23,7 @@ interface MuseumPostProps {
   title: string;
   coverPhotoUrl: string;
   museumUsername: string;
+  averageRating: number;
 }
 
 const MuseumPost: React.FC<MuseumPostProps> = ({
@@ -30,6 +32,7 @@ const MuseumPost: React.FC<MuseumPostProps> = ({
   coverPhotoUrl,
   museumUsername,
   museumId,
+  averageRating,
   museumPfp,
 }) => {
   const [loading, setLoading] = useState(true);
@@ -58,7 +61,6 @@ const MuseumPost: React.FC<MuseumPostProps> = ({
         <Text style={styles.usernameText}>{museumUsername}</Text>
       </TouchableOpacity>
       {/* Exhibition */}
-
       <TouchableOpacity
         style={styles.exhibition}
         onPress={handleExhibitionPress}
@@ -82,6 +84,24 @@ const MuseumPost: React.FC<MuseumPostProps> = ({
               color={colors.text_pink} // Ensure colors.text_pink is defined in your colors object
             />
           )}
+          <View style={styles.circularProgress}>
+            <CircularProgress
+              value={averageRating}
+              radius={30}
+              maxValue={5}
+              activeStrokeWidth={8}
+              titleColor={"#FFF"}
+              inActiveStrokeWidth={8}
+              clockwise={false}
+              duration={100}
+              activeStrokeColor={colors.plum_light}
+              progressValueColor={colors.white}
+              progressFormatter={(value: number) => {
+                "worklet";
+                return value.toFixed(1); // 2 decimal places
+              }}
+            />
+          </View>
         </View>
       </TouchableOpacity>
       <View style={styles.exhibitionTextContainer}>
@@ -152,7 +172,11 @@ const styles = StyleSheet.create({
     width: "100%", // Adjust width as necessary
     height: "100%", // Adjust height as necessary
   },
-
+  circularProgress: {
+    position: "absolute",
+    bottom: 10, // Adjust as necessary for your design
+    right: 10, // Adjust as necessary for your design
+  },
   activityIndicator: {
     position: "absolute",
     left: 0,

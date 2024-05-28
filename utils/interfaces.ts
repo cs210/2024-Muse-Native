@@ -29,6 +29,7 @@ export interface ExhibitionAndMuseum {
   id: string;
   title: string;
   cover_photo_url: string;
+  average_rating: number;
   museum: {
     id: string;
     username: string;
@@ -48,13 +49,13 @@ export interface FollowedUser {
   following_id: string;
 }
 
-export interface FollowedUsers extends Array<FollowedUser>{};
+export interface FollowedUsers extends Array<FollowedUser> {}
 
 export interface Artifact {
   id: string;
   exhibition: {
-    id: string,
-    cover_photo_url: string,
+    id: string;
+    cover_photo_url: string;
   };
   title: string;
   description: string;
