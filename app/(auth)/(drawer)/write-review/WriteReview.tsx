@@ -3,18 +3,15 @@ import { ExhibitionBasic } from "@/utils/interfaces";
 import { supabase } from "@/utils/supabase";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
+import StarRating from "react-native-star-rating-widget";
 import {
   Dimensions,
   Image,
-  Keyboard,
-  KeyboardAvoidingView,
-  Platform,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -23,6 +20,7 @@ const screenHeight = Dimensions.get("window").height;
 
 const WriteReviewPage = () => {
   const [review, setReview] = useState("");
+  const [rating, setRating] = useState(0);
   const [exhibition, setExhibition] = useState<ExhibitionBasic>({
     title: "Exhibition Title",
     cover_photo_url: "cover_photo_url",
@@ -83,7 +81,14 @@ const WriteReviewPage = () => {
   const onSubmitPress = async () => {
     const { data, error } = await supabase
       .from("reviews")
-      .insert([{ user_id: userId, exhibition_id: exhibitionId, text: review }])
+      .insert([
+        {
+          user_id: userId,
+          exhibition_id: exhibitionId,
+          text: review,
+          rating: rating,
+        },
+      ])
       .select();
 
     if (error) {
@@ -92,6 +97,30 @@ const WriteReviewPage = () => {
     }
 
     console.log("Review Data:", data);
+
+    // Now, update the averate review
+    const { data: exhibition, error: exhibitionError } = await supabase
+      .from("exhibitions")
+      .select("average_rating, review_count")
+      .eq("id", exhibitionId)
+      .single();
+
+    if (exhibitionError) throw exhibitionError;
+
+    const newReviewCount = exhibition.review_count + 1;
+    const newAverageRating =
+      (exhibition.average_rating * exhibition.review_count + rating) /
+      newReviewCount;
+
+    const { error: updateError } = await supabase
+      .from("exhibitions")
+      .update({
+        average_rating: newAverageRating,
+        review_count: newReviewCount,
+      })
+      .eq("id", exhibitionId);
+
+    if (updateError) throw updateError;
 
     router.back();
   };
@@ -116,7 +145,14 @@ const WriteReviewPage = () => {
           <Text style={styles.exhibitionTitle}>{exhibition.title}</Text>
           <Text style={styles.museumName}>{exhibition.museum.name}</Text>
         </View>
-
+        <View style={styles.starsContainer}>
+          <StarRating
+            rating={rating}
+            onChange={setRating}
+            color={colors.plum_light}
+            animationConfig={{ scale: 1.1 }}
+          />
+        </View>
         <TextInput
           style={styles.inputField}
           multiline={true}
@@ -196,6 +232,11 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     borderRadius: 10,
+  },
+  starsContainer: {
+    borderWidth: 2,
+    alignItems: "center",
+    marginBottom: 12,
   },
 });
 

@@ -76,6 +76,7 @@ const MuseumsScreen: React.FC = () => {
           id, 
           title, 
           cover_photo_url, 
+          average_rating,
           museum: museum_id (
             id,
             username,
@@ -123,6 +124,7 @@ const MuseumsScreen: React.FC = () => {
               title={exhibition.title}
               coverPhotoUrl={exhibition.cover_photo_url}
               museumUsername={exhibition?.museum?.username}
+              averageRating={exhibition.average_rating}
               museumId={exhibition?.museum?.id}
               museumPfp={exhibition?.museum?.profilePhotoUrl}
             />
