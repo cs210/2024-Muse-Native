@@ -3,26 +3,7 @@ import { StyleSheet, Text, View, ScrollView } from "react-native";
 import { supabase } from "@/utils/supabase";
 import { useEffect, useState } from "react";
 import ReviewCard from "@/components/profile/ReviewCard";
-
-interface Review {
-  id: string;
-  exhibition_id: string;
-  user_id: string;
-  text: string;
-  created_at: Date;
-  user: {
-    avatar_url: string;
-    username: string;
-  };
-  exhibition: {
-    title: string;
-    museum_id: string;
-    cover_photo_url: string;
-    museum: {
-      name: string;
-    };
-  };
-}
+import { Review } from "@/utils/interfaces";
 
 async function fetchReviewsFromFollowedUsers(userId: string) {
   const { data: followedUsers, error: followError } = await supabase
@@ -54,6 +35,7 @@ async function fetchReviewsFromFollowedUsers(userId: string) {
   user_id,
   text,
   created_at,
+  rating,
   user: user_id (
     avatar_url,
     username
@@ -142,6 +124,7 @@ const UsersScreen = () => {
               pfp={review.user.avatar_url}
               username={review.user.username}
               text={review.text}
+              rating={review.rating}
               exhibitionId={review.exhibition_id}
               exhibitionName={review.exhibition.title}
               museumId={review.exhibition.museum_id}

@@ -98,7 +98,7 @@ const WriteReviewPage = () => {
 
     console.log("Review Data:", data);
 
-    // Now, update the averate review
+    // Now, update the average review
     const { data: exhibition, error: exhibitionError } = await supabase
       .from("exhibitions")
       .select("average_rating, review_count")

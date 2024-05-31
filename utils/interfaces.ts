@@ -69,3 +69,24 @@ export interface ArtifactBasic {
   description: string;
   cover_photo_url: string;
 }
+
+export interface Review {
+  id: string;
+  exhibition_id: string;
+  user_id: string;
+  text: string;
+  rating: number;
+  created_at: Date;
+  user: {
+    avatar_url: string;
+    username: string;
+  };
+  exhibition: {
+    title: string;
+    museum_id: string;
+    cover_photo_url: string;
+    museum: {
+      name: string;
+    };
+  };
+}
