@@ -49,6 +49,7 @@ interface Review {
   user_id: string;
   text: string;
   created_at: Date;
+  rating: number;
   user: {
     avatar_url: string;
     username: string;
@@ -168,8 +169,7 @@ const ProfilePage: React.FC = () => {
       }
     };
 
-      getUserData();
-
+    getUserData();
   }, [userId, followCountUpdate]);
 
   const fetchFavoriteExhibitions = async (userId: string) => {
@@ -214,6 +214,7 @@ const ProfilePage: React.FC = () => {
       user_id,
       text,
       created_at,
+      rating,
       user: user_id (
         avatar_url,
         username
@@ -306,6 +307,7 @@ const ProfilePage: React.FC = () => {
               museumId={review.exhibition.museum_id}
               coverPhoto={review.exhibition.cover_photo_url}
               museumName={review.exhibition.museum.name}
+              rating={review.rating}
               user_id={userProfile?.id}
               showImage={true}
             />

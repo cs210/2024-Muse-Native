@@ -9,6 +9,8 @@ import {
 } from "react-native";
 import colors from "@/styles/colors";
 import { router } from "expo-router";
+import { StarRatingDisplay } from "react-native-star-rating-widget";
+import Stars from "react-native-stars";
 
 // interface Review {
 //   id: string;
@@ -36,6 +38,7 @@ interface ReviewCardProps {
   coverPhoto: string;
   user_id: string;
   showImage: boolean;
+  rating: number;
 }
 
 const screenHeight = Dimensions.get("window").height;
@@ -52,6 +55,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
   coverPhoto,
   user_id,
   showImage,
+  rating,
 }) => {
   // ! Important Code:
   const handlePress = () => {
@@ -70,6 +74,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
           exhibitionId,
           coverPhoto,
           user_id,
+          rating,
         }),
       },
     });
@@ -89,14 +94,14 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
           />
           <View
             style={{
-              // borderWidth: 2,
               borderColor: "white",
               width: "100%",
               flex: 1,
               gap: 2,
+              borderWidth: 2,
             }}
           >
-            <Text style={styles.usernameText}>{username}</Text>
+            <Text style={styles.usernameText}>{username.toUpperCase()}</Text>
             <Text
               style={styles.exhibitionText}
               numberOfLines={1}
@@ -104,7 +109,29 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
             >
               {exhibitionName.toUpperCase()}
             </Text>
+            <View style={{ alignItems: "flex-start", marginTop: 4 }}>
+              <Stars
+                half={true}
+                default={2.5}
+                spacing={5}
+                starSize={16}
+                count={5}
+                fullStar={require("../../images/Star.png")}
+                emptyStar={require("../../images/EmptyStar.png")}
+                halfStar={require("../../images/HalfStar.png")}
+              />
+            </View>
           </View>
+          {showImage && (
+            <Image
+              source={{ uri: coverPhoto }}
+              style={{
+                width: 95,
+                height: 95,
+                borderRadius: 5,
+              }}
+            />
+          )}
         </View>
         <View style={styles.reviewExhibitionContainer}>
           <View style={styles.reviewTextContainer}>
@@ -115,18 +142,6 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
             >
               {text}
             </Text>
-          </View>
-          <View style={styles.exhibitionImageContainer}>
-            {showImage && (
-              <Image
-                source={{ uri: coverPhoto }}
-                style={{
-                  width: 95,
-                  height: 95,
-                  borderRadius: 5,
-                }}
-              />
-            )}
           </View>
         </View>
       </View>
@@ -151,7 +166,7 @@ const styles = StyleSheet.create({
     height: 175,
     paddingHorizontal: 10,
     paddingVertical: 10,
-    borderRadius: 10,
+    borderRadius: 20,
     backgroundColor: colors.review_purple,
     gap: 10,
   },
@@ -165,7 +180,6 @@ const styles = StyleSheet.create({
   usernameText: {
     color: colors.text_pink,
     fontFamily: "Inter_700Bold",
-    textTransform: "lowercase",
   },
   exhibitionText: {
     color: colors.plum_light,

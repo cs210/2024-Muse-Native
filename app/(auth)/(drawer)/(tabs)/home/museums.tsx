@@ -47,7 +47,6 @@ const MuseumsScreen: React.FC = () => {
       }
     };
     getUserId();
-    console.log("USER ID:", userId);
   }, [userId]);
 
   useEffect(() => {

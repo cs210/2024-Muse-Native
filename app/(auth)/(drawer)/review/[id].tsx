@@ -7,14 +7,82 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Stack, useLocalSearchParams, Link, router } from "expo-router";
-
 import colors from "@/styles/colors";
-import { useCallback } from "react";
+import Stars from "react-native-stars";
+import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/utils/supabase";
+import { Ionicons } from "@expo/vector-icons";
+
 // TODO: Background when scrolling
 const review = () => {
   const { id } = useLocalSearchParams();
   const review = JSON.parse(id);
+  console.log(review);
+  const [userId, setUserId] = useState("");
+  const [liked, setLiked] = useState(false);
+
+  useEffect(() => {
+    const getUserId = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (session) {
+        // console.log("User ID:", session.user.id);
+        const userId = session.user.id;
+        setUserId(userId);
+      }
+    };
+    // Check if the review is liked on component mount
+    const checkLikedStatus = async () => {
+      console.log(userId);
+      const { data, error } = await supabase
+        .from("like_reviews")
+        .select("*")
+        .eq("user_id", userId)
+        .eq("review_id", review.reviewId)
+        .single();
+
+      if (data) {
+        setLiked(true);
+      }
+    };
+
+    getUserId();
+    checkLikedStatus();
+  }, [userId, review.reviewId]);
+
+  useEffect(() => {}, [userId, review.reviewId]);
+
+  const toggleLike = async () => {
+    if (liked) {
+      // Unlike the review
+      const { error } = await supabase
+        .from("like_reviews")
+        .delete()
+        .eq("user_id", userId)
+        .eq("review_id", review.reviewId);
+
+      if (!error) {
+        setLiked(false);
+      }
+    } else {
+      console.log("LIKING REVIEW", userId);
+      // Like the review
+
+      const { data, error } = await supabase
+        .from("like_reviews")
+        .insert([{ user_id: userId, review_id: review.reviewId }])
+        .select();
+
+      // const { error } = await supabase
+      //   .from("user_likes_reviews")
+      //   .insert({ user_id: userId, review_id: review.id });
+
+      if (!error) {
+        setLiked(true);
+      }
+    }
+  };
 
   const museumPressed = () => {
     router.push({
@@ -119,12 +187,36 @@ const review = () => {
                 }}
               />
 
-              <Text style={styles.username}> {review.username} </Text>
+              <Text style={styles.username}>
+                {" "}
+                {review.username.toUpperCase()}{" "}
+              </Text>
             </TouchableOpacity>
+            {review.rating && (
+              <Stars
+                half={true}
+                default={review?.rating}
+                spacing={5}
+                starSize={16}
+                count={5}
+                fullStar={require("../../../../images/Star.png")}
+                emptyStar={require("../../../../images/EmptyStar.png")}
+                halfStar={require("../../../../images/HalfStar.png")}
+              />
+            )}
           </View>
           <Text style={styles.reviewText}>{review.text}</Text>
           <View style={styles.visited}></View>
         </View>
+        {/* <Ionicons name="heart" size={32} color={colors.plum} />
+        <Ionicons name="heart-outline" size={32} color={colors.plum} /> */}
+        <TouchableOpacity onPress={toggleLike} style={{ borderWidth: 2 }}>
+          <Ionicons
+            name={liked ? "heart" : "heart-outline"}
+            size={32}
+            color={colors.plum}
+          />
+        </TouchableOpacity>
       </ScrollView>
     </View>
   );
@@ -143,8 +235,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   header: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: "column",
+    alignItems: "flex-start",
   },
   username: {
     color: colors.text_pink,

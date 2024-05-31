@@ -10,6 +10,7 @@ interface Review {
   user_id: string;
   text: string;
   created_at: Date;
+  rating: number;
   user: {
     avatar_url: string;
     username: string;
@@ -54,6 +55,7 @@ async function fetchReviewsFromFollowedUsers(userId: string) {
   user_id,
   text,
   created_at,
+  rating,
   user: user_id (
     avatar_url,
     username
@@ -149,6 +151,7 @@ const UsersScreen = () => {
               museumName={review.exhibition.museum.name}
               user_id={review.user_id}
               showImage={true}
+              rating={review.rating}
             />
           ))}
         </View>

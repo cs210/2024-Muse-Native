@@ -4,6 +4,7 @@ import { supabase } from "@/utils/supabase";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import StarRating from "react-native-star-rating-widget";
+
 import {
   Dimensions,
   Image,
