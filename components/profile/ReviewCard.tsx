@@ -9,19 +9,9 @@ import {
 } from "react-native";
 import colors from "@/styles/colors";
 import { router } from "expo-router";
-
-// interface Review {
-//   id: string;
-//   exhibition_id: string;
-//   user_id: string; // assuming there is a user associated with the review
-//   text: string;
-//   created_at: Date;
-//   //TODO:
-//   // Exhibition name !
-//   // Museum Name !
-//   // User Photo
-//   // museum id !
-// }
+import { StarRatingDisplay } from "react-native-star-rating-widget";
+import { Ionicons } from "@expo/vector-icons";
+import LikeButton from "../LikeReviewButton";
 
 // Define the props for the component using TypeScript
 interface ReviewCardProps {
@@ -30,6 +20,7 @@ interface ReviewCardProps {
   username: string;
   museumId: string;
   text: string;
+  rating: number;
   museumName: string;
   exhibitionName: string;
   exhibitionId: string;
@@ -45,6 +36,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
   pfp,
   username,
   text,
+  rating,
   museumId,
   museumName,
   exhibitionName,
@@ -78,67 +70,75 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
   return (
     <TouchableOpacity onPress={handlePress} style={styles.container}>
       <View style={{ borderColor: "white", width: "100%", gap: 8 }}>
-        <View style={styles.header}>
-          <Image
-            source={{ uri: pfp }}
-            style={{
-              width: 40,
-              height: 40,
-              borderRadius: 25,
-            }}
-          />
-          <View
-            style={{
-              // borderWidth: 2,
-              borderColor: "white",
-              width: "100%",
-              flex: 1,
-              gap: 2,
-            }}
-          >
-            <Text style={styles.usernameText}>{username}</Text>
-            <Text
-              style={styles.exhibitionText}
-              numberOfLines={1}
-              ellipsizeMode="tail"
-            >
-              {exhibitionName.toUpperCase()}
-            </Text>
-          </View>
-        </View>
-        <View style={styles.reviewExhibitionContainer}>
-          <View style={styles.reviewTextContainer}>
-            <Text
-              style={styles.reviewText}
-              numberOfLines={5}
-              ellipsizeMode="tail"
-            >
-              {text}
-            </Text>
+        <View style={styles.headerContainer}>
+          <View style={styles.profileRatingContainer}>
+            <View style={styles.profileContainer}>
+              <Image
+                source={{ uri: pfp }}
+                style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: 25,
+                }}
+              />
+              <View
+                style={{
+                  // borderWidth: 2,
+                  borderColor: "white",
+                  width: "100%",
+                  flex: 1,
+                  gap: 2,
+                }}
+              >
+                <Text style={styles.usernameText}>{username}</Text>
+                <Text
+                  style={styles.exhibitionText}
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                >
+                  {exhibitionName.toUpperCase()}
+                </Text>
+              </View>
+            </View>
+            {rating ? (
+              <View style={styles.starsContainer}>
+                <StarRatingDisplay
+                  rating={rating}
+                  color={colors.text_darker_pink}
+                  starSize={20}
+                  starStyle={styles.starStyle}
+                />
+              </View>
+            ) : null}
           </View>
           <View style={styles.exhibitionImageContainer}>
             {showImage && (
               <Image
                 source={{ uri: coverPhoto }}
                 style={{
-                  width: 95,
-                  height: 95,
+                  width: 60,
+                  height: 60,
                   borderRadius: 5,
                 }}
               />
             )}
           </View>
         </View>
+        <View style={styles.reviewExhibitionContainer}>
+          <View style={styles.reviewTextContainer}>
+            <Text
+              style={styles.reviewText}
+              numberOfLines={7}
+              ellipsizeMode="tail"
+            >
+              {text}
+            </Text>
+          </View>
+        </View>
+        <View style={styles.interactContainer}>
+          <LikeButton initialLiked={false} />
+        </View>
       </View>
-      <View
-        style={{
-          // borderWidth: 2,
-          borderColor: "white",
-          width: "auto",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      ></View>
     </TouchableOpacity>
   );
 };
@@ -148,14 +148,23 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     width: "100%",
-    height: 175,
     paddingHorizontal: 10,
     paddingVertical: 10,
+    paddingBottom: 15,
     borderRadius: 10,
     backgroundColor: colors.review_purple,
     gap: 10,
   },
-  header: {
+  headerContainer: {
+    // borderWidth: 1,
+    flexDirection: "row",
+  },
+  profileRatingContainer: {
+    flex: 1,
+    // borderWidth: 1,
+    gap: 5,
+  },
+  profileContainer: {
     flexDirection: "row",
     // borderWidth: 2,
     width: "auto",
@@ -169,7 +178,7 @@ const styles = StyleSheet.create({
   },
   exhibitionText: {
     color: colors.plum_light,
-    width: 250,
+    width: 220,
     // borderWidth: 2,
   },
   reviewTextContainer: {
@@ -178,6 +187,7 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     // borderWidth: 1,
     borderColor: colors.white,
+    // alignItems: "center",
   },
   reviewText: {
     color: colors.text_pink,
@@ -190,6 +200,17 @@ const styles = StyleSheet.create({
   },
   reviewExhibitionContainer: {
     flexDirection: "row",
+  },
+  starsContainer: {
+    paddingTop: 5,
+    paddingLeft: 2,
+  },
+  starStyle: {
+    marginHorizontal: 1,
+  },
+  interactContainer: {
+    paddingTop: 10,
+    alignItems: "center",
   },
 });
 
