@@ -7,14 +7,58 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Stack, useLocalSearchParams, Link, router } from "expo-router";
-
 import colors from "@/styles/colors";
-import { useCallback } from "react";
+import { StarRatingDisplay } from "react-native-star-rating-widget";
+import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/utils/supabase";
+import { Ionicons } from "@expo/vector-icons";
+import {
+  checkLikedStatus,
+  fetchLikeCount,
+  toggleLike,
+} from "../../../../fetch";
+
 // TODO: Background when scrolling
 const review = () => {
   const { id } = useLocalSearchParams();
   const review = JSON.parse(id);
+  console.log(review);
+  const [userId, setUserId] = useState("");
+  const [liked, setLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
+
+  useEffect(() => {
+    const getUserId = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (session) {
+        const userId = session.user.id;
+        setUserId(userId);
+      }
+    };
+
+    const fetchInitialData = async () => {
+      await getUserId();
+      const likeCount = await fetchLikeCount(review.reviewId);
+      setLikeCount(likeCount);
+
+      if (userId) {
+        const isLiked = await checkLikedStatus(userId, review.reviewId);
+        setLiked(isLiked);
+      }
+    };
+
+    fetchInitialData();
+  }, [userId, review.reviewId]);
+
+  const handleToggleLike = async () => {
+    const success = await toggleLike(liked, userId, review.reviewId);
+    if (success) {
+      setLiked(!liked);
+      setLikeCount(likeCount + (liked ? -1 : 1));
+    }
+  };
 
   const museumPressed = () => {
     router.push({
@@ -119,12 +163,31 @@ const review = () => {
                 }}
               />
 
-              <Text style={styles.username}> {review.username} </Text>
+              <Text style={styles.username}>
+                {" "}
+                {review.username.toUpperCase()}{" "}
+              </Text>
             </TouchableOpacity>
+            {review.rating && (
+              <StarRatingDisplay
+                rating={review.rating}
+                color={colors.text_darker_pink}
+                starSize={20}
+                starStyle={styles.starStyle}
+              />
+            )}
           </View>
           <Text style={styles.reviewText}>{review.text}</Text>
           <View style={styles.visited}></View>
         </View>
+        <TouchableOpacity onPress={handleToggleLike} style={{ borderWidth: 2 }}>
+          <Ionicons
+            name={liked ? "heart" : "heart-outline"}
+            size={32}
+            color={colors.plum}
+          />
+        </TouchableOpacity>
+        <Text style={{ color: colors.text_pink }}> {likeCount} </Text>
       </ScrollView>
     </View>
   );
@@ -143,8 +206,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   header: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: "column",
+    alignItems: "flex-start",
   },
   username: {
     color: colors.text_pink,
@@ -194,6 +257,9 @@ const styles = StyleSheet.create({
   },
   reviewContainer: {
     paddingHorizontal: 10,
+  },
+  starStyle: {
+    marginHorizontal: 1,
   },
 });
 export default review;

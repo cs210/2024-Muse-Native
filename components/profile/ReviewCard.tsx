@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -12,6 +12,8 @@ import { router } from "expo-router";
 import { StarRatingDisplay } from "react-native-star-rating-widget";
 import { Ionicons } from "@expo/vector-icons";
 import LikeButton from "../LikeReviewButton";
+import { checkLikedStatus, toggleLike, fetchLikeCount } from "@/fetch";
+import { supabase } from "@/utils/supabase";
 
 // Define the props for the component using TypeScript
 interface ReviewCardProps {
@@ -62,9 +64,48 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
           exhibitionId,
           coverPhoto,
           user_id,
+          rating,
         }),
       },
     });
+  };
+
+  const [liked, setLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
+
+  const [userId, setUserId] = useState("");
+
+  useEffect(() => {
+    const getUserId = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (session) {
+        const userId = session.user.id;
+        setUserId(userId);
+      }
+    };
+
+    const fetchInitialData = async () => {
+      await getUserId();
+      const likeCount = await fetchLikeCount(reviewId);
+      setLikeCount(likeCount);
+
+      if (userId) {
+        const isLiked = await checkLikedStatus(userId, reviewId);
+        setLiked(isLiked);
+      }
+    };
+
+    fetchInitialData();
+  }, [userId, reviewId]);
+
+  const handleToggleLike = async () => {
+    const success = await toggleLike(liked, userId, reviewId);
+    if (success) {
+      setLiked(!liked);
+      setLikeCount(likeCount + (liked ? -1 : 1));
+    }
   };
 
   return (
@@ -136,7 +177,17 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
           </View>
         </View>
         <View style={styles.interactContainer}>
-          <LikeButton initialLiked={false} />
+          <TouchableOpacity
+            onPress={handleToggleLike}
+            style={{ borderWidth: 2 }}
+          >
+            <Ionicons
+              name={liked ? "heart" : "heart-outline"}
+              size={32}
+              color={colors.plum}
+            />
+          </TouchableOpacity>
+          <Text style={{ color: colors.text_pink }}> {likeCount} </Text>
         </View>
       </View>
     </TouchableOpacity>
