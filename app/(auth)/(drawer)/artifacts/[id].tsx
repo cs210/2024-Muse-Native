@@ -9,17 +9,54 @@ import {
 } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import colors from "@/styles/colors";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/utils/supabase";
-import { Artifact, Exhibition } from "@/utils/interfaces";
+import { Artifact, ArtifactReviewBasic } from "@/utils/interfaces";
+import ArtifactReviewCard from "@/components/profile/ArtifactReviewCard";
+import { Ionicons } from "@expo/vector-icons";
 // Get the full height of the screen
 const screenHeight = Dimensions.get("window").height;
 
 const artifact = () => {
   const { id } = useLocalSearchParams();
-  const [exhibition, setExhibition] = useState<Exhibition>();
   const [artifact, setArtifact] = useState<Artifact>();
   const [loading, setLoading] = useState(true);
+  const [reviews, setReviews] = useState<ArtifactReviewBasic[]>([]);
+  const [reviewsUpdate, setReviewsUpdate] = useState<boolean>(false);
+  const [userId, setUserId] = useState("");
+
+  const channels = supabase
+    .channel("artifact-reviews-update-channel")
+    .on(
+      "postgres_changes",
+      {
+        event: "*",
+        schema: "public",
+        table: "artifact_reviews",
+        filter: "user_id=eq.".concat(userId),
+      },
+      (payload) => {
+        console.log("Change received!", payload);
+        setReviewsUpdate(!reviewsUpdate);
+      }
+    )
+    .subscribe();
+
+  useEffect(() => {
+    const getUserId = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (session) {
+        const userId = session.user.id;
+        setUserId(userId);
+      }
+    };
+
+    if (id) {
+      getUserId();
+    }
+  }, [id]);
 
   // Retrieve Artifact and Exhibition data
   useEffect(() => {
@@ -32,6 +69,8 @@ const artifact = () => {
             id, 
             exhibition: exhibition_id (id, cover_photo_url),
             title,
+            artist,
+            year,
             description,
             cover_photo_url
             `
@@ -54,11 +93,54 @@ const artifact = () => {
     }
   }, [id]);
 
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("artifact_reviews")
+          .select(
+            `
+            id,
+            text,
+            rating,
+            created_at,
+            user: user_id (avatar_url, username),
+            artifact: artifact_id (title, cover_photo_url)
+          `
+          )
+          .eq("artifact_id", id)
+          .returns<ArtifactReviewBasic[]>();
+
+        if (error) throw error;
+
+        setReviews(data);
+        console.log("ARTIFACT REVIEWS: ", data); // Improved logging to display the actual data
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
+      }
+    };
+
+    if (id) {
+      fetchReviews();
+    }
+  }, [reviewsUpdate]); // Include `reviewsUpdate` in the dependency array to re-run this effect when `id` changes
+
   const exhibitionPressed = () => {
     if (artifact) {
       router.push({
         pathname: "/(auth)/(drawer)/exhibition/[id]",
         params: { id: artifact.exhibition.id },
+      });
+    }
+  };
+
+  const writeReviewPressed = () => {
+    if (artifact?.exhibition) {
+      router.push({
+        pathname: "/(auth)/(drawer)/write-review/WriteArtifactReview",
+        params: {
+          artifactId: artifact.id,
+        },
       });
     }
   };
@@ -94,29 +176,29 @@ const artifact = () => {
 
         {/* TEXT */}
         <View style={styles.artifactContainer}>
-          <Text style={styles.artifactTitle}>{artifact?.title} </Text>
+          <Text style={styles.artifactTitle}>{artifact?.title}</Text>
+          <Text style={styles.artifactArtist}>{artifact?.artist}</Text>
+          <Text style={styles.artifactYear}>{artifact?.year}</Text>
           <Text style={styles.artifactDescription}>
             {artifact?.description}
           </Text>
         </View>
-        
-        {/* <View style={styles.reviewsContainer}>
+
+        <View style={styles.reviewsContainer}>
           {reviews && reviews.length > 0 ? (
             reviews
               .toReversed()
               .map((review) => (
-                <ReviewCard
+                <ArtifactReviewCard
                   key={review.id}
                   reviewId={review.id}
                   pfp={review.user.avatar_url}
                   username={review.user.username}
                   text={review.text}
-                  museumId={exhibition?.museum_id}
-                  exhibitionId={exhibition?.id}
-                  museumName={exhibition?.museum.name}
-                  exhibitionName={exhibition?.title}
-                  coverPhoto={exhibition?.cover_photo_url}
-                  user_id={review.user_id}
+                  rating={review.rating}
+                  artifactName={review.artifact.title}
+                  coverPhoto={review.artifact.cover_photo_url}
+                  userId={userId}
                   showImage={false}
                 />
               ))
@@ -125,11 +207,11 @@ const artifact = () => {
               No reviews available. Be the first to review this!
             </Text>
           )}
-        </View> */}
+        </View>
       </ScrollView>
-      {/* <TouchableOpacity style={styles.fab} onPress={writeReviewPressed}>
+      <TouchableOpacity style={styles.fab} onPress={writeReviewPressed}>
         <Ionicons name="create-outline" size={32} color={colors.white} />
-      </TouchableOpacity> */}
+      </TouchableOpacity>
     </View>
   );
 };
@@ -272,11 +354,12 @@ const styles = StyleSheet.create({
   },
   artifactContainer: {
     paddingHorizontal: 12,
-    gap: 12,
   },
   artifactTitle: {
-    fontSize: 24,
-    color: colors.text_pink,
+    fontSize: 20,
+    color: colors.white,
+    marginBottom: 5,
+    fontFamily: "Inter_700Bold",
   },
   artifactDescription: {
     fontSize: 15,
@@ -289,25 +372,16 @@ const styles = StyleSheet.create({
     fontFamily: "Inter_400Regular",
     // marginBottom: 75,
   },
-  artifactsHeader: {
-    color: colors.text_pink,
-    fontFamily: "Inter_700Bold",
+  artifactArtist: {
     fontSize: 17,
+    color: colors.text_pink,
+    marginBottom: 2,
+    fontFamily: "Inter_400Regular",
   },
-  artifactsOuterContainer: {
-    gap: 10,
-  },
-  artifactsContainer: {
-    borderWidth: 1,
-    borderRadius: 10,
-    borderColor: colors.light_background,
-    backgroundColor: colors.light_background,
-    paddingVertical: 10,
-    display: "flex",
-    flexDirection: "row",
-    width: "100%",
-    justifyContent: "space-evenly",
-    alignItems: "center",
+  artifactYear: {
+    fontSize: 17,
+    color: colors.plum_light,
+    marginBottom: 10,
   },
   viewAllButton: {},
 });

@@ -100,6 +100,7 @@ const MuseumPost: React.FC<MuseumPostProps> = ({
                 "worklet";
                 return value.toFixed(1); // 2 decimal places
               }}
+              circleBackgroundColor={"rgba(0,0,0,0.4)"}
             />
           </View>
         </View>
