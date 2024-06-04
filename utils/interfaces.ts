@@ -58,13 +58,18 @@ export interface Artifact {
     cover_photo_url: string;
   };
   title: string;
+  artist: string;
+  year: number;
+  average_rating: number;
   description: string;
   cover_photo_url: string;
 }
 
 export interface ArtifactBasic {
   id: string;
-  exhibition_id: string;
+  exhibition: {
+    title: string;
+  };
   title: string;
   description: string;
   cover_photo_url: string;
@@ -90,3 +95,37 @@ export interface Review {
     };
   };
 }
+
+export interface ArtifactReviewBasic {
+  id: string;
+  text: string;
+  rating: number;
+  created_at: Date;
+  user: { // user_id
+    avatar_url: string;
+    username: string;
+  };
+  artifact: { // artifact_id
+    title: string;
+    cover_photo_url: string;
+  }
+}
+
+export interface ArtifactReview {
+  id: string;
+  text: string;
+  rating: number;
+  created_at: Date;
+  user: { // user_id
+    avatar_url: string;
+    username: string;
+  };
+  artifact: { // artifact_id
+    title: string;
+    exhibition: { // exhibition_id
+      title: string;
+    };
+    cover_photo_url: string;
+  }
+}
+

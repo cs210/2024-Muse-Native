@@ -15,6 +15,7 @@ import { supabase } from "@/utils/supabase";
 import { Ionicons } from "@expo/vector-icons";
 import { format } from "date-fns";
 import { Artifact } from "@/utils/interfaces";
+import ArtifactCarousel from "../artifacts/ArtifactCarousel";
 // Get the full height of the screen
 const screenHeight = Dimensions.get("window").height;
 
@@ -134,7 +135,7 @@ const exhibition = () => {
           .from("artifacts")
           .select("*")
           .eq("exhibition_id", id)
-          .limit(3);
+          .limit(10);
 
         if (error) throw error;
         console.log("Artifacts data: ", data);
@@ -198,8 +199,6 @@ const exhibition = () => {
 
     if (id) {
       getUserId();
-    } else {
-      console.log("Invalid or missing exhibition ID");
     }
   }, [id]);
 
@@ -287,9 +286,19 @@ const exhibition = () => {
               : format(exhibition?.end_date, "MMM d, yyyy")}
           </Text>
           <View style={styles.artifactsOuterContainer}>
-            <Text style={styles.artifactsHeader}>Artifacts</Text>
-            <View style={styles.artifactsContainer}>
-              {artifacts?.map((artifact) => (
+            <View style={styles.artifactsAndViewAllContainer}>
+              <Text style={styles.artifactsHeader}>Artifacts</Text>
+              <View style={{ flex: 1 }} />
+              <TouchableOpacity onPress={viewAllArtifactsPressed}>
+                <Ionicons
+                  name="arrow-forward-circle-outline"
+                  size={32}
+                  color={colors.text_pink}
+                />
+              </TouchableOpacity>
+            </View>
+
+            {/* {artifacts?.map((artifact) => (
                 <TouchableOpacity
                   style={styles.artifactItem}
                   key={artifact.id}
@@ -309,18 +318,8 @@ const exhibition = () => {
                     {artifact.title}
                   </Text>
                 </TouchableOpacity>
-              ))}
-              <TouchableOpacity
-                style={styles.viewAllButton}
-                onPress={viewAllArtifactsPressed}
-              >
-                <Ionicons
-                  name="chevron-forward-circle-outline"
-                  size={32}
-                  color={colors.text_pink}
-                />
-              </TouchableOpacity>
-            </View>
+              ))} */}
+            <ArtifactCarousel artifacts={artifacts ?? []} />
           </View>
           <Text style={styles.exhibitionDescription}>
             {exhibition?.description}
@@ -499,15 +498,16 @@ const styles = StyleSheet.create({
   },
   exhibitionContainer: {
     paddingHorizontal: 12,
-    gap: 12,
   },
   exhibitionTitle: {
     fontSize: 24,
     color: colors.text_pink,
+    marginBottom: 5,
   },
   exhibitionDates: {
     fontSize: 15,
     color: colors.plum_light,
+    marginBottom: 12,
   },
   exhibitionDescription: {
     fontSize: 15,
@@ -526,13 +526,20 @@ const styles = StyleSheet.create({
     fontSize: 17,
   },
   artifactsOuterContainer: {
-    gap: 10,
+    gap: 5,
+    marginBottom: 15,
+  },
+  artifactsAndViewAllContainer: {
+    // borderWidth: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingRight: 10,
   },
   artifactsContainer: {
     // borderWidth: 1,
     borderRadius: 10,
-    borderColor: colors.light_background,
-    backgroundColor: colors.light_background,
+    // borderColor: colors.light_background,
+    // backgroundColor: colors.light_background,
     padding: 10,
     display: "flex",
     flexDirection: "row",
@@ -550,11 +557,8 @@ const styles = StyleSheet.create({
   },
   artifactTitle: {
     fontSize: 15,
-    color: colors.plum_light,
+    color: colors.white,
     width: "100%",
-  },
-  viewAllButton: {
-    justifyContent: "center",
   },
 });
 

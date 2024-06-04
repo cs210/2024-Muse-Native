@@ -1,5 +1,5 @@
 import colors from "@/styles/colors";
-import { ArtifactBasic } from "@/utils/interfaces";
+import { Artifact } from "@/utils/interfaces";
 import { supabase } from "@/utils/supabase";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
@@ -11,13 +11,14 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import CircularProgress from "react-native-circular-progress-indicator";
 
 const ArtifactsListPage = () => {
   const { exhibitionId } = useLocalSearchParams();
-  const [artifacts, setArtifacts] = useState<ArtifactBasic[]>();
+  const [artifacts, setArtifacts] = useState<Artifact[]>();
   const [loading, setLoading] = useState(true);
 
-  const handleArtifactPress = (artifact: ArtifactBasic) => {
+  const handleArtifactPress = (artifact: Artifact) => {
     if (artifact) {
       router.push({
         pathname: "/(auth)/(drawer)/artifacts/[id]",
@@ -52,18 +53,60 @@ const ArtifactsListPage = () => {
     <View style={styles.outerContainer}>
       <ScrollView style={styles.container}>
         {artifacts?.map((artifact) => (
-          <View style={styles.artifactsContainer} key={artifact.id}>
-            <TouchableOpacity
-              onPress={() => handleArtifactPress(artifact)}
-              key={artifact.id}
-            >
-              <Image
-                source={{ uri: artifact.cover_photo_url }}
-                style={{ height: 200, width: "100%", borderRadius: 20 }}
-              />
-            </TouchableOpacity>
-            <Text style={styles.artifactTitle}>{artifact.title}</Text>
-          </View>
+          <TouchableOpacity
+            style={styles.artifactsContainer}
+            onPress={() => handleArtifactPress(artifact)}
+            key={artifact.id}
+          >
+            <Image
+              source={{ uri: artifact.cover_photo_url }}
+              style={{ height: 100, width: 100, borderRadius: 10 }}
+            />
+            <View style={styles.artifactInfo}>
+              <Text
+                style={styles.artifactTitle}
+                numberOfLines={3}
+                ellipsizeMode="tail"
+              >
+                {artifact.title}
+              </Text>
+              <Text
+                style={styles.artifactArtist}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                {artifact.artist}
+              </Text>
+              <Text
+                style={styles.artifactYear}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                {artifact.year}
+              </Text>
+            </View>
+            <View style={styles.circularProgress}>
+              {artifact.average_rating ? (
+                <CircularProgress
+                  value={artifact.average_rating}
+                  radius={25}
+                  maxValue={5}
+                  activeStrokeWidth={8}
+                  titleColor={"#FFF"}
+                  inActiveStrokeWidth={8}
+                  clockwise={false}
+                  duration={100}
+                  activeStrokeColor={colors.plum_light}
+                  progressValueColor={colors.white}
+                  progressFormatter={(value: number) => {
+                    "worklet";
+                    return value.toFixed(1); // 2 decimal places
+                  }}
+                  circleBackgroundColor={"rgba(0,0,0,0.4)"}
+                />
+              ) : null}
+            </View>
+          </TouchableOpacity>
         ))}
       </ScrollView>
     </View>
@@ -77,21 +120,43 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    paddingHorizontal: 20,
+    // borderWidth: 1,
+    paddingHorizontal: 10,
     paddingTop: 20,
     backgroundColor: colors.background,
   },
   artifactsContainer: {
+    // borderWidth: 1,
+    flexDirection: "row",
     width: "100%",
-    paddingHorizontal: 12,
-    gap: 12,
     marginBottom: 20,
   },
+  artifactInfo: {
+    marginLeft: 12,
+    // borderWidth: 1,
+    width: 200,
+    flexDirection: "column",
+    gap: 2,
+  },
   artifactTitle: {
-    width: "100%",
+    color: colors.white,
+    fontFamily: "Inter_700Bold",
+    fontSize: 15,
+  },
+  artifactArtist: {
     color: colors.text_pink,
     fontFamily: "Inter_400Regular",
-    fontSize: 20,
+    fontSize: 14,
+  },
+  artifactYear: {
+    color: colors.plum_light,
+    fontFamily: "Inter_400Regular",
+    fontSize: 14,
+  },
+  circularProgress: {
+    flex: 1,
+    alignItems: "center",
+    // borderWidth: 1,
   },
 });
 
