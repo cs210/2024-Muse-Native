@@ -15,6 +15,7 @@ import { supabase } from "@/utils/supabase";
 import { Ionicons } from "@expo/vector-icons";
 import { format } from "date-fns";
 import { Artifact } from "@/utils/interfaces";
+import ArtifactCarousel from "../artifacts/ArtifactCarousel";
 // Get the full height of the screen
 const screenHeight = Dimensions.get("window").height;
 
@@ -134,7 +135,7 @@ const exhibition = () => {
           .from("artifacts")
           .select("*")
           .eq("exhibition_id", id)
-          .limit(3);
+          .limit(10);
 
         if (error) throw error;
         console.log("Artifacts data: ", data);
@@ -285,9 +286,19 @@ const exhibition = () => {
               : format(exhibition?.end_date, "MMM d, yyyy")}
           </Text>
           <View style={styles.artifactsOuterContainer}>
-            <Text style={styles.artifactsHeader}>Artifacts</Text>
-            <View style={styles.artifactsContainer}>
-              {artifacts?.map((artifact) => (
+            <View style={styles.artifactsAndViewAllContainer}>
+              <Text style={styles.artifactsHeader}>Artifacts</Text>
+              <View style={{ flex: 1 }} />
+              <TouchableOpacity onPress={viewAllArtifactsPressed}>
+                <Ionicons
+                  name="arrow-forward-circle-outline"
+                  size={32}
+                  color={colors.text_pink}
+                />
+              </TouchableOpacity>
+            </View>
+
+            {/* {artifacts?.map((artifact) => (
                 <TouchableOpacity
                   style={styles.artifactItem}
                   key={artifact.id}
@@ -307,18 +318,8 @@ const exhibition = () => {
                     {artifact.title}
                   </Text>
                 </TouchableOpacity>
-              ))}
-              <TouchableOpacity
-                style={styles.viewAllButton}
-                onPress={viewAllArtifactsPressed}
-              >
-                <Ionicons
-                  name="chevron-forward-circle-outline"
-                  size={32}
-                  color={colors.text_pink}
-                />
-              </TouchableOpacity>
-            </View>
+              ))} */}
+            <ArtifactCarousel artifacts={artifacts ?? []} />
           </View>
           <Text style={styles.exhibitionDescription}>
             {exhibition?.description}
@@ -528,6 +529,12 @@ const styles = StyleSheet.create({
     gap: 5,
     marginBottom: 15,
   },
+  artifactsAndViewAllContainer: {
+    // borderWidth: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingRight: 10,
+  },
   artifactsContainer: {
     // borderWidth: 1,
     borderRadius: 10,
@@ -552,9 +559,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: colors.white,
     width: "100%",
-  },
-  viewAllButton: {
-    justifyContent: "center",
   },
 });
 
