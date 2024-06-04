@@ -131,6 +131,7 @@ const UsersScreen = () => {
               coverPhoto={review.exhibition.cover_photo_url}
               museumName={review.exhibition.museum.name}
               user_id={review.user_id}
+              created_at={review.created_at}
               showImage={true}
             />
           ))}

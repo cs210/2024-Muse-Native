@@ -11,9 +11,9 @@ import colors from "@/styles/colors";
 import { router } from "expo-router";
 import { StarRatingDisplay } from "react-native-star-rating-widget";
 import { Ionicons } from "@expo/vector-icons";
-import LikeButton from "../LikeReviewButton";
 import { checkLikedStatus, toggleLike, fetchLikeCount } from "@/fetch";
 import { supabase } from "@/utils/supabase";
+import { formatTimeDifference } from "@/utils/timeUtils";
 
 // Define the props for the component using TypeScript
 interface ReviewCardProps {
@@ -29,6 +29,7 @@ interface ReviewCardProps {
   coverPhoto: string;
   user_id: string;
   showImage: boolean;
+  created_at: Date;
 }
 
 const screenHeight = Dimensions.get("window").height;
@@ -45,6 +46,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
   exhibitionId,
   coverPhoto,
   user_id,
+  created_at,
   showImage,
 }) => {
   // ! Important Code:
@@ -72,7 +74,6 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
 
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
-
   const [userId, setUserId] = useState("");
 
   useEffect(() => {
@@ -177,17 +178,17 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
           </View>
         </View>
         <View style={styles.interactContainer}>
-          <TouchableOpacity
-            onPress={handleToggleLike}
-            style={{ borderWidth: 2 }}
-          >
+          <TouchableOpacity onPress={handleToggleLike}>
             <Ionicons
               name={liked ? "heart" : "heart-outline"}
               size={32}
               color={colors.plum}
             />
           </TouchableOpacity>
-          <Text style={{ color: colors.text_pink }}> {likeCount} </Text>
+          <Text style={{ color: colors.text_pink, alignSelf: "center" }}>
+            {likeCount}
+          </Text>
+          <Text>{formatTimeDifference(created_at)}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -201,7 +202,8 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingHorizontal: 10,
     paddingVertical: 10,
-    paddingBottom: 15,
+    paddingTop: 20,
+    paddingRight: 20,
     borderRadius: 10,
     backgroundColor: colors.review_purple,
     gap: 10,
@@ -260,8 +262,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 1,
   },
   interactContainer: {
-    paddingTop: 10,
-    alignItems: "center",
+    flexDirection: "row",
+    alignItems: "flex-start",
   },
 });
 
