@@ -344,6 +344,7 @@ const exhibition = () => {
                   coverPhoto={exhibition?.cover_photo_url}
                   user_id={review.user_id}
                   showImage={false}
+                  created_at={review.created_at}
                 />
               ))
           ) : (

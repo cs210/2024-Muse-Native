@@ -5,11 +5,13 @@ import {
   ScrollView,
   ActivityIndicator,
   StyleSheet,
+  TouchableOpacity,
 } from "react-native";
 import { supabase } from "@/utils/supabase";
 import MuseumPost from "@/components/MuseumPost";
 import colors from "@/styles/colors";
 import { ExhibitionAndMuseum } from "@/utils/interfaces";
+import { useNavigation } from "expo-router";
 
 const MuseumsScreen: React.FC = () => {
   const [exhibitions, setExhibitions] = useState<ExhibitionAndMuseum[]>([]);
@@ -18,6 +20,11 @@ const MuseumsScreen: React.FC = () => {
   const [userId, setUserId] = useState("");
   const [museumsUpdate, setMuseumsUpdate] = useState<boolean>(false);
 
+  const navigator = useNavigation();
+
+  const goToSearch = () => {
+    navigator.navigate("search");
+  };
   const channels = supabase
     .channel("custom-update-channel-3")
     .on(
@@ -117,6 +124,41 @@ const MuseumsScreen: React.FC = () => {
         style={styles.scrollContainer}
         showsVerticalScrollIndicator={false}
       >
+        {exhibitions.length === 0 && (
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              flex: 1,
+              marginTop: 100,
+              gap: 10,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 24,
+                color: colors.text_pink,
+                textAlign: "center",
+              }}
+            >
+              You currently don't follow any museums! Check back here once you
+              start following some!
+            </Text>
+            <TouchableOpacity
+              onPress={goToSearch}
+              style={{
+                borderRadius: 10,
+                backgroundColor: colors.plum_light,
+                padding: 10,
+                marginTop: 20,
+              }}
+            >
+              <Text style={{ fontWeight: "bold", color: colors.text_pink }}>
+                Find Museums
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
         {exhibitions.toReversed().map((exhibition) => (
           <View key={exhibition.id} style={{ height: 350 }}>
             <MuseumPost

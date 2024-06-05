@@ -1,9 +1,16 @@
 import colors from "@/styles/colors";
-import { StyleSheet, Text, View, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 import { supabase } from "@/utils/supabase";
 import { useEffect, useState } from "react";
 import ReviewCard from "@/components/profile/ReviewCard";
 import { Review } from "@/utils/interfaces";
+import { useNavigation } from "expo-router";
 
 async function fetchReviewsFromFollowedUsers(userId: string) {
   const { data: followedUsers, error: followError } = await supabase
@@ -11,7 +18,7 @@ async function fetchReviewsFromFollowedUsers(userId: string) {
     .select("following_id")
     .eq("follower_id", userId);
 
-  console.log("followedUsers: ", followedUsers);
+  // console.log("followedUsers: ", followedUsers);
 
   if (followError) {
     console.error("Error fetching followed users:", followError);
@@ -70,6 +77,11 @@ const UsersScreen = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [userId, setUserId] = useState("");
   const [reviewsUpdate, setReviewsUpdate] = useState<boolean>(false);
+  const navigator = useNavigation();
+
+  const goToSearch = () => {
+    navigator.navigate("search");
+  };
 
   const channels = supabase
     .channel("custom-update-channel-2")
@@ -116,6 +128,42 @@ const UsersScreen = () => {
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
       >
+        {reviews.length === 0 && (
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              flex: 1,
+              marginTop: 100,
+              gap: 10,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 24,
+                color: colors.text_pink,
+                textAlign: "center",
+              }}
+            >
+              You currently don't follow any users! Come back once you start
+              following some!
+            </Text>
+            <TouchableOpacity
+              onPress={goToSearch}
+              style={{
+                borderRadius: 10,
+                backgroundColor: colors.plum_light,
+                padding: 10,
+                marginTop: 20,
+              }}
+            >
+              <Text style={{ fontWeight: "bold", color: colors.text_pink }}>
+                Find Users
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
         <View style={styles.reviewsContainer}>
           {reviews.toReversed().map((review) => (
             <ReviewCard
