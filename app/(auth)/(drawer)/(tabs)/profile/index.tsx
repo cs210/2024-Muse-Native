@@ -168,8 +168,7 @@ const ProfilePage: React.FC = () => {
       }
     };
 
-      getUserData();
-
+    getUserData();
   }, [userId, followCountUpdate]);
 
   const fetchFavoriteExhibitions = async (userId: string) => {
@@ -308,6 +307,7 @@ const ProfilePage: React.FC = () => {
               museumName={review.exhibition.museum.name}
               user_id={userProfile?.id}
               showImage={true}
+              created_at={review.created_at}
             />
           ))}
           <Text style={{ color: "white" }}>

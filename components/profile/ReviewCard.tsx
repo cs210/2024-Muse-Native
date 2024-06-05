@@ -177,18 +177,22 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
             </Text>
           </View>
         </View>
-        <View style={styles.interactContainer}>
-          <TouchableOpacity onPress={handleToggleLike}>
-            <Ionicons
-              name={liked ? "heart" : "heart-outline"}
-              size={32}
-              color={colors.plum}
-            />
-          </TouchableOpacity>
+        <View style={styles.bottomContainer}>
+          <View style={styles.interactContainer}>
+            <TouchableOpacity onPress={handleToggleLike}>
+              <Ionicons
+                name={liked ? "heart" : "heart-outline"}
+                size={32}
+                color={colors.plum}
+              />
+            </TouchableOpacity>
+            <Text style={{ color: colors.text_pink, alignSelf: "center" }}>
+              {likeCount}
+            </Text>
+          </View>
           <Text style={{ color: colors.text_pink, alignSelf: "center" }}>
-            {likeCount}
+            {formatTimeDifference(created_at)}
           </Text>
-          <Text>{formatTimeDifference(created_at)}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -261,9 +265,15 @@ const styles = StyleSheet.create({
   starStyle: {
     marginHorizontal: 1,
   },
+  bottomContainer: {
+    justifyContent: "space-between",
+    flexDirection: "row",
+    alignItems: "flex-start",
+  },
   interactContainer: {
     flexDirection: "row",
     alignItems: "flex-start",
+    gap: 4,
   },
 });
 
