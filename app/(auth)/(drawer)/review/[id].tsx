@@ -16,7 +16,7 @@ import {
   checkLikedStatus,
   fetchLikeCount,
   toggleLike,
-} from "../../../../fetch";
+} from "../../../../fetch/fetch";
 
 // TODO: Background when scrolling
 const review = () => {
@@ -180,14 +180,19 @@ const review = () => {
           <Text style={styles.reviewText}>{review.text}</Text>
           <View style={styles.visited}></View>
         </View>
-        <TouchableOpacity onPress={handleToggleLike} style={{ borderWidth: 2 }}>
-          <Ionicons
-            name={liked ? "heart" : "heart-outline"}
-            size={32}
-            color={colors.plum}
-          />
-        </TouchableOpacity>
-        <Text style={{ color: colors.text_pink }}> {likeCount} </Text>
+        <View>
+          <TouchableOpacity
+            onPress={handleToggleLike}
+            style={{ borderWidth: 2 }}
+          >
+            <Ionicons
+              name={liked ? "heart" : "heart-outline"}
+              size={32}
+              color={colors.plum}
+            />
+          </TouchableOpacity>
+          <Text style={{ color: colors.text_pink }}> {likeCount} </Text>
+        </View>
       </ScrollView>
     </View>
   );

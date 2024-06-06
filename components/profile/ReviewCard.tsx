@@ -11,7 +11,7 @@ import colors from "@/styles/colors";
 import { router } from "expo-router";
 import { StarRatingDisplay } from "react-native-star-rating-widget";
 import { Ionicons } from "@expo/vector-icons";
-import { checkLikedStatus, toggleLike, fetchLikeCount } from "@/fetch";
+import { checkLikedStatus, toggleLike, fetchLikeCount } from "@/fetch/fetch";
 import { supabase } from "@/utils/supabase";
 import { formatTimeDifference } from "@/utils/timeUtils";
 

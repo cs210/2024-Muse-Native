@@ -1,4 +1,5 @@
 import { Stack } from "expo-router";
+import colors from "@/styles/colors";
 
 const StackLayout = () => {
   return (
@@ -14,9 +15,41 @@ const StackLayout = () => {
       <Stack.Screen
         name="following"
         options={{
+          title: "Following",
           headerShown: true,
+          headerTintColor: colors.text_pink,
+          headerShadowVisible: false,
+          headerBackTitleVisible: false,
+          headerStyle: {
+            backgroundColor: colors.background,
+          },
+          headerTitleStyle: {
+            fontSize: 18,
+            color: colors.text_pink,
+            fontFamily: "Inter_400Regular",
+          },
         }}
       />
+
+      <Stack.Screen
+        name="followers"
+        options={{
+          title: "Followers",
+          headerShown: true,
+          headerTintColor: colors.text_pink,
+          headerShadowVisible: false,
+          headerBackTitleVisible: false,
+          headerStyle: {
+            backgroundColor: colors.background,
+          },
+          headerTitleStyle: {
+            fontSize: 18,
+            color: colors.text_pink,
+            fontFamily: "Inter_400Regular",
+          },
+        }}
+      />
+
       <Stack.Screen
         name="settings"
         options={{

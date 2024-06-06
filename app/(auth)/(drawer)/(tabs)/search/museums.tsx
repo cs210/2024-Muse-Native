@@ -34,8 +34,7 @@ const MuseumsScreen = () => {
         event: "*",
         schema: "public",
         table: "user_follows_museums",
-        filter: "user_id=eq."
-          .concat(userId)
+        filter: "user_id=eq.".concat(userId),
       },
       (payload) => {
         console.log("Change received!", payload);

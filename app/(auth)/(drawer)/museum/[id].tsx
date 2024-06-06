@@ -94,7 +94,10 @@ const museum: React.FC = () => {
   if (!museum) return;
   return (
     <View style={styles.outerContainer}>
-      <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Profile Container */}
         <View style={styles.container2}>
           <View style={styles.imageContainer}>

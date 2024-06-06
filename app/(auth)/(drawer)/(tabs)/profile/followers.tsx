@@ -7,13 +7,13 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
-import { fetchFollowingUsers } from "@/fetch/followFetch";
+import { fetchFollowerUsers } from "@/fetch/followFetch";
 import { useLocalSearchParams } from "expo-router";
 import colors from "@/styles/colors";
 import FollowButton from "@/components/FollowButton";
 
-interface FollowingUser {
-  following_id: string;
+interface FollowerUser {
+  follower_id: string;
   profiles: {
     username: string;
     avatar_url: string;
@@ -24,15 +24,15 @@ interface FollowingListProps {
   userId: string;
 }
 
-const FollowingList: React.FC<FollowingListProps> = () => {
-  const [followingUsers, setFollowingUsers] = useState<FollowingUser[]>([]);
+const followers: React.FC<FollowingListProps> = () => {
+  const [followingUsers, setFollowingUsers] = useState<FollowerUser[]>([]);
   const { userId } = useLocalSearchParams();
   console.log(userId);
 
   useEffect(() => {
     const fetchData = async () => {
       if (userId) {
-        const data = await fetchFollowingUsers(userId);
+        const data = await fetchFollowerUsers(userId);
         setFollowingUsers(data);
       }
     };
@@ -44,7 +44,7 @@ const FollowingList: React.FC<FollowingListProps> = () => {
       <ScrollView contentContainerStyle={styles.container}>
         {followingUsers.map((user) => (
           <TouchableOpacity
-            key={user.following_id}
+            key={user.follower_id}
             onPress={() => console.log("Pressed")}
           >
             <View style={styles.profileContainer}>
@@ -59,7 +59,7 @@ const FollowingList: React.FC<FollowingListProps> = () => {
               </View>
               <FollowButton
                 currentUserId={userId}
-                profileUserId={user.following_id}
+                profileUserId={user.follower_id}
               />
             </View>
           </TouchableOpacity>
@@ -101,4 +101,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FollowingList;
+export default followers;

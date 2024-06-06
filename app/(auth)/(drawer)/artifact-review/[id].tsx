@@ -6,13 +6,11 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import { Stack, useLocalSearchParams, Link, router } from "expo-router";
+import { useLocalSearchParams, Link, router } from "expo-router";
 
 import colors from "@/styles/colors";
 import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/utils/supabase";
-import review from "../review/[id]";
-import { QueryData } from "@supabase/supabase-js";
 import { StarRatingDisplay } from "react-native-star-rating-widget";
 
 type User = {
@@ -196,9 +194,7 @@ const artifact_review = () => {
                 }}
               />
 
-              <Text style={styles.username}>
-                {review?.user.username}
-              </Text>
+              <Text style={styles.username}>{review?.user.username}</Text>
             </TouchableOpacity>
             {review?.rating && (
               <StarRatingDisplay
@@ -211,6 +207,7 @@ const artifact_review = () => {
           </View>
           <Text style={styles.reviewText}>{review?.text}</Text>
           <View style={styles.visited}></View>
+          <Text> Helo </Text>
         </View>
         {/* <TouchableOpacity onPress={handleToggleLike} style={{ borderWidth: 2 }}>
           <Ionicons
@@ -270,7 +267,6 @@ const styles = StyleSheet.create({
   visited: {
     justifyContent: "flex-end",
     alignItems: "flex-end",
-    // borderWidth: 2,
   },
   visitedText: {
     color: colors.plum_light,

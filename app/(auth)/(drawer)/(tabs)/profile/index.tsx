@@ -80,6 +80,7 @@ const ProfilePage: React.FC = () => {
   const [reviewsUpdate, setReviewsUpdate] = useState<boolean>(false);
   const [followCountUpdate, setFollowCountUpdate] = useState<boolean>(false);
   const [followedUserIds, setFollowedUserIds] = useState([""]);
+  const [followingUserIds, setFollowingUserIds] = useState([""]);
 
   const channels = supabase
     .channel("custom-update-channel-5")
@@ -151,8 +152,6 @@ const ProfilePage: React.FC = () => {
         .select("following_id")
         .eq("follower_id", user.user.id);
 
-      console.log("followedUsers: ", followedUsers);
-
       if (followError) {
         console.error("Error fetching followed users:", followError);
         return [];
@@ -165,6 +164,24 @@ const ProfilePage: React.FC = () => {
         console.log("No followed users found.");
       } else {
         setFollowedUserIds(followedUserList);
+      }
+
+      const { data: followingUser, error: followingError } = await supabase
+        .from("user_follows_users")
+        .select("follower_id")
+        .eq("following_id", user.user.id);
+
+      if (followingError) {
+        console.error("Error fetching followed users:", followingError);
+        return [];
+      }
+
+      const followingUserList = followingUser.map((user) => user.follower_id);
+
+      if (!followingUserIds) {
+        console.log("No followed users found.");
+      } else {
+        setFollowingUserIds(followingUserList);
       }
     };
 
@@ -243,12 +260,21 @@ const ProfilePage: React.FC = () => {
 
   const goToFollowing = () => {
     if (!userProfile) return;
-
+    console.log("USER PROFILE" + userProfile.id);
     router.push({
       pathname: "/(auth)/(drawer)/(tabs)/profile/following",
       // TODO: Fix this red squiggly
-      // !
-      params: { following: followedUserIds, userId: userProfile.id },
+      // !)
+      params: { userId: userProfile.id },
+    });
+  };
+
+  const goToFollowers = () => {
+    if (!userProfile) return;
+
+    router.push({
+      pathname: "/(auth)/(drawer)/(tabs)/profile/followers",
+      params: { userId: userProfile.id },
     });
   };
 
@@ -276,10 +302,10 @@ const ProfilePage: React.FC = () => {
             <Text style={styles.userNameText}>{followedUserIds.length}</Text>
             <Text style={styles.userNameText}> Following </Text>
           </TouchableOpacity>
-          <View style={styles.follow}>
-            <Text style={styles.userNameText}>1</Text>
+          <TouchableOpacity style={styles.follow} onPress={goToFollowers}>
+            <Text style={styles.userNameText}>{followingUserIds.length}</Text>
             <Text style={styles.userNameText}>Followers</Text>
-          </View>
+          </TouchableOpacity>
         </View>
         {/* Favorites */}
         <View style={styles.favoritesContainer}>
