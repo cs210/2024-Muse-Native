@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   starsContainer: {
-    borderWidth: 2,
+    // borderWidth: 2,
     alignItems: "center",
     marginBottom: 12,
   },
