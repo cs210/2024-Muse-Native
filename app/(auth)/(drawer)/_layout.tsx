@@ -14,7 +14,10 @@ const Layout = () => {
     //   },
     // }}
     >
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="(tabs)"
+        options={{ title: "Home", headerShown: false }}
+      />
       <Stack.Screen
         name="settings"
         options={{
@@ -80,7 +83,7 @@ const Layout = () => {
           },
         }}
       />
-       <Stack.Screen
+      <Stack.Screen
         name="write-review/WriteReview"
         options={{
           title: "Write a Review",
@@ -120,6 +123,24 @@ const Layout = () => {
         name="artifacts/[id]"
         options={{
           title: "Artifact",
+          // drawerLabel: "Review",
+          headerTintColor: colors.text_pink,
+          headerShadowVisible: false,
+          headerBackTitleVisible: false,
+          headerStyle: {
+            backgroundColor: colors.background,
+          },
+          headerTitleStyle: {
+            fontSize: 18,
+            color: colors.text_pink,
+            fontFamily: "Inter_400Regular",
+          },
+        }}
+      />
+      <Stack.Screen
+        name="artifact-review/[id]"
+        options={{
+          title: "Artifact Review",
           // drawerLabel: "Review",
           headerTintColor: colors.text_pink,
           headerShadowVisible: false,

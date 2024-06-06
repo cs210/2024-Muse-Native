@@ -38,7 +38,7 @@ const ArtifactReviewCard: React.FC<ArtifactReviewCardProps> = ({
     router.push({
       pathname: "/(auth)/(drawer)/artifact-review/[id]",
       params: {
-        id: reviewId,
+        reviewId: reviewId,
       },
     });
   };
