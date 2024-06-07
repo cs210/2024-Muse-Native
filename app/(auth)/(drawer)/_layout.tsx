@@ -61,7 +61,7 @@ const Layout = () => {
           headerTitleStyle: {
             fontSize: 18,
             color: colors.text_pink,
-            fontFamily: "Inter_400Regular",
+            fontFamily: "Inter_700Bold",
           },
         }}
       />

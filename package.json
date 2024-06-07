@@ -15,6 +15,7 @@
   "dependencies": {
     "@expo-google-fonts/inter": "^0.2.3",
     "@expo-google-fonts/noto-serif": "^0.2.3",
+    "@expo-google-fonts/poppins": "^0.2.3",
     "@expo/vector-icons": "^14.0.0",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@react-navigation/drawer": "^6.6.15",
@@ -36,6 +37,7 @@
     "expo-splash-screen": "~0.27.4",
     "expo-status-bar": "~1.12.1",
     "expo-system-ui": "~3.0.4",
+    "expo-updates": "~0.25.16",
     "expo-web-browser": "~13.0.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -44,6 +46,7 @@
     "react-native-gesture-handler": "~2.16.1",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-linear-gradient": "^2.8.3",
+    "react-native-loading-placeholder": "^0.0.6",
     "react-native-pager-view": "6.3.0",
     "react-native-reanimated": "^3.10.0",
     "react-native-reanimated-carousel": "^3.5.1",
@@ -53,8 +56,7 @@
     "react-native-stars": "^1.2.2",
     "react-native-tab-view": "^3.5.2",
     "react-native-url-polyfill": "^2.0.0",
-    "react-native-web": "~0.19.6",
-    "expo-updates": "~0.25.16"
+    "react-native-web": "~0.19.6"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

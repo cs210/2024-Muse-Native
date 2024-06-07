@@ -11,6 +11,7 @@ import colors from "@/styles/colors";
 import { router } from "expo-router";
 import { useState } from "react";
 import CircularProgress from "react-native-circular-progress-indicator";
+import { PlaceholderContainer } from "react-native-loading-placeholder";
 
 const windowWidth = Dimensions.get("window").width;
 const iconSize = windowWidth * 0.08; // for example, 8% of the window width
@@ -163,7 +164,8 @@ const styles = StyleSheet.create({
   exhibitionText: {
     width: "100%",
     color: colors.text_pink,
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Inter_700Bold",
+
     fontSize: 20,
   },
   linkStyle: {
