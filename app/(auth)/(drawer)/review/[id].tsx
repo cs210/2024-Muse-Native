@@ -19,7 +19,7 @@ import {
 } from "../../../../fetch/fetch";
 
 // TODO: Background when scrolling
-const review = () => {
+const Review = () => {
   const { id } = useLocalSearchParams();
   const review = JSON.parse(id);
   console.log(review);
@@ -126,6 +126,7 @@ const review = () => {
                 {review?.exhibitionName}
               </Text>
             </TouchableOpacity>
+
             <TouchableOpacity
               style={{ alignSelf: "flex-start" }}
               onPress={museumPressed}
@@ -163,11 +164,9 @@ const review = () => {
                 }}
               />
 
-              <Text style={styles.username}>
-                {" "}
-                {review.username.toUpperCase()}{" "}
-              </Text>
+              <Text style={styles.username}>{review.username}</Text>
             </TouchableOpacity>
+            <Text> Hello </Text>
             {review.rating && (
               <StarRatingDisplay
                 rating={review.rating}
@@ -180,11 +179,8 @@ const review = () => {
           <Text style={styles.reviewText}>{review.text}</Text>
           <View style={styles.visited}></View>
         </View>
-        <View>
-          <TouchableOpacity
-            onPress={handleToggleLike}
-            style={{ borderWidth: 2 }}
-          >
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <TouchableOpacity onPress={handleToggleLike}>
             <Ionicons
               name={liked ? "heart" : "heart-outline"}
               size={32}
@@ -267,4 +263,4 @@ const styles = StyleSheet.create({
     marginHorizontal: 1,
   },
 });
-export default review;
+export default Review;
