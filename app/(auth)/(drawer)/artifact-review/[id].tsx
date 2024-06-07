@@ -41,7 +41,7 @@ type ArtifactReview = {
   artifact: Artifact;
 };
 
-const artifact_review = () => {
+const ArtifactReview = () => {
   const { reviewId } = useLocalSearchParams();
   const [userId, setUserId] = useState("");
   const [review, setReview] = useState<ArtifactReview>();
@@ -207,7 +207,7 @@ const artifact_review = () => {
           </View>
           <Text style={styles.reviewText}>{review?.text}</Text>
           <View style={styles.visited}></View>
-          <Text> Helo </Text>
+          <Text> WOW</Text>
         </View>
         {/* <TouchableOpacity onPress={handleToggleLike} style={{ borderWidth: 2 }}>
           <Ionicons
@@ -297,4 +297,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
-export default artifact_review;
+export default ArtifactReview;

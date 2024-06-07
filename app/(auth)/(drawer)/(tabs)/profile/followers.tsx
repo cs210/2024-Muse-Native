@@ -24,7 +24,7 @@ interface FollowingListProps {
   userId: string;
 }
 
-const followers: React.FC<FollowingListProps> = () => {
+const Followers: React.FC<FollowingListProps> = () => {
   const [followingUsers, setFollowingUsers] = useState<FollowerUser[]>([]);
   const { userId } = useLocalSearchParams();
   console.log(userId);
@@ -101,4 +101,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default followers;
+export default Followers;
