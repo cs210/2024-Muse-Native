@@ -14,6 +14,7 @@ import { supabase } from "@/utils/supabase";
 import review from "../review/[id]";
 import { QueryData } from "@supabase/supabase-js";
 import { StarRatingDisplay } from "react-native-star-rating-widget";
+import LikeButton from "@/components/LikeReviewButton";
 
 type User = {
   id: string;
@@ -47,6 +48,8 @@ const artifact_review = () => {
   const { reviewId } = useLocalSearchParams();
   const [userId, setUserId] = useState("");
   const [review, setReview] = useState<ArtifactReview>();
+  const [isLiked, setIsLiked] = useState<boolean>(false);
+  const [likeCount, setLikeCount] = useState<number>(0);
 
   useEffect(() => {
     const getUserId = async () => {
@@ -81,7 +84,7 @@ const artifact_review = () => {
         .returns<ArtifactReview>()
         .single();
       const { data, error } = await artifactReviewQuery;
-      console.log(data);
+      console.log("artifactReview: ", data);
       if (error) throw error;
       setReview(data);
     };
@@ -89,6 +92,43 @@ const artifact_review = () => {
       getArtifactReviewData();
     }
   }, [reviewId]);
+
+  useEffect(() => {
+    const checkUserLiked = async () => {
+      const { count, error } = await supabase
+        .from("user_likes_artifact_reviews")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", userId)
+        .eq("review_id", reviewId);
+
+      if (error) {
+        console.error("Error fetching data:", error);
+      } else {
+        if (count != null) {
+          setIsLiked(count > 0);
+        }
+      }
+    };
+
+    const checkLikeCount = async () => {
+      const { count, error } = await supabase
+        .from("user_likes_artifact_reviews")
+        .select("*", { count: "exact", head: true })
+        .eq("review_id", reviewId);
+
+      if (error) {
+        console.error("Error fetching data:", error);
+      } else {
+        if (count != null) {
+          setLikeCount(count);
+        }
+      }
+    };
+    if (userId && reviewId) {
+      checkLikeCount();
+      checkUserLiked();
+    }
+  }, [userId]);
 
   const handleProfileClicked = useCallback(async () => {
     if (review?.user.id) {
@@ -196,11 +236,9 @@ const artifact_review = () => {
                 }}
               />
 
-              <Text style={styles.username}>
-                {review?.user.username}
-              </Text>
+              <Text style={styles.username}>{review?.user.username}</Text>
             </TouchableOpacity>
-            {review?.rating && (
+            {review && review.rating > 0 && (
               <StarRatingDisplay
                 rating={review.rating}
                 color={colors.text_darker_pink}
@@ -211,15 +249,17 @@ const artifact_review = () => {
           </View>
           <Text style={styles.reviewText}>{review?.text}</Text>
           <View style={styles.visited}></View>
+          {review && (
+            <View style={styles.likeButtonContainer}>
+              <LikeButton
+                initialLiked={isLiked}
+                likeCount={likeCount}
+                reviewId={review.id}
+                userId={userId}
+              />
+            </View>
+          )}
         </View>
-        {/* <TouchableOpacity onPress={handleToggleLike} style={{ borderWidth: 2 }}>
-          <Ionicons
-            name={liked ? "heart" : "heart-outline"}
-            size={32}
-            color={colors.plum}
-          />
-        </TouchableOpacity> */}
-        {/* <Text style={{ color: colors.text_pink }}> {likeCount} </Text> */}
       </ScrollView>
     </View>
   );
@@ -259,7 +299,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   exhibitionText: {
-    color: colors.plum_light,
+    color: colors.white,
     fontSize: 20,
     fontWeight: "bold",
   },
@@ -297,8 +337,11 @@ const styles = StyleSheet.create({
   artist: {
     alignSelf: "flex-start",
     fontFamily: "Inter_700Bold",
-    color: colors.white,
+    color: colors.text_darker_pink,
     fontSize: 16,
+  },
+  likeButtonContainer: {
+    marginTop: 10,
   },
 });
 export default artifact_review;

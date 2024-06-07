@@ -72,7 +72,6 @@ const InitialLayout = () => {
         if (data.length > 0) {
           router.replace("/(auth)/(drawer)/setup");
         } else {
-          console.log("DATA LENGTH LOADED line 73");
           // router.replace("/(auth)/(drawer)/(tabs)/home");
           //TODO: CHANGE BACK
           router.replace("/(auth)/(drawer)/(tabs)/home");

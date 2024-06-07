@@ -45,35 +45,28 @@ const ArtifactReviewCard: React.FC<ArtifactReviewCardProps> = ({
 
   useEffect(() => {
     const checkUserLiked = async () => {
-      const { count, error } = await supabase
+      const { count } = await supabase
         .from("user_likes_artifact_reviews")
         .select("*", { count: "exact", head: true })
         .eq("user_id", userId)
         .eq("review_id", reviewId);
 
-      if (error) {
-        console.error("Error fetching data:", error);
-      } else {
-        if (count != null) {
-          setIsLiked(count > 0);
-        }
+      if (count != null) {
+        setIsLiked(count > 0);
       }
     };
 
     const checkLikeCount = async () => {
-      const { count, error } = await supabase
+      const { count } = await supabase
         .from("user_likes_artifact_reviews")
         .select("*", { count: "exact", head: true })
         .eq("review_id", reviewId);
 
-      if (error) {
-        console.error("Error fetching data:", error);
-      } else {
-        if (count != null) {
-          setLikeCount(count);
-        }
+      if (count != null) {
+        setLikeCount(count);
       }
     };
+
     if (userId && reviewId) {
       checkLikeCount();
       checkUserLiked();
