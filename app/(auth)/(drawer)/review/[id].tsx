@@ -17,6 +17,7 @@ import {
   fetchLikeCount,
   toggleLike,
 } from "../../../../fetch/fetch";
+import React from "react";
 
 // TODO: Background when scrolling
 const Review = () => {

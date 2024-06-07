@@ -12,6 +12,7 @@ import { router } from "expo-router";
 import { useState } from "react";
 import CircularProgress from "react-native-circular-progress-indicator";
 import { PlaceholderContainer } from "react-native-loading-placeholder";
+import React from "react";
 
 const windowWidth = Dimensions.get("window").width;
 const iconSize = windowWidth * 0.08; // for example, 8% of the window width

@@ -6,6 +6,7 @@ import {
   Dimensions,
   Image,
   TouchableOpacity,
+  Animated,
 } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import colors from "@/styles/colors";
@@ -17,6 +18,8 @@ import { format } from "date-fns";
 import { Artifact } from "@/utils/interfaces";
 import ArtifactCarousel from "../artifacts/ArtifactCarousel";
 import CircularProgress from "react-native-circular-progress-indicator";
+import CustomHeader from "@/components/CustomHeader";
+import React from "react";
 // Get the full height of the screen
 const screenHeight = Dimensions.get("window").height;
 
@@ -58,6 +61,7 @@ interface Review {
 
 const Exhibition = () => {
   const { id } = useLocalSearchParams();
+  const scrollY = useRef(new Animated.Value(0)).current;
   //  console.log("Exhibition ID:", id);
   const [exhibition, setExhibition] = useState<Exhibition>();
   const [artifacts, setArtifacts] = useState<Artifact[]>();
@@ -259,9 +263,14 @@ const Exhibition = () => {
 
   return (
     <View style={styles.outerContainer}>
-      <ScrollView
+      <CustomHeader title="Exhibition" scrollY={scrollY} />
+      <Animated.ScrollView
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+          { useNativeDriver: false }
+        )}
       >
         {/* Profile Container */}
         <View style={styles.container2}>
@@ -293,7 +302,7 @@ const Exhibition = () => {
               marginBottom: 10,
             }}
           >
-            <View>
+            <View style={{ flex: 1, marginRight: 10 }}>
               <Text style={styles.exhibitionTitle}>{exhibition?.title} </Text>
               <Text style={styles.exhibitionDates}>
                 {format(exhibition?.start_date, "MMM d, yyyy")} -{" "}
@@ -396,7 +405,7 @@ const Exhibition = () => {
             </Text>
           )}
         </View>
-      </ScrollView>
+      </Animated.ScrollView>
       <TouchableOpacity style={styles.fab} onPress={writeReviewPressed}>
         <Ionicons name="create-outline" size={32} color={colors.white} />
       </TouchableOpacity>
@@ -562,7 +571,8 @@ const styles = StyleSheet.create({
   },
   exhibitionDescription: {
     fontSize: 15,
-    color: "#B881A6",
+    // color: "#B881A6",
+    color: colors.text_darker_pink,
     fontFamily: "Poppins_400Regular",
     lineHeight: 25,
   },

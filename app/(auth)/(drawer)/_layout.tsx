@@ -51,6 +51,7 @@ const Layout = () => {
         name="exhibition/[id]"
         options={{
           title: "Exhibition",
+          headerShown: false,
           // drawerLabel: "Review",
           headerTintColor: colors.text_pink,
           headerShadowVisible: false,
