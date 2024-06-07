@@ -105,15 +105,26 @@ const WriteArtifactReviewPage = () => {
       (artifactTable.average_rating * artifactTable.review_count + rating) /
       newReviewCount;
 
-    const { error: updateError } = await supabase
-      .from("artifacts")
-      .update({
-        average_rating: newAverageRating,
-        review_count: newReviewCount,
-      })
-      .eq("id", artifactId);
+    if (rating) {
+      const { error: updateError } = await supabase
+        .from("artifacts")
+        .update({
+          average_rating: newAverageRating,
+          review_count: newReviewCount,
+        })
+        .eq("id", artifactId);
 
-    if (updateError) throw updateError;
+      if (updateError) throw updateError;
+    } else {
+      const { error: updateError } = await supabase
+        .from("artifacts")
+        .update({
+          review_count: newReviewCount,
+        })
+        .eq("id", artifactId);
+
+      if (updateError) throw updateError;
+    }
 
     router.back();
   };
@@ -136,7 +147,9 @@ const WriteArtifactReviewPage = () => {
         </View>
         <View style={styles.reviewHeader}>
           <Text style={styles.artifactTitle}>{artifact?.title}</Text>
-          <Text style={styles.exhibitionTitle}>{artifact?.exhibition.title}</Text>
+          <Text style={styles.exhibitionTitle}>
+            {artifact?.exhibition.title}
+          </Text>
         </View>
         <View style={styles.starsContainer}>
           <StarRating

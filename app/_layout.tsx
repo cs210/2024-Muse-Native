@@ -64,13 +64,15 @@ const InitialLayout = () => {
         return false; // or handle the error in a way that fits your app logic
       }
 
-      if (data.length > 0) {
-        router.replace("/(auth)/(drawer)/setup");
-      } else {
-        console.log("DATA LENGTH LOADED line 73");
-        router.replace("/(auth)/(drawer)/(tabs)/home");
-      }
-    };
+        // If data is not empty, it means there's a row with id where username is NULL
+        if (data.length > 0) {
+          router.replace("/(auth)/(drawer)/setup");
+        } else {
+          // router.replace("/(auth)/(drawer)/(tabs)/home");
+          //TODO: CHANGE BACK
+          router.replace("/(auth)/(drawer)/(tabs)/home");
+        }
+      };
 
     if (session && !inAuthGroup) {
       console.log("inAuth");
