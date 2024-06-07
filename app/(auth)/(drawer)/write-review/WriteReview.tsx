@@ -63,9 +63,6 @@ const WriteReviewPage = () => {
       }
       const exhibitionData = data;
 
-      console.log("Data: ", exhibitionData);
-      console.log("data.museum_id", exhibitionData.museum.name);
-
       setExhibition(exhibitionData);
     };
 
@@ -96,7 +93,6 @@ const WriteReviewPage = () => {
       throw error;
     }
 
-    console.log("Review Data:", data);
 
     // Now, update the average review
     const { data: exhibition, error: exhibitionError } = await supabase

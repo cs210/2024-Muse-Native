@@ -86,7 +86,6 @@ const exhibition = () => {
     .subscribe();
   // Get the user Exhibition
   useEffect(() => {
-    console.log("ID  " + id);
     const getExhibitionData = async () => {
       setLoading(true);
       try {
@@ -138,7 +137,6 @@ const exhibition = () => {
           .limit(10);
 
         if (error) throw error;
-        console.log("Artifacts data: ", data);
 
         setArtifacts(data);
       } catch (error) {
@@ -172,7 +170,6 @@ const exhibition = () => {
         if (error) throw error;
 
         setReviews(reviewsData);
-        console.log("REVIEWS: ", reviewsData); // Improved logging to display the actual data
       } catch (error) {
         console.error("Error fetching reviews:", error);
         setReviewsError(error.message);

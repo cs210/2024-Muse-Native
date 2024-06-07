@@ -17,7 +17,7 @@ import { Ionicons } from "@expo/vector-icons";
 // Get the full height of the screen
 const screenHeight = Dimensions.get("window").height;
 
-const artifact = () => {
+const ArtifactScreen = () => {
   const { id } = useLocalSearchParams();
   const [artifact, setArtifact] = useState<Artifact>();
   const [loading, setLoading] = useState(true);
@@ -114,7 +114,6 @@ const artifact = () => {
         if (error) throw error;
 
         setReviews(data);
-        console.log("ARTIFACT REVIEWS: ", data); // Improved logging to display the actual data
       } catch (error) {
         console.error("Error fetching reviews:", error);
       }
@@ -386,4 +385,4 @@ const styles = StyleSheet.create({
   viewAllButton: {},
 });
 
-export default artifact;
+export default ArtifactScreen;

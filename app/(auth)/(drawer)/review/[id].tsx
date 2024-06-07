@@ -22,7 +22,6 @@ import {
 const Review = () => {
   const { id } = useLocalSearchParams();
   const review = JSON.parse(id);
-  console.log(review);
   const [userId, setUserId] = useState("");
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
@@ -71,7 +70,6 @@ const Review = () => {
     if (review.user_id) {
       const { data: user, error: authError } = await supabase.auth.getUser();
       if (review.user_id === user.user?.id) {
-        console.log("IM IN PROFILE");
         router.push({
           pathname: "/(auth)/(drawer)/(tabs)/profile",
           params: { id: review.user_id },

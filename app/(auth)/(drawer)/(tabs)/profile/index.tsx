@@ -159,7 +159,6 @@ const ProfilePage: React.FC = () => {
 
       const followedUserList = followedUsers.map((user) => user.following_id);
 
-      console.log("FollowedUserIDS: ", followedUserIds);
       if (!followedUserIds) {
         console.log("No followed users found.");
       } else {
@@ -260,7 +259,6 @@ const ProfilePage: React.FC = () => {
 
   const goToFollowing = () => {
     if (!userProfile) return;
-    console.log("USER PROFILE" + userProfile.id);
     router.push({
       pathname: "/(auth)/(drawer)/(tabs)/profile/following",
       // TODO: Fix this red squiggly

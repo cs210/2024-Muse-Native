@@ -30,7 +30,6 @@ const WriteArtifactReviewPage = () => {
       data: { session },
     } = await supabase.auth.getSession();
     if (session) {
-      console.log("User ID:", session.user.id);
       const userId = session.user.id;
       setUserId(userId);
     }
@@ -89,8 +88,6 @@ const WriteArtifactReviewPage = () => {
       throw artifactReviewError;
     }
 
-    console.log("Review Data:", artifactReview);
-
     // Now, update the average review
     const { data: artifactTable, error: artifactError } = await supabase
       .from("artifacts")
@@ -100,12 +97,22 @@ const WriteArtifactReviewPage = () => {
 
     if (artifactError) throw artifactError;
 
-    const newReviewCount = artifactTable.review_count + 1;
-    const newAverageRating =
-      (artifactTable.average_rating * artifactTable.review_count + rating) /
-      newReviewCount;
+    const { count } = await supabase
+      .from("artifact_reviews")
+      .select("*", { count: "exact", head: true })
+      .eq("artifact_id", artifactId)
+      .neq("rating", 0);
+    
+      console.log("how many reviews?", count);
 
-    if (rating) {
+    if (count == null) {
+      console.error("Error retrieving review count");
+    } else {
+      const newReviewCount = artifactTable.review_count + 1;
+      const newAverageRating = rating
+        ? (artifactTable.average_rating * (count - 1) + rating) / count
+        : artifactTable.average_rating;
+
       const { error: updateError } = await supabase
         .from("artifacts")
         .update({
@@ -115,18 +122,9 @@ const WriteArtifactReviewPage = () => {
         .eq("id", artifactId);
 
       if (updateError) throw updateError;
-    } else {
-      const { error: updateError } = await supabase
-        .from("artifacts")
-        .update({
-          review_count: newReviewCount,
-        })
-        .eq("id", artifactId);
 
-      if (updateError) throw updateError;
+      router.back();
     }
-
-    router.back();
   };
 
   return (

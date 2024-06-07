@@ -82,7 +82,6 @@ const ArtifactReview = () => {
         .returns<ArtifactReview>()
         .single();
       const { data, error } = await artifactReviewQuery;
-      console.log("artifactReview: ", data);
       if (error) throw error;
       setReview(data);
     };
@@ -132,7 +131,6 @@ const ArtifactReview = () => {
     if (review?.user.id) {
       const { data: user, error: authError } = await supabase.auth.getUser();
       if (review.user.id === user.user?.id) {
-        console.log("IM IN PROFILE");
         router.push({
           pathname: "/(auth)/(drawer)/(tabs)/profile",
           params: { id: review.user.id },

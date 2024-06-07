@@ -62,7 +62,6 @@ interface FavoriteExhibition {
 
 const ProfilePage: React.FC = () => {
   const { id } = useLocalSearchParams();
-  console.log(id);
   const [userProfile, setUserProfile] = useState<Profile | null>(null);
   const [userReviews, setUserReviews] = useState<Review[]>([]);
   const [favoriteExhibitions, setFavoriteExhibitions] = useState<

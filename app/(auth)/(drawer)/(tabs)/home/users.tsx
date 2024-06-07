@@ -27,7 +27,6 @@ async function fetchReviewsFromFollowedUsers(userId: string) {
 
   const followedUserIds = followedUsers.map((user) => user.following_id);
 
-  console.log("FollowedUserIDS: ", followedUserIds);
   if (followedUserIds.length === 0) {
     console.log("No followed users found.");
     return [];

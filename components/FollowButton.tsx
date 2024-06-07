@@ -31,7 +31,6 @@ const FollowButton = ({
       console.log("Error with checkFollowingQuery.");
       throw error;
     }
-    console.log("~ user ~ following_id", user?.following_id);
     setIsFollowing(user != null);
   };
 

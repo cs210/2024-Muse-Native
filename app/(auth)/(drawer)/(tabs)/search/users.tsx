@@ -22,7 +22,6 @@ const UsersScreen = () => {
     if (user_id) {
       const { data: user, error: authError } = await supabase.auth.getUser();
       if (user_id === user.user?.id) {
-        console.log("IM IN PROFILE");
         router.push({
           pathname: "/(auth)/(drawer)/(tabs)/profile",
           params: { id: user_id },
@@ -47,8 +46,6 @@ const UsersScreen = () => {
     } = await supabase.auth.getUser();
 
     if (user) {
-      console.log("~ getCurrentUserId ~ user", user);
-      console.log("~ getCurrentUserId ~ userId", user.id);
       setUserId(user.id);
     } else {
       console.log("~ getCurrentUserId ~ error", error);
@@ -70,7 +67,6 @@ const UsersScreen = () => {
     if (error) {
       console.log("~ loadProfiles ~ error", error);
     } else {
-      console.log("~ loadProfiles ~ profiles", profiles);
       setProfiles(profiles);
     }
   };
