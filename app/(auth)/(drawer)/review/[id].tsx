@@ -166,7 +166,6 @@ const Review = () => {
 
               <Text style={styles.username}>{review.username}</Text>
             </TouchableOpacity>
-            <Text> Hello </Text>
             {review.rating && (
               <StarRatingDisplay
                 rating={review.rating}

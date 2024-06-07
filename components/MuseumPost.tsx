@@ -85,23 +85,25 @@ const MuseumPost: React.FC<MuseumPostProps> = ({
             />
           )}
           <View style={styles.circularProgress}>
-            <CircularProgress
-              value={averageRating}
-              radius={30}
-              maxValue={5}
-              activeStrokeWidth={8}
-              titleColor={"#FFF"}
-              inActiveStrokeWidth={8}
-              clockwise={false}
-              duration={100}
-              activeStrokeColor={colors.plum_light}
-              progressValueColor={colors.white}
-              progressFormatter={(value: number) => {
-                "worklet";
-                return value.toFixed(1); // 2 decimal places
-              }}
-              circleBackgroundColor={"rgba(0,0,0,0.4)"}
-            />
+            {averageRating !== 0 && (
+              <CircularProgress
+                value={averageRating}
+                radius={30}
+                maxValue={5}
+                activeStrokeWidth={8}
+                titleColor={"#FFF"}
+                inActiveStrokeWidth={8}
+                clockwise={false}
+                duration={100}
+                activeStrokeColor={colors.plum_light}
+                progressValueColor={colors.white}
+                progressFormatter={(value: number) => {
+                  "worklet";
+                  return value.toFixed(1); // 2 decimal places
+                }}
+                circleBackgroundColor={"rgba(0,0,0,0.4)"}
+              />
+            )}
           </View>
         </View>
       </TouchableOpacity>

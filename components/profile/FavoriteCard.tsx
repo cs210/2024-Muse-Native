@@ -46,8 +46,7 @@ const FavoriteCard: React.FC<FavoriteCardProps> = ({ exhibitionId }) => {
     fetchCoverPhoto();
   }, [exhibitionId]);
 
-  if (loading)
-    return <Text style={{ color: "white", fontSize: 50 }}>Loading...</Text>;
+  if (loading) return <Text style={{ color: "white" }}>Loading...</Text>;
   if (error) return <Text>Error: {error}</Text>;
 
   return (
