@@ -1,5 +1,12 @@
 import React from "react";
-import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 import { Artifact } from "@/utils/interfaces";
 import { router } from "expo-router";
 
@@ -22,7 +29,11 @@ const ArtifactScrollView: React.FC<ArtifactCarouselProps> = ({ artifacts }) => {
     <View style={styles.container}>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {artifacts.map((artifact, index) => (
-          <View key={index} style={styles.artifactContainer}>
+          <TouchableOpacity
+            key={index}
+            style={styles.artifactContainer}
+            onPress={() => artifactPressed(artifact)}
+          >
             <Image
               style={styles.artifactImage}
               source={{
@@ -32,7 +43,7 @@ const ArtifactScrollView: React.FC<ArtifactCarouselProps> = ({ artifacts }) => {
             <Text style={styles.artifactTitle} numberOfLines={3}>
               {artifact.title}
             </Text>
-          </View>
+          </TouchableOpacity>
         ))}
       </ScrollView>
     </View>
