@@ -1,5 +1,5 @@
 import colors from "@/styles/colors";
-import { Stack, useRouter, Link, router } from "expo-router";
+import { router } from "expo-router";
 import { useNavigation } from "@react-navigation/native";
 import { useState, useEffect } from "react";
 import {
@@ -11,9 +11,10 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { supabase } from "@/utils/supabase";
+import React from "react";
 
 // TODO: In the future, we ask people what kind of art they like here.
-const setup = () => {
+const Setup = () => {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const navigation = useNavigation();
@@ -48,24 +49,25 @@ const setup = () => {
       .eq("id", user?.id);
 
     if (error) {
-      setMessage("Failed to update: " + error.message);
+      setMessage("This Username already exists, please pick another one!");
     } else {
       setMessage("Profile updated successfully!");
-      router.push("/(auth)/(drawer)/(tabs)/home");
+      router.replace("/(auth)/(drawer)/(tabs)/home");
     }
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.container}>
-        <Text style={{ fontSize: 20, color: "white", marginBottom: 20 }}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <Text style={styles.header}>Muse</Text>
+        <Text style={styles.messageText}>
           Please fill in your name and username to finish creating an account!
         </Text>
         {/* Email field */}
         <TextInput
           style={styles.inputField}
           placeholder="Your Name"
-          placeholderTextColor={colors.text_pink}
+          placeholderTextColor={"#D5AFC9"}
           onChangeText={setName}
           value={name}
           autoCapitalize="none"
@@ -75,7 +77,7 @@ const setup = () => {
         <TextInput
           style={styles.inputField}
           placeholder="Username"
-          placeholderTextColor={colors.text_pink}
+          placeholderTextColor={"#D5AFC9"}
           onChangeText={setUsername}
           value={username}
           autoCapitalize="none"
@@ -84,44 +86,68 @@ const setup = () => {
         <TouchableOpacity onPress={handlePress} style={styles.logInButton}>
           <Text style={styles.logInText}>Create Account</Text>
         </TouchableOpacity>
-        {message ? <Text>{message}</Text> : null}
+        {message ? <Text style={styles.errorMessage}>{message}</Text> : null}
       </ScrollView>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  header: {
+    fontSize: 50,
+    color: colors.text_pink,
+    textAlign: "center",
+    fontFamily: "NotoSerif_400Regular",
+    margin: 45,
+    marginBottom: 20,
+  },
   container: {
     flex: 1,
-    padding: 12,
     backgroundColor: colors.background,
+  },
+  scrollContainer: {
+    flex: 1,
+    paddingTop: 100,
+    paddingHorizontal: 20,
   },
   text: {
     color: colors.text_pink,
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Poppins_400Regular",
     fontSize: 20,
   },
   inputField: {
-    marginVertical: 4,
+    marginVertical: 8,
     height: 47,
     borderRadius: 4,
     padding: 10,
-    color: "#ffeffa",
-    fontFamily: "Inter_400Regular",
+    color: colors.text_pink,
+    fontFamily: "Inter_700Bold",
     backgroundColor: colors.plum,
   },
+  messageText: {
+    fontSize: 20,
+    color: "white",
+    marginBottom: 20,
+    fontFamily: "Poppins_700Bold",
+    textAlign: "center",
+  },
   logInButton: {
-    marginTop: 25,
+    marginTop: 20,
     marginBottom: 15,
     alignItems: "center",
-    backgroundColor: colors.light_green,
+    backgroundColor: colors.dark_blue,
     padding: 12,
-    borderRadius: 4,
+    borderRadius: 10,
   },
   logInText: {
     color: colors.white,
-    fontFamily: "Inter_700Bold",
+    fontFamily: "Poppins_700Bold",
+    fontSize: 15,
+  },
+  errorMessage: {
+    color: colors.white,
+    fontFamily: "Poppins_700Bold",
     fontSize: 15,
   },
 });
-export default setup;
+export default Setup;

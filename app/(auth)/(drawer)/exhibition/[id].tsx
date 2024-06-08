@@ -17,6 +17,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { format } from "date-fns";
 import { Artifact } from "@/utils/interfaces";
 import ArtifactCarousel from "../artifacts/ArtifactCarousel";
+import ArtifactScrollView from "../artifacts/ArtifactScrollView";
 import CircularProgress from "react-native-circular-progress-indicator";
 import CustomHeader from "@/components/CustomHeader";
 import React from "react";
@@ -369,6 +370,7 @@ const Exhibition = () => {
                   </Text>
                 </TouchableOpacity>
               ))} */}
+              <ArtifactScrollView artifacts={artifacts ?? []} />
               <ArtifactCarousel artifacts={artifacts ?? []} />
             </View>
           )}
