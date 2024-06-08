@@ -141,6 +141,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
     }
   };
 
+  console.log(rating);
   return (
     <TouchableOpacity onPress={handlePress} style={styles.container}>
       <View style={{ borderColor: "white", width: "100%", gap: 8 }}>
@@ -198,17 +199,19 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
             )}
           </View>
         </View>
-        <View style={styles.reviewExhibitionContainer}>
-          <View style={styles.reviewTextContainer}>
-            <Text
-              style={styles.reviewText}
-              numberOfLines={7}
-              ellipsizeMode="tail"
-            >
-              {text}
-            </Text>
+        {text.length > 0 && (
+          <View style={styles.reviewExhibitionContainer}>
+            <View style={styles.reviewTextContainer}>
+              <Text
+                style={styles.reviewText}
+                numberOfLines={6}
+                ellipsizeMode="tail"
+              >
+                {text}
+              </Text>
+            </View>
           </View>
-        </View>
+        )}
         <View style={styles.bottomContainer}>
           <View style={styles.interactContainer}>
             <TouchableOpacity onPress={handleToggleLike}>
@@ -281,7 +284,7 @@ const styles = StyleSheet.create({
     // alignItems: "center",
   },
   reviewText: {
-    color: colors.text_pink,
+    color: colors.text_darker_pink,
     fontFamily: "Inter_400Regular",
     fontSize: 16,
   },
@@ -293,19 +296,19 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   starsContainer: {
-    paddingTop: 5,
     paddingLeft: 2,
+    marginBottom: 8,
   },
   starStyle: {
     marginHorizontal: 1,
   },
   bottomContainer: {
+    marginTop: 8,
     justifyContent: "space-between",
     flexDirection: "row",
     alignItems: "flex-start",
   },
   interactContainer: {
-    marginTop: 8,
     flexDirection: "row",
     alignItems: "flex-start",
     gap: 4,

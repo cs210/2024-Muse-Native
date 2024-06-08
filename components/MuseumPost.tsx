@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
     flexDirection: "column", // Aligns children in a column
-    marginBottom: 40,
+    marginBottom: 45,
   },
   museumContainer: {
     backgroundColor: colors.background,

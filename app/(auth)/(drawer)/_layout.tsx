@@ -43,7 +43,7 @@ const Layout = () => {
           headerTitleStyle: {
             fontSize: 18,
             color: colors.text_pink,
-            fontFamily: "Inter_400Regular",
+            fontFamily: "Poppins_700Bold",
           },
         }}
       />
@@ -62,7 +62,7 @@ const Layout = () => {
           headerTitleStyle: {
             fontSize: 18,
             color: colors.text_pink,
-            fontFamily: "Inter_700Bold",
+            fontFamily: "Poppins_700Bold",
           },
         }}
       />
@@ -80,7 +80,7 @@ const Layout = () => {
           headerTitleStyle: {
             fontSize: 18,
             color: colors.text_pink,
-            fontFamily: "Inter_400Regular",
+            fontFamily: "Poppins_700Bold",
           },
         }}
       />
@@ -99,7 +99,7 @@ const Layout = () => {
           headerTitleStyle: {
             fontSize: 18,
             color: colors.text_pink,
-            fontFamily: "Inter_400Regular",
+            fontFamily: "Poppins_700Bold",
           },
         }}
       />
@@ -118,7 +118,7 @@ const Layout = () => {
           headerTitleStyle: {
             fontSize: 18,
             color: colors.text_pink,
-            fontFamily: "Inter_400Regular",
+            fontFamily: "Poppins_700Bold",
           },
         }}
       />
@@ -137,7 +137,7 @@ const Layout = () => {
           headerTitleStyle: {
             fontSize: 18,
             color: colors.text_pink,
-            fontFamily: "Inter_400Regular",
+            fontFamily: "Poppins_700Bold",
           },
         }}
       />
@@ -155,7 +155,7 @@ const Layout = () => {
           headerTitleStyle: {
             fontSize: 18,
             color: colors.text_pink,
-            fontFamily: "Inter_400Regular",
+            fontFamily: "Poppins_700Bold",
           },
         }}
       />
@@ -173,7 +173,7 @@ const Layout = () => {
           headerTitleStyle: {
             fontSize: 18,
             color: colors.text_pink,
-            fontFamily: "Inter_400Regular",
+            fontFamily: "Poppins_700Bold",
           },
         }}
       />
@@ -191,7 +191,7 @@ const Layout = () => {
           headerTitleStyle: {
             fontSize: 18,
             color: colors.text_pink,
-            fontFamily: "Inter_400Regular",
+            fontFamily: "Poppins_700Bold",
           },
         }}
       />
@@ -209,7 +209,7 @@ const Layout = () => {
           headerTitleStyle: {
             fontSize: 18,
             color: colors.text_pink,
-            fontFamily: "Inter_400Regular",
+            fontFamily: "Poppins_700Bold",
           },
         }}
       />

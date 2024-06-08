@@ -139,6 +139,7 @@ const MuseumsScreen: React.FC = () => {
                 fontSize: 24,
                 color: colors.text_pink,
                 textAlign: "center",
+                fontFamily: "Poppins_700Bold",
               }}
             >
               You currently don't follow any museums! Check back here once you
@@ -153,7 +154,14 @@ const MuseumsScreen: React.FC = () => {
                 marginTop: 20,
               }}
             >
-              <Text style={{ fontWeight: "bold", color: colors.text_pink }}>
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  color: colors.text_pink,
+                  fontFamily: "Poppins_700Bold",
+                  fontSize: 17,
+                }}
+              >
                 Find Museums
               </Text>
             </TouchableOpacity>

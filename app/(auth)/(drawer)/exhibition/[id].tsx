@@ -49,6 +49,7 @@ interface Review {
   user_id: string;
   text: string;
   created_at: Date;
+  rating: number;
   user: {
     avatar_url: string;
     username: string;
@@ -173,6 +174,7 @@ const Exhibition = () => {
             user_id,
             text,
             created_at,
+            rating,
             user: user_id (avatar_url, username)  // Join with profiles table and get avatar_url
           `
           )
@@ -399,6 +401,7 @@ const Exhibition = () => {
                   user_id={review.user_id}
                   showImage={false}
                   created_at={review.created_at}
+                  rating={review.rating}
                 />
               ))
           ) : (

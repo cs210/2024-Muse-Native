@@ -143,6 +143,7 @@ const UsersScreen = () => {
                 fontSize: 24,
                 color: colors.text_pink,
                 textAlign: "center",
+                fontFamily: "Poppins_700Bold",
               }}
             >
               You currently don't follow any users! Come back once you start
@@ -157,7 +158,14 @@ const UsersScreen = () => {
                 marginTop: 20,
               }}
             >
-              <Text style={{ fontWeight: "bold", color: colors.text_pink }}>
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  color: colors.text_pink,
+                  fontFamily: "Poppins_700Bold",
+                  fontSize: 17,
+                }}
+              >
                 Find Users
               </Text>
             </TouchableOpacity>

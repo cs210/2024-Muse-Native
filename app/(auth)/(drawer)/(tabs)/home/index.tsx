@@ -15,7 +15,7 @@ const HomePage = () => {
         tabBarLabelStyle: {
           fontSize: 18,
           textTransform: "none",
-          fontFamily: "Inter_700Bold",
+          fontFamily: "Poppins_700Bold",
         },
         tabBarStyle: {
           backgroundColor: colors.background,
