@@ -13,9 +13,11 @@ const FavoriteCard: React.FC<FavoriteCardProps> = ({ exhibitionId }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // pathname: "/(auth)/(drawer)/exhibition/[id]",
   const goToExhibition = () => {
-    router.push({
-      pathname: "/(auth)/(drawer)/exhibition/[id]",
+    // CHANGE BACK TO PUSH
+    router.replace({
+      pathname: "/(auth)/(drawer)/setup",
       params: { id: exhibitionId },
     });
   };

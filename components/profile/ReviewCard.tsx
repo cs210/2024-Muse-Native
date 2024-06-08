@@ -273,6 +273,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
   },
   interactContainer: {
+    marginTop: 8,
     flexDirection: "row",
     alignItems: "flex-start",
     gap: 4,

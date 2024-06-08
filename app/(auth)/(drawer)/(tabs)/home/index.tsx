@@ -26,12 +26,12 @@ const HomePage = () => {
       <Tab.Screen
         name="museums"
         component={MuseumsScreen}
-        options={{ tabBarLabel: "Museums" }}
+        options={{ tabBarLabel: "Exhibitions" }}
       />
       <Tab.Screen
         name="users"
         component={UsersScreen}
-        options={{ tabBarLabel: "Users" }}
+        options={{ tabBarLabel: "Reviews" }}
       />
     </Tab.Navigator>
   );

@@ -110,7 +110,7 @@ const MuseumPost: React.FC<MuseumPostProps> = ({
         </View>
       </TouchableOpacity>
       <View style={styles.exhibitionTextContainer}>
-        <Text style={styles.exhibitionText}>{title.toUpperCase()}</Text>
+        <Text style={styles.exhibitionText}>{title}</Text>
       </View>
     </View>
   );
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
     flexDirection: "column", // Aligns children in a column
-    marginBottom: 20,
+    marginBottom: 40,
   },
   museumContainer: {
     backgroundColor: colors.background,
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
   exhibitionText: {
     width: "100%",
     color: colors.text_pink,
-    fontFamily: "Poppins_400Regular",
+    fontFamily: "Poppins_700Bold",
     fontSize: 20,
   },
   linkStyle: {

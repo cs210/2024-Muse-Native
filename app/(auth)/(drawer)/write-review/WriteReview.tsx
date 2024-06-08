@@ -146,6 +146,7 @@ const WriteReviewPage = () => {
           <Text style={styles.museumName}>{exhibition.museum.name}</Text>
         </View>
         <View style={styles.starsContainer}>
+          <Text style={styles.rateText}> Rate </Text>
           <StarRating
             rating={rating}
             onChange={setRating}
@@ -188,13 +189,13 @@ const styles = StyleSheet.create({
   },
   inputField: {
     height: 200,
-    borderRadius: 4,
-    padding: 10,
-    paddingTop: 10,
+    borderRadius: 10,
+    padding: 16,
+    paddingTop: 16,
     color: colors.text_pink,
     fontFamily: "Inter_400Regular",
     fontSize: 15,
-    backgroundColor: colors.plum,
+    backgroundColor: colors.review_purple,
   },
   exhibitionTitle: {
     color: colors.text_pink,
@@ -210,13 +211,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: colors.dark_blue,
     padding: 12,
-    borderRadius: 4,
+    borderRadius: 10,
     marginVertical: 20,
   },
   submitText: {
     color: colors.white,
-    fontFamily: "Inter_700Bold",
-    fontSize: 15,
+    fontFamily: "Poppins_700Bold",
+    fontSize: 17,
   },
   imageContainer: {
     width: "100%",
@@ -234,9 +235,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   starsContainer: {
-    borderWidth: 2,
-    alignItems: "center",
-    marginBottom: 12,
+    alignItems: "flex-start",
+    marginBottom: 20,
+    gap: 4,
+  },
+  rateText: {
+    fontFamily: "Poppins_700Bold",
+    color: "white",
+    fontSize: 17,
   },
 });
 
