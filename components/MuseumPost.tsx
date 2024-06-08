@@ -110,7 +110,7 @@ const MuseumPost: React.FC<MuseumPostProps> = ({
         </View>
       </TouchableOpacity>
       <View style={styles.exhibitionTextContainer}>
-        <Text style={styles.exhibitionText}>{title}</Text>
+        <Text style={styles.exhibitionText}>{title.toUpperCase()}</Text>
       </View>
     </View>
   );
@@ -165,8 +165,7 @@ const styles = StyleSheet.create({
   exhibitionText: {
     width: "100%",
     color: colors.text_pink,
-    fontFamily: "Inter_700Bold",
-
+    fontFamily: "Poppins_400Regular",
     fontSize: 20,
   },
   linkStyle: {

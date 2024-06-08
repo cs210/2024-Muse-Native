@@ -566,6 +566,7 @@ const styles = StyleSheet.create({
   },
   exhibitionDates: {
     fontSize: 15,
+    fontFamily: "Poppins_400Regular",
     color: colors.plum_light,
     marginBottom: 12,
   },
@@ -573,8 +574,9 @@ const styles = StyleSheet.create({
     fontSize: 15,
     // color: "#B881A6",
     color: colors.text_darker_pink,
-    fontFamily: "Poppins_400Regular",
+    fontFamily: "Inter_400Regular",
     lineHeight: 25,
+    marginBottom: 10,
   },
   noReviewsStyle: {
     textAlign: "center",

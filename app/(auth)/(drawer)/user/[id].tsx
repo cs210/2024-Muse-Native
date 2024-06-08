@@ -14,8 +14,6 @@ import { supabase } from "@/utils/supabase";
 import { useEffect, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 
-//TODO Jake SHOUlD GO TO JAKE PROFILE
-
 interface Profile {
   id: string;
   username: string | null;
@@ -24,17 +22,6 @@ interface Profile {
   avatar_url: string;
   favorite_exhibitions: string[]; // Array of favorite exhibition IDs
 }
-
-// interface Review {
-//   id: string;
-//   created_at: string;
-//   exhibition_id: string;
-//   text: string;
-//   exhibition: {
-//     title: string;
-//   };
-// }
-
 interface Review {
   id: string;
   exhibition_id: string;
@@ -62,7 +49,6 @@ interface FavoriteExhibition {
 
 const ProfilePage: React.FC = () => {
   const { id } = useLocalSearchParams();
-  console.log(id);
   const [userProfile, setUserProfile] = useState<Profile | null>(null);
   const [userReviews, setUserReviews] = useState<Review[]>([]);
   const [favoriteExhibitions, setFavoriteExhibitions] = useState<

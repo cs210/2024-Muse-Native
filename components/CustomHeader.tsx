@@ -6,6 +6,7 @@ import {
   View,
   Text,
   TouchableOpacity,
+  Dimensions,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import colors from "@/styles/colors";
@@ -14,9 +15,13 @@ import Icon from "react-native-vector-icons/Ionicons";
 const CustomHeader = ({ title, scrollY }) => {
   const navigation = useNavigation();
 
+  const { height: screenHeight } = Dimensions.get("window");
+  const HEADER_MAX_HEIGHT = screenHeight * 0.1; // 10% of screen height
+  const HEADER_MIN_HEIGHT = screenHeight * 0.06; // 5% of screen height
+
   const headerHeight = scrollY.interpolate({
     inputRange: [0, 150],
-    outputRange: [100, 0],
+    outputRange: [HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT],
     extrapolate: "clamp",
   });
 
@@ -34,7 +39,9 @@ const CustomHeader = ({ title, scrollY }) => {
             <Icon name="arrow-back" size={24} color={colors.text_pink} />
           </TouchableOpacity>
         </Animated.View>
-        <Text style={styles.headerTitle}>{title}</Text>
+        <Animated.View style={{ opacity: arrowOpacity }}>
+          <Text style={styles.headerTitle}>{title}</Text>
+        </Animated.View>
       </View>
     </Animated.View>
   );
