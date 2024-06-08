@@ -118,6 +118,12 @@ const MuseumsScreen: React.FC = () => {
     );
   if (error) return <Text>Error: {error}</Text>;
 
+  const sortedExhibitions = exhibitions.toReversed().sort((a, b) => {
+    if (a.title === "Day Jobs") return -1;
+    if (b.title === "Day Jobs") return 1;
+    return 0;
+  });
+
   return (
     <View style={styles.container}>
       <ScrollView
@@ -139,6 +145,7 @@ const MuseumsScreen: React.FC = () => {
                 fontSize: 24,
                 color: colors.text_pink,
                 textAlign: "center",
+                fontFamily: "Poppins_700Bold",
               }}
             >
               You currently don't follow any museums! Check back here once you
@@ -153,13 +160,20 @@ const MuseumsScreen: React.FC = () => {
                 marginTop: 20,
               }}
             >
-              <Text style={{ fontWeight: "bold", color: colors.text_pink }}>
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  color: colors.text_pink,
+                  fontFamily: "Poppins_700Bold",
+                  fontSize: 17,
+                }}
+              >
                 Find Museums
               </Text>
             </TouchableOpacity>
           </View>
         )}
-        {exhibitions.toReversed().map((exhibition) => (
+        {sortedExhibitions.map((exhibition) => (
           <View key={exhibition.id} style={{ height: 350 }}>
             <MuseumPost
               id={exhibition.id}

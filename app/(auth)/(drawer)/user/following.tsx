@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -6,11 +6,13 @@ import {
   Image,
   ScrollView,
   StyleSheet,
+  Animated,
 } from "react-native";
 import { fetchFollowingUsers } from "@/fetch/followFetch";
 import { router, useLocalSearchParams } from "expo-router";
 import colors from "@/styles/colors";
 import FollowButton from "@/components/FollowButton";
+import CustomHeader from "@/components/CustomHeader";
 import { supabase } from "@/utils/supabase";
 
 interface FollowingUser {
@@ -47,6 +49,8 @@ const FollowingList: React.FC<FollowingListProps> = () => {
     }
   }, []);
 
+  const scrollY = useRef(new Animated.Value(0)).current;
+
   useEffect(() => {
     const fetchData = async () => {
       if (userId) {
@@ -59,7 +63,14 @@ const FollowingList: React.FC<FollowingListProps> = () => {
 
   return (
     <View style={styles.outerContainer}>
-      <ScrollView contentContainerStyle={styles.container}>
+      <CustomHeader title={"Following"} scrollY={scrollY} />
+      <Animated.ScrollView
+        contentContainerStyle={styles.container}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+          { useNativeDriver: false }
+        )}
+      >
         {followingUsers.map((user) => (
           <TouchableOpacity
             key={user.following_id}
@@ -82,7 +93,7 @@ const FollowingList: React.FC<FollowingListProps> = () => {
             </View>
           </TouchableOpacity>
         ))}
-      </ScrollView>
+      </Animated.ScrollView>
     </View>
   );
 };
@@ -97,6 +108,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     backgroundColor: colors.background,
     flexGrow: 1,
+    paddingBottom: 500,
   },
   profileContainer: {
     padding: 12,

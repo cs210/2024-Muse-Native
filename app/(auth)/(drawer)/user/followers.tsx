@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -6,15 +6,17 @@ import {
   Image,
   ScrollView,
   StyleSheet,
+  Animated,
 } from "react-native";
-import { fetchFollowingUsers } from "@/fetch/followFetch";
+import { fetchFollowerUsers } from "@/fetch/followFetch";
 import { router, useLocalSearchParams } from "expo-router";
 import colors from "@/styles/colors";
 import FollowButton from "@/components/FollowButton";
+import CustomHeader from "@/components/CustomHeader";
 import { supabase } from "@/utils/supabase";
 
-interface FollowingUser {
-  following_id: string;
+interface FollowerUser {
+  follower_id: string;
   profiles: {
     username: string;
     avatar_url: string;
@@ -25,10 +27,9 @@ interface FollowingListProps {
   userId: string;
 }
 
-const FollowingList: React.FC<FollowingListProps> = () => {
-  const [followingUsers, setFollowingUsers] = useState<FollowingUser[]>([]);
+const Followers: React.FC<FollowingListProps> = () => {
+  const [followingUsers, setFollowingUsers] = useState<FollowerUser[]>([]);
   const { userId } = useLocalSearchParams();
-
   const userPressed = useCallback(async (user_id: string) => {
     if (user_id) {
       const { data: user, error: authError } = await supabase.auth.getUser();
@@ -46,11 +47,12 @@ const FollowingList: React.FC<FollowingListProps> = () => {
       }
     }
   }, []);
+  const scrollY = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     const fetchData = async () => {
       if (userId) {
-        const data = await fetchFollowingUsers(userId);
+        const data = await fetchFollowerUsers(userId);
         setFollowingUsers(data);
       }
     };
@@ -59,11 +61,18 @@ const FollowingList: React.FC<FollowingListProps> = () => {
 
   return (
     <View style={styles.outerContainer}>
-      <ScrollView contentContainerStyle={styles.container}>
+      <CustomHeader title={"Following"} scrollY={scrollY} />
+      <Animated.ScrollView
+        contentContainerStyle={styles.container}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+          { useNativeDriver: false }
+        )}
+      >
         {followingUsers.map((user) => (
           <TouchableOpacity
-            key={user.following_id}
-            onPress={() => userPressed(user.following_id)}
+            key={user.follower_id}
+            onPress={() => userPressed(user.follower_id)}
           >
             <View style={styles.profileContainer}>
               <View style={{ flexDirection: "row", gap: 12 }}>
@@ -77,12 +86,12 @@ const FollowingList: React.FC<FollowingListProps> = () => {
               </View>
               <FollowButton
                 currentUserId={userId}
-                profileUserId={user.following_id}
+                profileUserId={user.follower_id}
               />
             </View>
           </TouchableOpacity>
         ))}
-      </ScrollView>
+      </Animated.ScrollView>
     </View>
   );
 };
@@ -97,6 +106,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     backgroundColor: colors.background,
     flexGrow: 1,
+    paddingBottom: 300,
   },
   profileContainer: {
     padding: 12,
@@ -119,4 +129,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FollowingList;
+export default Followers;

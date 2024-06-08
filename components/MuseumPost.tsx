@@ -11,6 +11,8 @@ import colors from "@/styles/colors";
 import { router } from "expo-router";
 import { useState } from "react";
 import CircularProgress from "react-native-circular-progress-indicator";
+import { PlaceholderContainer } from "react-native-loading-placeholder";
+import React from "react";
 
 const windowWidth = Dimensions.get("window").width;
 const iconSize = windowWidth * 0.08; // for example, 8% of the window width
@@ -85,23 +87,25 @@ const MuseumPost: React.FC<MuseumPostProps> = ({
             />
           )}
           <View style={styles.circularProgress}>
-            <CircularProgress
-              value={averageRating}
-              radius={30}
-              maxValue={5}
-              activeStrokeWidth={8}
-              titleColor={"#FFF"}
-              inActiveStrokeWidth={8}
-              clockwise={false}
-              duration={100}
-              activeStrokeColor={colors.plum_light}
-              progressValueColor={colors.white}
-              progressFormatter={(value: number) => {
-                "worklet";
-                return value.toFixed(1); // 2 decimal places
-              }}
-              circleBackgroundColor={"rgba(0,0,0,0.4)"}
-            />
+            {averageRating !== 0 && (
+              <CircularProgress
+                value={averageRating}
+                radius={30}
+                maxValue={5}
+                activeStrokeWidth={8}
+                titleColor={"#FFF"}
+                inActiveStrokeWidth={8}
+                clockwise={false}
+                duration={100}
+                activeStrokeColor={colors.plum_light}
+                progressValueColor={colors.white}
+                progressFormatter={(value: number) => {
+                  "worklet";
+                  return value.toFixed(1); // 2 decimal places
+                }}
+                circleBackgroundColor={"rgba(0,0,0,0.4)"}
+              />
+            )}
           </View>
         </View>
       </TouchableOpacity>
@@ -118,7 +122,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
     flexDirection: "column", // Aligns children in a column
-    marginBottom: 20,
+    marginBottom: 45,
   },
   museumContainer: {
     backgroundColor: colors.background,
@@ -161,7 +165,7 @@ const styles = StyleSheet.create({
   exhibitionText: {
     width: "100%",
     color: colors.text_pink,
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Poppins_700Bold",
     fontSize: 20,
   },
   linkStyle: {

@@ -13,7 +13,9 @@ const FavoriteCard: React.FC<FavoriteCardProps> = ({ exhibitionId }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // pathname: "/(auth)/(drawer)/exhibition/[id]",
   const goToExhibition = () => {
+    // CHANGE BACK TO PUSH
     router.push({
       pathname: "/(auth)/(drawer)/exhibition/[id]",
       params: { id: exhibitionId },
@@ -46,8 +48,7 @@ const FavoriteCard: React.FC<FavoriteCardProps> = ({ exhibitionId }) => {
     fetchCoverPhoto();
   }, [exhibitionId]);
 
-  if (loading)
-    return <Text style={{ color: "white", fontSize: 50 }}>Loading...</Text>;
+  if (loading) return <Text style={{ color: "white" }}>Loading...</Text>;
   if (error) return <Text>Error: {error}</Text>;
 
   return (

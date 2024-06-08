@@ -14,6 +14,7 @@ import { supabase } from "@/utils/supabase";
 import { useEffect, useState } from "react";
 import { router } from "expo-router";
 import review from "../../review/[id]";
+import React from "react";
 
 // TODO: Unhardcode
 // TODO: Add Lists Feature Eventually
@@ -49,6 +50,7 @@ interface Review {
   user_id: string;
   text: string;
   created_at: Date;
+  rating: number;
   user: {
     avatar_url: string;
     username: string;
@@ -229,6 +231,7 @@ const ProfilePage: React.FC = () => {
       user_id,
       text,
       created_at,
+      rating,
       user: user_id (
         avatar_url,
         username
@@ -309,14 +312,30 @@ const ProfilePage: React.FC = () => {
         <View style={styles.favoritesContainer}>
           <Text style={styles.userNameText}> Favorites </Text>
           <View style={styles.favoriteScroll}>
-            {favoriteExhibitions.map((exhibition) => (
-              <FavoriteCard key={exhibition.id} exhibitionId={exhibition.id} />
-            ))}
+            {favoriteExhibitions.length === 0 ? (
+              <Text style={{ color: "white", fontSize: 17, marginBottom: 20 }}>
+                Displaying your favorite exhibitions is still under development,
+                sorry for the inconvenience... If you want to check out how it
+                would look, feel free to go to Jake or Pedro's profile!
+              </Text>
+            ) : (
+              favoriteExhibitions.map((exhibition) => (
+                <FavoriteCard
+                  key={exhibition.id}
+                  exhibitionId={exhibition.id}
+                />
+              ))
+            )}
           </View>
         </View>
         {/* Posts */}
         <Text style={styles.userNameText}> Reviews </Text>
         <View style={styles.reviewsContainer}>
+          {userReviews.length === 0 && (
+            <Text style={{ fontFamily: "Poppins_700Bold", color: "white" }}>
+              You still don't have any reviews...
+            </Text>
+          )}
           {userReviews.toReversed().map((review) => (
             <ReviewCard
               key={review.id}
@@ -332,6 +351,7 @@ const ProfilePage: React.FC = () => {
               user_id={userProfile?.id}
               showImage={true}
               created_at={review.created_at}
+              rating={review.rating}
             />
           ))}
           <Text style={{ color: "white" }}>
@@ -351,7 +371,6 @@ const ProfilePage: React.FC = () => {
 const styles = StyleSheet.create({
   safeContainer: {
     flex: 1,
-    padding: 12,
     backgroundColor: colors.background,
   },
   container: {
@@ -381,6 +400,7 @@ const styles = StyleSheet.create({
   favoritesContainer: {
     // borderColor: "white",
     // borderWidth: 2,
+    marginTop: 10,
     display: "flex",
     flexDirection: "column",
     alignItems: "flex-start",

@@ -1,5 +1,9 @@
 import { NotoSerif_400Regular } from "@expo-google-fonts/noto-serif";
 import { Inter_400Regular, Inter_700Bold } from "@expo-google-fonts/inter";
+import {
+  Poppins_400Regular,
+  Poppins_700Bold,
+} from "@expo-google-fonts/poppins";
 import { useFonts } from "expo-font";
 import { Stack, useRouter, useSegments } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -64,15 +68,15 @@ const InitialLayout = () => {
         return false; // or handle the error in a way that fits your app logic
       }
 
-        // If data is not empty, it means there's a row with id where username is NULL
-        if (data.length > 0) {
-          router.replace("/(auth)/(drawer)/setup");
-        } else {
-          // router.replace("/(auth)/(drawer)/(tabs)/home");
-          //TODO: CHANGE BACK
-          router.replace("/(auth)/(drawer)/(tabs)/home");
-        }
-      };
+      // If data is not empty, it means there's a row with id where username is NULL
+      if (data.length > 0) {
+        router.replace("/(auth)/(drawer)/setup");
+      } else {
+        // router.replace("/(auth)/(drawer)/(tabs)/home");
+        //TODO: CHANGE BACK
+        router.replace("/(auth)/(drawer)/(tabs)/home");
+      }
+    };
 
     if (session && !inAuthGroup) {
       console.log("inAuth");
@@ -89,6 +93,8 @@ const InitialLayout = () => {
     NotoSerif_400Regular,
     Inter_400Regular,
     Inter_700Bold,
+    Poppins_400Regular,
+    Poppins_700Bold,
   });
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.

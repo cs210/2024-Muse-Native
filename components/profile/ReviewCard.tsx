@@ -82,13 +82,15 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
         data: { session },
       } = await supabase.auth.getSession();
       if (session) {
-        const userId = session.user.id;
-        setUserId(userId);
+        setUserId(session.user.id);
       }
     };
 
+    getUserId();
+  }, []);
+
+  useEffect(() => {
     const fetchInitialData = async () => {
-      await getUserId();
       const likeCount = await fetchLikeCount(reviewId);
       setLikeCount(likeCount);
 
@@ -99,6 +101,36 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
     };
 
     fetchInitialData();
+
+    if (userId) {
+      // Subscribe to changes in the "like_reviews" table for the specific reviewId
+      const channel = supabase
+        .channel(`like_reviews_${reviewId}`)
+        .on(
+          "postgres_changes",
+          {
+            event: "*",
+            schema: "public",
+            table: "like_reviews",
+            filter: `review_id=eq.${reviewId}`,
+          },
+          async (payload) => {
+            console.log("Change received!", payload);
+            const likeCount = await fetchLikeCount(reviewId);
+            console.log(likeCount);
+            setLikeCount(likeCount);
+            const isLiked = await checkLikedStatus(userId, reviewId);
+            console.log(isLiked);
+            setLiked(isLiked);
+          }
+        )
+        .subscribe();
+
+      // Clean up the subscription on component unmount
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    }
   }, [userId, reviewId]);
 
   const handleToggleLike = async () => {
@@ -109,6 +141,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
     }
   };
 
+  console.log(rating);
   return (
     <TouchableOpacity onPress={handlePress} style={styles.container}>
       <View style={{ borderColor: "white", width: "100%", gap: 8 }}>
@@ -166,23 +199,25 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
             )}
           </View>
         </View>
-        <View style={styles.reviewExhibitionContainer}>
-          <View style={styles.reviewTextContainer}>
-            <Text
-              style={styles.reviewText}
-              numberOfLines={7}
-              ellipsizeMode="tail"
-            >
-              {text}
-            </Text>
+        {text.length > 0 && (
+          <View style={styles.reviewExhibitionContainer}>
+            <View style={styles.reviewTextContainer}>
+              <Text
+                style={styles.reviewText}
+                numberOfLines={6}
+                ellipsizeMode="tail"
+              >
+                {text}
+              </Text>
+            </View>
           </View>
-        </View>
+        )}
         <View style={styles.bottomContainer}>
           <View style={styles.interactContainer}>
             <TouchableOpacity onPress={handleToggleLike}>
               <Ionicons
                 name={liked ? "heart" : "heart-outline"}
-                size={32}
+                size={28}
                 color={colors.plum}
               />
             </TouchableOpacity>
@@ -236,6 +271,8 @@ const styles = StyleSheet.create({
   exhibitionText: {
     color: colors.plum_light,
     width: 220,
+    fontFamily: "Poppins_400Regular",
+
     // borderWidth: 2,
   },
   reviewTextContainer: {
@@ -247,7 +284,7 @@ const styles = StyleSheet.create({
     // alignItems: "center",
   },
   reviewText: {
-    color: colors.text_pink,
+    color: colors.text_darker_pink,
     fontFamily: "Inter_400Regular",
     fontSize: 16,
   },
@@ -259,13 +296,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   starsContainer: {
-    paddingTop: 5,
     paddingLeft: 2,
+    marginBottom: 8,
   },
   starStyle: {
     marginHorizontal: 1,
   },
   bottomContainer: {
+    marginTop: 8,
     justifyContent: "space-between",
     flexDirection: "row",
     alignItems: "flex-start",

@@ -24,7 +24,7 @@ const Layout = () => {
           marginTop: -5,
         },
         tabBarStyle: {
-          backgroundColor: "#392132",
+          backgroundColor: "#251520",
           borderTopWidth: 0,
           height: 90,
         },

@@ -3,6 +3,7 @@ import colors from "@/styles/colors";
 import { Profile } from "@/utils/interfaces";
 import { supabase } from "@/utils/supabase";
 import { router } from "expo-router";
+import React from "react";
 import { useCallback, useEffect, useState } from "react";
 import {
   FlatList,
@@ -33,7 +34,7 @@ const UsersScreen = () => {
         });
       }
     }
-  }, []); // Dependency array includes `review`
+  }, []);
 
   useEffect(() => {
     getCurrentUserId();
