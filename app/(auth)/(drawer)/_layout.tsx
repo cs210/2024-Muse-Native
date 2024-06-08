@@ -178,6 +178,24 @@ const Layout = () => {
         }}
       />
       <Stack.Screen
+        name="write-review/WriteArtifactReview"
+        options={{
+          title: "Write Review",
+          // drawerLabel: "Review",
+          headerTintColor: colors.text_pink,
+          headerShadowVisible: false,
+          headerBackTitleVisible: false,
+          headerStyle: {
+            backgroundColor: colors.background,
+          },
+          headerTitleStyle: {
+            fontSize: 18,
+            color: colors.text_pink,
+            fontFamily: "Poppins_700Bold",
+          },
+        }}
+      />
+      <Stack.Screen
         name="artifacts/[id]"
         options={{
           title: "Artifact",

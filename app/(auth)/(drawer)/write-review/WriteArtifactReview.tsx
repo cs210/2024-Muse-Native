@@ -152,6 +152,7 @@ const WriteArtifactReviewPage = () => {
           </Text>
         </View>
         <View style={styles.starsContainer}>
+          <Text style={styles.rateText}> Rate </Text>
           <StarRating
             rating={rating}
             onChange={setRating}
@@ -240,9 +241,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   starsContainer: {
-    // borderWidth: 2,
-    alignItems: "center",
-    marginBottom: 12,
+    alignItems: "flex-start",
+    marginBottom: 20,
+    gap: 4,
+  },
+  rateText: {
+    fontFamily: "Poppins_700Bold",
+    color: "white",
+    fontSize: 17,
   },
 });
 
