@@ -544,6 +544,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.dark_blue,
     borderRadius: 32,
     elevation: 8,
+    paddingLeft: 5,
   },
   fabIcon: {
     fontSize: 24,

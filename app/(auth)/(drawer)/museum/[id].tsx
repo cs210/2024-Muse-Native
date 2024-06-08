@@ -91,7 +91,12 @@ const museum: React.FC = () => {
     }
   }, [id]); // Dependency on 'id' ensures fetch is re-run if 'id' changes
 
-  if (!museum) return;
+  if (!museum)
+    return (
+      <View style={{ flex: 1, backgroundColor: colors.background }}>
+        <Text> Loading.. </Text>
+      </View>
+    );
   return (
     <View style={styles.outerContainer}>
       <ScrollView

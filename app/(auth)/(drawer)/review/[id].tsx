@@ -179,7 +179,9 @@ const Review = () => {
           <Text style={styles.reviewText}>{review.text}</Text>
           <View style={styles.visited}></View>
         </View>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <View
+          style={{ flexDirection: "row", alignItems: "center", marginTop: 10 }}
+        >
           <TouchableOpacity onPress={handleToggleLike}>
             <Ionicons
               name={liked ? "heart" : "heart-outline"}
@@ -209,12 +211,14 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "column",
     alignItems: "flex-start",
+    marginBottom: 10,
   },
   username: {
-    color: colors.text_pink,
-    fontFamily: "Inter_400Regular",
+    color: colors.plum_light,
+    fontFamily: "Poppins_700Bold",
     fontSize: 17,
     fontWeight: "bold",
+    paddingLeft: 4,
   },
   subtext: {
     color: colors.text_pink,

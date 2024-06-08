@@ -237,6 +237,7 @@ const styles = StyleSheet.create({
   starsContainer: {
     alignItems: "flex-start",
     marginBottom: 20,
+    gap: 4,
   },
   rateText: {
     fontFamily: "Poppins_700Bold",
