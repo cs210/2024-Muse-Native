@@ -82,13 +82,15 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
         data: { session },
       } = await supabase.auth.getSession();
       if (session) {
-        const userId = session.user.id;
-        setUserId(userId);
+        setUserId(session.user.id);
       }
     };
 
+    getUserId();
+  }, []);
+
+  useEffect(() => {
     const fetchInitialData = async () => {
-      await getUserId();
       const likeCount = await fetchLikeCount(reviewId);
       setLikeCount(likeCount);
 
@@ -99,6 +101,36 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
     };
 
     fetchInitialData();
+
+    if (userId) {
+      // Subscribe to changes in the "like_reviews" table for the specific reviewId
+      const channel = supabase
+        .channel(`like_reviews_${reviewId}`)
+        .on(
+          "postgres_changes",
+          {
+            event: "*",
+            schema: "public",
+            table: "like_reviews",
+            filter: `review_id=eq.${reviewId}`,
+          },
+          async (payload) => {
+            console.log("Change received!", payload);
+            const likeCount = await fetchLikeCount(reviewId);
+            console.log(likeCount);
+            setLikeCount(likeCount);
+            const isLiked = await checkLikedStatus(userId, reviewId);
+            console.log(isLiked);
+            setLiked(isLiked);
+          }
+        )
+        .subscribe();
+
+      // Clean up the subscription on component unmount
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    }
   }, [userId, reviewId]);
 
   const handleToggleLike = async () => {
