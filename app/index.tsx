@@ -63,6 +63,9 @@ const Page = () => {
       )}
       {/* Muse Logo */}
       <Text style={styles.header}>Muse</Text>
+      <Text style={styles.subtitle}>
+        Bringing the arts to life for everyone, everywhere.
+      </Text>
       {/* Email field */}
       <TextInput
         style={styles.inputField}
@@ -110,29 +113,35 @@ const styles = StyleSheet.create({
     color: colors.text_pink,
     textAlign: "center",
     fontFamily: "NotoSerif_400Regular",
-    margin: 45,
-    marginBottom: 35,
+    marginBottom: 16,
+  },
+  subtitle: {
+    fontSize: 20,
+    color: colors.text_pink,
+    textAlign: "center",
+    fontFamily: "Poppins_700Bold",
+    marginBottom: 24,
   },
   inputField: {
-    marginVertical: 4,
+    marginVertical: 8,
     height: 47,
     borderRadius: 4,
     padding: 10,
-    color: "#ffeffa",
-    fontFamily: "Inter_400Regular",
+    color: colors.text_pink,
+    fontFamily: "Inter_700Bold",
     backgroundColor: colors.plum,
   },
   logInButton: {
     marginTop: 25,
     marginBottom: 15,
     alignItems: "center",
-    backgroundColor: colors.light_green,
+    backgroundColor: colors.dark_blue,
     padding: 12,
-    borderRadius: 4,
+    borderRadius: 10,
   },
   logInText: {
     color: colors.white,
-    fontFamily: "Inter_700Bold",
+    fontFamily: "Poppins_700Bold",
     fontSize: 15,
   },
   signUpButton: {
@@ -142,7 +151,7 @@ const styles = StyleSheet.create({
   },
   signUpText: {
     color: colors.text_pink,
-    fontFamily: "Inter_700Bold",
+    fontFamily: "Poppins_700Bold",
     fontSize: 15,
   },
   overlay: {

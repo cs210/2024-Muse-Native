@@ -5,6 +5,7 @@ import {
   Poppins_700Bold,
 } from "@expo-google-fonts/poppins";
 import { useFonts } from "expo-font";
+import { StatusBar } from "react-native";
 import { Stack, useRouter, useSegments } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
@@ -12,6 +13,7 @@ import { Session } from "@supabase/supabase-js";
 import { supabase } from "@/utils/supabase";
 import "react-native-reanimated";
 import "react-native-gesture-handler";
+import React from "react";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync(); // TODO: Custom Splash Screen
@@ -117,6 +119,7 @@ const InitialLayout = () => {
 
   return (
     <>
+      <StatusBar barStyle="light-content" />
       <Stack screenOptions={{ headerShown: false }}></Stack>
     </>
   );
