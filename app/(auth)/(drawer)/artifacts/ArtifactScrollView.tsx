@@ -1,18 +1,7 @@
 import React from "react";
-import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  StyleSheet,
-  Dimensions,
-  ScrollView,
-} from "react-native";
-import Carousel from "react-native-reanimated-carousel";
-import colors from "@/styles/colors";
+import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
 import { Artifact } from "@/utils/interfaces";
 import { router } from "expo-router";
-import FastImage from "react-native-fast-image";
 
 interface ArtifactCarouselProps {
   artifacts: Artifact[];
@@ -34,13 +23,11 @@ const ArtifactScrollView: React.FC<ArtifactCarouselProps> = ({ artifacts }) => {
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {artifacts.map((artifact, index) => (
           <View key={index} style={styles.artifactContainer}>
-            <FastImage
+            <Image
               style={styles.artifactImage}
               source={{
                 uri: artifact.cover_photo_url,
-                priority: FastImage.priority.normal,
               }}
-              resizeMode={FastImage.resizeMode.cover}
             />
             <Text style={styles.artifactTitle} numberOfLines={3}>
               {artifact.title}
@@ -61,6 +48,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   artifactImage: {
+    marginTop: 8,
     width: 120,
     height: 120,
     borderRadius: 8,
@@ -69,7 +57,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
     fontSize: 14,
     color: "#fff",
-    textAlign: "center",
+    fontFamily: "Poppins_700Bold",
     width: 120,
   },
 });

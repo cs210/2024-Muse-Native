@@ -371,7 +371,7 @@ const Exhibition = () => {
                 </TouchableOpacity>
               ))} */}
               <ArtifactScrollView artifacts={artifacts ?? []} />
-              <ArtifactCarousel artifacts={artifacts ?? []} />
+              {/* <ArtifactCarousel artifacts={artifacts ?? []} /> */}
             </View>
           )}
           <Text style={styles.exhibitionDescription}>
