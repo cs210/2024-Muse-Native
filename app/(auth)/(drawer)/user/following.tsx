@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -9,10 +9,11 @@ import {
   Animated,
 } from "react-native";
 import { fetchFollowingUsers } from "@/fetch/followFetch";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import colors from "@/styles/colors";
 import FollowButton from "@/components/FollowButton";
 import CustomHeader from "@/components/CustomHeader";
+import { supabase } from "@/utils/supabase";
 
 interface FollowingUser {
   following_id: string;
@@ -29,7 +30,25 @@ interface FollowingListProps {
 const FollowingList: React.FC<FollowingListProps> = () => {
   const [followingUsers, setFollowingUsers] = useState<FollowingUser[]>([]);
   const { userId } = useLocalSearchParams();
-  console.log(userId);
+
+  const userPressed = useCallback(async (user_id: string) => {
+    if (user_id) {
+      const { data: user, error: authError } = await supabase.auth.getUser();
+      if (user_id === user.user?.id) {
+        console.log("IM IN PROFILE");
+        router.push({
+          pathname: "/(auth)/(drawer)/(tabs)/profile",
+          params: { id: user_id },
+        });
+      } else {
+        router.push({
+          pathname: "/(auth)/(drawer)/user/[id]",
+          params: { id: user_id },
+        });
+      }
+    }
+  }, []);
+
   const scrollY = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -55,7 +74,7 @@ const FollowingList: React.FC<FollowingListProps> = () => {
         {followingUsers.map((user) => (
           <TouchableOpacity
             key={user.following_id}
-            onPress={() => console.log("Pressed")}
+            onPress={() => userPressed(user.following_id)}
           >
             <View style={styles.profileContainer}>
               <View style={{ flexDirection: "row", gap: 12 }}>

@@ -13,7 +13,12 @@ import { supabase } from "@/utils/supabase";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState, useEffect } from "react";
 import FollowMuseumButton from "@/components/FollowMuseumButton";
+import { ExhibitionAndMuseum } from "@/utils/interfaces";
+import MuseumPost from "@/components/MuseumPost";
+import React from "react";
 // Get the full height of the screen
+//TODO: Fix Museum Post
+
 const screenHeight = Dimensions.get("window").height;
 
 interface Museum {
@@ -34,9 +39,10 @@ interface Exhibition {
   description?: string;
   profilePhotoUrl: string;
   cover_photo_url?: string;
+  average_rating: number;
 }
 
-const museum: React.FC = () => {
+const Museum: React.FC = () => {
   const { id } = useLocalSearchParams();
   const [museum, setMuseum] = useState<Museum | null>(null);
   const [exhibitions, setExhibitions] = useState<Exhibition[]>([]);
@@ -97,6 +103,8 @@ const museum: React.FC = () => {
         <Text> Loading.. </Text>
       </View>
     );
+
+  console.log(museum);
   return (
     <View style={styles.outerContainer}>
       <ScrollView
@@ -167,6 +175,16 @@ const museum: React.FC = () => {
         </View>
         {exhibitions.map((exhibition) => (
           <View style={styles.exhibitionContainer} key={exhibition.id}>
+            {/* <MuseumPost
+              id={exhibition.id}
+              title={exhibition.title}
+              coverPhotoUrl={exhibition.cover_photo_url}
+              museumUsername={museum.username}
+              averageRating={exhibition.average_rating}
+              museumId={museum.id}
+              museumPfp={museum.profilePhotoUrl}
+            /> */}
+
             <TouchableOpacity
               onPress={() => handleExhibitionPress(exhibition)}
               key={exhibition.id}
@@ -306,7 +324,7 @@ const styles = StyleSheet.create({
   exhibitionText: {
     width: "100%",
     color: colors.text_pink,
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Poppins_700Bold",
     fontSize: 20,
   },
   exhibitionContainer: {
@@ -317,4 +335,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default museum;
+export default Museum;

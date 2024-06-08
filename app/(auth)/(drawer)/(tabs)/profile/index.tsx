@@ -14,6 +14,7 @@ import { supabase } from "@/utils/supabase";
 import { useEffect, useState } from "react";
 import { router } from "expo-router";
 import review from "../../review/[id]";
+import React from "react";
 
 // TODO: Unhardcode
 // TODO: Add Lists Feature Eventually
@@ -49,6 +50,7 @@ interface Review {
   user_id: string;
   text: string;
   created_at: Date;
+  rating: number;
   user: {
     avatar_url: string;
     username: string;
@@ -230,6 +232,7 @@ const ProfilePage: React.FC = () => {
       user_id,
       text,
       created_at,
+      rating,
       user: user_id (
         avatar_url,
         username
@@ -330,6 +333,11 @@ const ProfilePage: React.FC = () => {
         {/* Posts */}
         <Text style={styles.userNameText}> Reviews </Text>
         <View style={styles.reviewsContainer}>
+          {userReviews.length === 0 && (
+            <Text style={{ fontFamily: "Poppins_700Bold", color: "white" }}>
+              You still don't have any reviews...
+            </Text>
+          )}
           {userReviews.toReversed().map((review) => (
             <ReviewCard
               key={review.id}
@@ -345,6 +353,7 @@ const ProfilePage: React.FC = () => {
               user_id={userProfile?.id}
               showImage={true}
               created_at={review.created_at}
+              rating={review.rating}
             />
           ))}
           <Text style={{ color: "white" }}>

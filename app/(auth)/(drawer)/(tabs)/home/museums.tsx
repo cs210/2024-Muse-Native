@@ -118,6 +118,12 @@ const MuseumsScreen: React.FC = () => {
     );
   if (error) return <Text>Error: {error}</Text>;
 
+  const sortedExhibitions = exhibitions.toReversed().sort((a, b) => {
+    if (a.title === "Day Jobs") return -1;
+    if (b.title === "Day Jobs") return 1;
+    return 0;
+  });
+
   return (
     <View style={styles.container}>
       <ScrollView
@@ -167,7 +173,7 @@ const MuseumsScreen: React.FC = () => {
             </TouchableOpacity>
           </View>
         )}
-        {exhibitions.toReversed().map((exhibition) => (
+        {sortedExhibitions.map((exhibition) => (
           <View key={exhibition.id} style={{ height: 350 }}>
             <MuseumPost
               id={exhibition.id}

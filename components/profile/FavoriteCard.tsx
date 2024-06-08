@@ -16,8 +16,8 @@ const FavoriteCard: React.FC<FavoriteCardProps> = ({ exhibitionId }) => {
   // pathname: "/(auth)/(drawer)/exhibition/[id]",
   const goToExhibition = () => {
     // CHANGE BACK TO PUSH
-    router.replace({
-      pathname: "/(auth)/(drawer)/setup",
+    router.push({
+      pathname: "/(auth)/(drawer)/exhibition/[id]",
       params: { id: exhibitionId },
     });
   };

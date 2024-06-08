@@ -16,6 +16,7 @@ import { useEffect, useRef, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import Review from "../review/[id]";
 import CustomHeader from "@/components/CustomHeader";
+import React from "react";
 
 // TODO: Add Lists Feature Eventually
 // TODO: Only load 5 posts (Map)
@@ -242,6 +243,7 @@ const ProfilePage: React.FC = () => {
     };
 
     getUserReviews();
+    console.log(userReviews);
   }, [userProfile, reviewsUpdate]); // This useEffect runs only when userProfile changes.
 
   const goToFollowing = () => {
@@ -314,6 +316,12 @@ const ProfilePage: React.FC = () => {
 
         <Text style={styles.userNameText}> Reviews </Text>
         <View style={styles.reviewsContainer}>
+          {userReviews.length === 0 && (
+            <Text style={{ fontFamily: "Poppins_700Bold", color: "white" }}>
+              {" "}
+              This User still doesn't have any reviews
+            </Text>
+          )}
           {userReviews.toReversed().map((review) => (
             <ReviewCard
               key={review.id}
