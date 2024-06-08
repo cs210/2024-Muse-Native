@@ -6,6 +6,7 @@ import {
   Dimensions,
   Image,
   TouchableOpacity,
+  Animated,
 } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import colors from "@/styles/colors";
@@ -16,6 +17,9 @@ import { Ionicons } from "@expo/vector-icons";
 import { format } from "date-fns";
 import { Artifact } from "@/utils/interfaces";
 import ArtifactCarousel from "../artifacts/ArtifactCarousel";
+import CircularProgress from "react-native-circular-progress-indicator";
+import CustomHeader from "@/components/CustomHeader";
+import React from "react";
 // Get the full height of the screen
 const screenHeight = Dimensions.get("window").height;
 
@@ -35,6 +39,7 @@ interface Exhibition {
   cover_photo_url: string;
   ticket_link: string;
   museum: Museum;
+  average_rating: number;
 }
 
 interface Review {
@@ -54,8 +59,9 @@ interface Review {
 // pass museum id
 // pass title: string;
 
-const exhibition = () => {
+const Exhibition = () => {
   const { id } = useLocalSearchParams();
+  const scrollY = useRef(new Animated.Value(0)).current;
   //  console.log("Exhibition ID:", id);
   const [exhibition, setExhibition] = useState<Exhibition>();
   const [artifacts, setArtifacts] = useState<Artifact[]>();
@@ -101,6 +107,7 @@ const exhibition = () => {
             end_date,
             description,
             cover_photo_url,
+            average_rating,
             ticket_link,
             museum: museum_id (id, name, profilePhotoUrl)
           `
@@ -141,6 +148,7 @@ const exhibition = () => {
         console.log("Artifacts data: ", data);
 
         setArtifacts(data);
+        console.log("ARTIFACTS", artifacts);
       } catch (error) {
         console.error("Error fetching artifacts:", error);
       }
@@ -241,7 +249,12 @@ const exhibition = () => {
     }
   };
 
-  if (loading) return <Text>Loading...</Text>;
+  if (loading)
+    return (
+      <View style={{ flex: 1, backgroundColor: colors.background }}>
+        <Text>Loading...</Text>
+      </View>
+    );
   if (error) return <Text>Error: {error}</Text>;
 
   // if (exhibition?.end_date === null) {
@@ -250,9 +263,14 @@ const exhibition = () => {
 
   return (
     <View style={styles.outerContainer}>
-      <ScrollView
+      <CustomHeader title="Exhibition" scrollY={scrollY} />
+      <Animated.ScrollView
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+          { useNativeDriver: false }
+        )}
       >
         {/* Profile Container */}
         <View style={styles.container2}>
@@ -277,28 +295,60 @@ const exhibition = () => {
 
         {/* TEXT */}
         <View style={styles.exhibitionContainer}>
-          <Text style={styles.exhibitionTitle}>{exhibition?.title} </Text>
-          <Text style={styles.exhibitionDates}>
-            {format(exhibition?.start_date, "MMM d, yyyy")} -{" "}
-            {/* {format(exhibition?.end_date, "MMM, d yyyy")} */}
-            {exhibition?.end_date === null
-              ? "Ongoing"
-              : format(exhibition?.end_date, "MMM d, yyyy")}
-          </Text>
-          <View style={styles.artifactsOuterContainer}>
-            <View style={styles.artifactsAndViewAllContainer}>
-              <Text style={styles.artifactsHeader}>Artifacts</Text>
-              <View style={{ flex: 1 }} />
-              <TouchableOpacity onPress={viewAllArtifactsPressed}>
-                <Ionicons
-                  name="arrow-forward-circle-outline"
-                  size={32}
-                  color={colors.text_pink}
-                />
-              </TouchableOpacity>
+          <View
+            style={{
+              justifyContent: "space-between",
+              flexDirection: "row",
+              marginBottom: 10,
+            }}
+          >
+            <View style={{ flex: 1, marginRight: 10 }}>
+              <Text style={styles.exhibitionTitle}>{exhibition?.title} </Text>
+              <Text style={styles.exhibitionDates}>
+                {format(exhibition?.start_date, "MMM d, yyyy")} -{" "}
+                {/* {format(exhibition?.end_date, "MMM, d yyyy")} */}
+                {exhibition?.end_date === null
+                  ? "Ongoing"
+                  : format(exhibition?.end_date, "MMM d, yyyy")}
+              </Text>
             </View>
 
-            {/* {artifacts?.map((artifact) => (
+            {exhibition?.average_rating !== 0 && (
+              <CircularProgress
+                value={exhibition?.average_rating}
+                radius={30}
+                maxValue={5}
+                activeStrokeWidth={8}
+                titleColor={"#FFF"}
+                inActiveStrokeWidth={8}
+                clockwise={false}
+                duration={100}
+                activeStrokeColor={colors.plum_light}
+                progressValueColor={colors.white}
+                progressFormatter={(value: number) => {
+                  "worklet";
+                  return value.toFixed(1); // 2 decimal places
+                }}
+                circleBackgroundColor={"rgba(0,0,0,0.4)"}
+              />
+            )}
+          </View>
+          {/* ARTIFACTS */}
+          {artifacts?.length > 0 && (
+            <View style={styles.artifactsOuterContainer}>
+              <View style={styles.artifactsAndViewAllContainer}>
+                <Text style={styles.artifactsHeader}>Artifacts</Text>
+                <View style={{ flex: 1 }} />
+                <TouchableOpacity onPress={viewAllArtifactsPressed}>
+                  <Ionicons
+                    name="arrow-forward-circle-outline"
+                    size={32}
+                    color={colors.text_pink}
+                  />
+                </TouchableOpacity>
+              </View>
+
+              {/* {artifacts?.map((artifact) => (
                 <TouchableOpacity
                   style={styles.artifactItem}
                   key={artifact.id}
@@ -319,13 +369,15 @@ const exhibition = () => {
                   </Text>
                 </TouchableOpacity>
               ))} */}
-            <ArtifactCarousel artifacts={artifacts ?? []} />
-          </View>
+              <ArtifactCarousel artifacts={artifacts ?? []} />
+            </View>
+          )}
           <Text style={styles.exhibitionDescription}>
             {exhibition?.description}
           </Text>
         </View>
         {/* Posts */}
+        <Text style={styles.header}> Popular Reviews </Text>
         <View style={styles.reviewsContainer}>
           {reviews && reviews.length > 0 ? (
             reviews
@@ -353,7 +405,7 @@ const exhibition = () => {
             </Text>
           )}
         </View>
-      </ScrollView>
+      </Animated.ScrollView>
       <TouchableOpacity style={styles.fab} onPress={writeReviewPressed}>
         <Ionicons name="create-outline" size={32} color={colors.white} />
       </TouchableOpacity>
@@ -412,7 +464,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: colors.text_pink,
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Poppins_400Regular",
     fontSize: 20,
   },
   signUpButton: {
@@ -497,23 +549,34 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: "white",
   },
+  header: {
+    fontSize: 24,
+    fontFamily: "Inter_700Bold",
+    color: colors.text_pink,
+  },
   exhibitionContainer: {
+    marginTop: 10,
     paddingHorizontal: 12,
   },
   exhibitionTitle: {
     fontSize: 24,
+    fontFamily: "Poppins_700Bold",
     color: colors.text_pink,
     marginBottom: 5,
   },
   exhibitionDates: {
     fontSize: 15,
+    fontFamily: "Poppins_400Regular",
     color: colors.plum_light,
     marginBottom: 12,
   },
   exhibitionDescription: {
     fontSize: 15,
-    color: colors.text_pink,
+    // color: "#B881A6",
+    color: colors.text_darker_pink,
+    fontFamily: "Inter_400Regular",
     lineHeight: 25,
+    marginBottom: 10,
   },
   noReviewsStyle: {
     textAlign: "center",
@@ -563,4 +626,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default exhibition;
+export default Exhibition;

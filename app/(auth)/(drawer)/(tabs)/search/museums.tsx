@@ -72,7 +72,7 @@ const MuseumsScreen = () => {
       }
     };
     getMuseums();
-  }, [museumsUpdate]);
+  }, []);
 
   if (loading) {
     return (

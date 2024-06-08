@@ -311,9 +311,20 @@ const ProfilePage: React.FC = () => {
         <View style={styles.favoritesContainer}>
           <Text style={styles.userNameText}> Favorites </Text>
           <View style={styles.favoriteScroll}>
-            {favoriteExhibitions.map((exhibition) => (
-              <FavoriteCard key={exhibition.id} exhibitionId={exhibition.id} />
-            ))}
+            {favoriteExhibitions.length === 0 ? (
+              <Text style={{ color: "white", fontSize: 17, marginBottom: 20 }}>
+                Displaying your favorite exhibitions is still under development,
+                sorry for the inconvenience... If you want to check out how it
+                would look, feel free to go to Jake or Pedro's profile!
+              </Text>
+            ) : (
+              favoriteExhibitions.map((exhibition) => (
+                <FavoriteCard
+                  key={exhibition.id}
+                  exhibitionId={exhibition.id}
+                />
+              ))
+            )}
           </View>
         </View>
         {/* Posts */}
@@ -353,7 +364,6 @@ const ProfilePage: React.FC = () => {
 const styles = StyleSheet.create({
   safeContainer: {
     flex: 1,
-    padding: 12,
     backgroundColor: colors.background,
   },
   container: {
@@ -383,6 +393,7 @@ const styles = StyleSheet.create({
   favoritesContainer: {
     // borderColor: "white",
     // borderWidth: 2,
+    marginTop: 10,
     display: "flex",
     flexDirection: "column",
     alignItems: "flex-start",

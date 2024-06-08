@@ -51,6 +51,25 @@ const Layout = () => {
         name="exhibition/[id]"
         options={{
           title: "Exhibition",
+          headerShown: false,
+          // drawerLabel: "Review",
+          headerTintColor: colors.text_pink,
+          headerShadowVisible: false,
+          headerBackTitleVisible: false,
+          headerStyle: {
+            backgroundColor: colors.background,
+          },
+          headerTitleStyle: {
+            fontSize: 18,
+            color: colors.text_pink,
+            fontFamily: "Inter_700Bold",
+          },
+        }}
+      />
+      <Stack.Screen
+        name="museum/[id]"
+        options={{
+          title: "Museum",
           // drawerLabel: "Review",
           headerTintColor: colors.text_pink,
           headerShadowVisible: false,
@@ -66,10 +85,49 @@ const Layout = () => {
         }}
       />
       <Stack.Screen
-        name="museum/[id]"
+        name="user/[id]"
         options={{
           title: "Museum",
           // drawerLabel: "Review",
+          headerShown: false,
+          headerTintColor: colors.text_pink,
+          headerShadowVisible: false,
+          headerBackTitleVisible: false,
+          headerStyle: {
+            backgroundColor: colors.background,
+          },
+          headerTitleStyle: {
+            fontSize: 18,
+            color: colors.text_pink,
+            fontFamily: "Inter_400Regular",
+          },
+        }}
+      />
+      <Stack.Screen
+        name="user/following"
+        options={{
+          title: "Museum",
+          // drawerLabel: "Review",
+          headerShown: false,
+          headerTintColor: colors.text_pink,
+          headerShadowVisible: false,
+          headerBackTitleVisible: false,
+          headerStyle: {
+            backgroundColor: colors.background,
+          },
+          headerTitleStyle: {
+            fontSize: 18,
+            color: colors.text_pink,
+            fontFamily: "Inter_400Regular",
+          },
+        }}
+      />
+      <Stack.Screen
+        name="user/followers"
+        options={{
+          title: "Museum",
+          // drawerLabel: "Review",
+          headerShown: false,
           headerTintColor: colors.text_pink,
           headerShadowVisible: false,
           headerBackTitleVisible: false,

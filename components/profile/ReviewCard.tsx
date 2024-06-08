@@ -182,7 +182,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
             <TouchableOpacity onPress={handleToggleLike}>
               <Ionicons
                 name={liked ? "heart" : "heart-outline"}
-                size={32}
+                size={28}
                 color={colors.plum}
               />
             </TouchableOpacity>
@@ -236,6 +236,8 @@ const styles = StyleSheet.create({
   exhibitionText: {
     color: colors.plum_light,
     width: 220,
+    fontFamily: "Poppins_400Regular",
+
     // borderWidth: 2,
   },
   reviewTextContainer: {
