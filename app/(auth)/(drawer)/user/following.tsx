@@ -1,0 +1,115 @@
+import React, { useEffect, useRef, useState } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Animated,
+} from "react-native";
+import { fetchFollowingUsers } from "@/fetch/followFetch";
+import { useLocalSearchParams } from "expo-router";
+import colors from "@/styles/colors";
+import FollowButton from "@/components/FollowButton";
+import CustomHeader from "@/components/CustomHeader";
+
+interface FollowingUser {
+  following_id: string;
+  profiles: {
+    username: string;
+    avatar_url: string;
+  };
+}
+
+interface FollowingListProps {
+  userId: string;
+}
+
+const FollowingList: React.FC<FollowingListProps> = () => {
+  const [followingUsers, setFollowingUsers] = useState<FollowingUser[]>([]);
+  const { userId } = useLocalSearchParams();
+  console.log(userId);
+  const scrollY = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (userId) {
+        const data = await fetchFollowingUsers(userId);
+        setFollowingUsers(data);
+      }
+    };
+    fetchData();
+  }, [userId]);
+
+  return (
+    <View style={styles.outerContainer}>
+      <CustomHeader title={"Following"} scrollY={scrollY} />
+      <Animated.ScrollView
+        contentContainerStyle={styles.container}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+          { useNativeDriver: false }
+        )}
+      >
+        {followingUsers.map((user) => (
+          <TouchableOpacity
+            key={user.following_id}
+            onPress={() => console.log("Pressed")}
+          >
+            <View style={styles.profileContainer}>
+              <View style={{ flexDirection: "row", gap: 12 }}>
+                <Image
+                  source={{ uri: user.profiles.avatar_url }}
+                  style={{ height: 50, width: 50, borderRadius: 25 }}
+                />
+                <View style={styles.nameUserContainer}>
+                  <Text style={styles.nameText}>{user.profiles.username}</Text>
+                </View>
+              </View>
+              <FollowButton
+                currentUserId={userId}
+                profileUserId={user.following_id}
+              />
+            </View>
+          </TouchableOpacity>
+        ))}
+      </Animated.ScrollView>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  outerContainer: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  container: {
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    backgroundColor: colors.background,
+    flexGrow: 1,
+    paddingBottom: 500,
+  },
+  profileContainer: {
+    padding: 12,
+    marginVertical: 5,
+    borderRadius: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    height: 75,
+    backgroundColor: colors.plum,
+  },
+  nameUserContainer: {
+    flexDirection: "column",
+    justifyContent: "center",
+  },
+  nameText: {
+    color: colors.text_pink,
+    fontFamily: "Inter_700Bold",
+    fontSize: 14,
+  },
+});
+
+export default FollowingList;

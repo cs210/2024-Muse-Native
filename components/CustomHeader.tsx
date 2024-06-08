@@ -17,7 +17,7 @@ const CustomHeader = ({ title, scrollY }) => {
 
   const { height: screenHeight } = Dimensions.get("window");
   const HEADER_MAX_HEIGHT = screenHeight * 0.1; // 10% of screen height
-  const HEADER_MIN_HEIGHT = screenHeight * 0.06; // 5% of screen height
+  const HEADER_MIN_HEIGHT = screenHeight * 0.066; // 5% of screen height
 
   const headerHeight = scrollY.interpolate({
     inputRange: [0, 150],
@@ -39,7 +39,7 @@ const CustomHeader = ({ title, scrollY }) => {
             <Icon name="arrow-back" size={24} color={colors.text_pink} />
           </TouchableOpacity>
         </Animated.View>
-        <Animated.View style={{ opacity: arrowOpacity }}>
+        <Animated.View style={[{ opacity: arrowOpacity }]}>
           <Text style={styles.headerTitle}>{title}</Text>
         </Animated.View>
       </View>

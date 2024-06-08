@@ -7,21 +7,42 @@ import {
   Image,
   SafeAreaView,
   TouchableOpacity,
+  Animated,
 } from "react-native";
 import FavoriteCard from "@/components/profile/FavoriteCard";
 import ReviewCard from "@/components/profile/ReviewCard";
 import { supabase } from "@/utils/supabase";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
+import Review from "../review/[id]";
+import CustomHeader from "@/components/CustomHeader";
+
+// TODO: Add Lists Feature Eventually
+// TODO: Only load 5 posts (Map)
+// TODO: Click on profile and it grows
+// TODO: Only Fetch When Required to do so
+
+interface ReviewCardProps {
+  reviewId: string; // Type for reviewId
+}
 
 interface Profile {
   id: string;
-  username: string | null;
-  follower_ids: string[]; // Array of user IDs who follow this user
-  following_ids: string[]; // Array of user IDs this user follows
+  username: string;
   avatar_url: string;
   favorite_exhibitions: string[]; // Array of favorite exhibition IDs
 }
+
+// interface Review {
+//   id: string;
+//   created_at: string;
+//   exhibition_id: string;
+//   text: string;
+//   exhibition: {
+//     title: string;
+//   };
+// }
+
 interface Review {
   id: string;
   exhibition_id: string;
@@ -51,22 +72,54 @@ const ProfilePage: React.FC = () => {
   const { id } = useLocalSearchParams();
   const [userProfile, setUserProfile] = useState<Profile | null>(null);
   const [userReviews, setUserReviews] = useState<Review[]>([]);
+  const scrollY = useRef(new Animated.Value(0)).current;
   const [favoriteExhibitions, setFavoriteExhibitions] = useState<
     FavoriteExhibition[]
   >([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [userId, setUserId] = useState("");
+  const [reviewsUpdate, setReviewsUpdate] = useState<boolean>(false);
+  const [followCountUpdate, setFollowCountUpdate] = useState<boolean>(false);
+  const [followedUserIds, setFollowedUserIds] = useState([""]);
+  const [followingUserIds, setFollowingUserIds] = useState([""]);
+
+  const channels = supabase
+    .channel("custom-update-channel-5")
+    .on(
+      "postgres_changes",
+      {
+        event: "*",
+        schema: "public",
+        table: "reviews",
+        filter: "user_id=eq.".concat(userId),
+      },
+      (payload) => {
+        console.log("Change received!", payload);
+        setReviewsUpdate(!reviewsUpdate);
+      }
+    )
+    .on(
+      "postgres_changes",
+      {
+        event: "*",
+        schema: "public",
+        table: "user_follows_users",
+        filter: "follower_id=eq.".concat(userId),
+      },
+      (payload) => {
+        console.log("Change received!", payload);
+        setFollowCountUpdate(!followCountUpdate);
+      }
+    )
+    .subscribe();
 
   // Get the user Data
   useEffect(() => {
     const getUserData = async () => {
-      setLoading(true);
-
       const { data, error } = await supabase
         .from("profiles")
-        .select(
-          "id, username, follower_ids, following_ids, avatar_url, favorite_exhibitions"
-        )
+        .select("id, username, avatar_url, favorite_exhibitions")
         .eq("id", id)
         .single();
 
@@ -77,10 +130,49 @@ const ProfilePage: React.FC = () => {
       } else {
         setUserProfile(data);
         fetchFavoriteExhibitions(data.id);
+        setUserId(id);
+      }
+
+      const { data: followedUsers, error: followError } = await supabase
+        .from("user_follows_users")
+        .select("following_id")
+        .eq("follower_id", id);
+
+      if (followError) {
+        console.error("Error fetching followed users:", followError);
+        return [];
+      }
+
+      const followedUserList = followedUsers.map((user) => user.following_id);
+
+      console.log("FollowedUserIDS: ", followedUserIds);
+      if (!followedUserIds) {
+        console.log("No followed users found.");
+      } else {
+        setFollowedUserIds(followedUserList);
+      }
+
+      const { data: followingUser, error: followingError } = await supabase
+        .from("user_follows_users")
+        .select("follower_id")
+        .eq("following_id", id);
+
+      if (followingError) {
+        console.error("Error fetching followed users:", followingError);
+        return [];
+      }
+
+      const followingUserList = followingUser.map((user) => user.follower_id);
+
+      if (!followingUserIds) {
+        console.log("No followed users found.");
+      } else {
+        setFollowingUserIds(followingUserList);
       }
     };
+
     getUserData();
-  }, []);
+  }, [userId, followCountUpdate]);
 
   const fetchFavoriteExhibitions = async (userId: string) => {
     const { data, error } = await supabase
@@ -150,56 +242,61 @@ const ProfilePage: React.FC = () => {
     };
 
     getUserReviews();
-  }, [userProfile]); // This useEffect runs only when userProfile changes.
+  }, [userProfile, reviewsUpdate]); // This useEffect runs only when userProfile changes.
 
   const goToFollowing = () => {
     if (!userProfile) return;
-
+    console.log("USER PROFILE" + userProfile.id);
     router.push({
-      pathname: "/(auth)/(drawer)/(tabs)/profile/following",
-      // TODO: Fix this red squiggly
-      // !
-      params: { following: userProfile.following_ids, userId: userProfile.id },
+      pathname: "/(auth)/(drawer)/user/following",
+      params: { userId: userProfile.id },
     });
   };
 
+  const goToFollowers = () => {
+    if (!userProfile) return;
+
+    router.push({
+      pathname: "/(auth)/(drawer)/user/followers",
+      params: { userId: userProfile.id },
+    });
+  };
   return (
-    <SafeAreaView style={styles.safeContainer}>
-      <ScrollView contentContainerStyle={styles.container}>
-        {/* Profile Container */}
+    <View style={styles.safeContainer}>
+      <CustomHeader title={userProfile?.username} scrollY={scrollY} />
+      <Animated.ScrollView
+        contentContainerStyle={styles.container}
+        showsVerticalScrollIndicator={false}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+          { useNativeDriver: false }
+        )}
+        scrollEventThrottle={16}
+      >
         <View style={styles.profileContainer}>
           <Image
             source={{ uri: userProfile?.avatar_url }}
-            style={{
-              width: 100,
-              height: 100,
-              borderRadius: 100 / 2,
-            }}
+            style={styles.profileImage}
           />
           <Text style={styles.userNameText}>{userProfile?.username}</Text>
         </View>
-        {/*Followers / Following */}
+
         <View style={styles.followersContainer}>
           <TouchableOpacity style={styles.follow} onPress={goToFollowing}>
-            <Text style={styles.userNameText}>
-              {userProfile?.following_ids.length}
-            </Text>
+            <Text style={styles.userNameText}>{followedUserIds.length}</Text>
             <Text style={styles.userNameText}> Following </Text>
           </TouchableOpacity>
-          <View style={styles.follow}>
-            <Text style={styles.userNameText}>
-              {" "}
-              {userProfile?.follower_ids.length}{" "}
-            </Text>
+          <TouchableOpacity style={styles.follow} onPress={goToFollowers}>
+            <Text style={styles.userNameText}>{followingUserIds.length}</Text>
             <Text style={styles.userNameText}>Followers</Text>
-          </View>
+          </TouchableOpacity>
         </View>
-        {/* Favorites */}
+
         <View style={styles.favoritesContainer}>
           <Text style={styles.userNameText}> Favorites </Text>
           <View style={styles.favoriteScroll}>
             {favoriteExhibitions.length === 0 ? (
-              <Text style={{ color: "white", fontSize: 17, marginBottom: 20 }}>
+              <Text style={styles.noFavoritesText}>
                 Displaying your favorite exhibitions is still under development,
                 sorry for the inconvenience... If you want to check out how it
                 would look, feel free to go to Jake or Pedro's profile!
@@ -214,8 +311,8 @@ const ProfilePage: React.FC = () => {
             )}
           </View>
         </View>
+
         <Text style={styles.userNameText}> Reviews </Text>
-        {/* Posts */}
         <View style={styles.reviewsContainer}>
           {userReviews.toReversed().map((review) => (
             <ReviewCard
@@ -231,26 +328,18 @@ const ProfilePage: React.FC = () => {
               museumName={review.exhibition.museum.name}
               user_id={userProfile?.id}
               showImage={true}
+              created_at={review.created_at}
             />
           ))}
-          <Text style={{ color: "white" }}>
-            {/* {userReviews &&
-              userReviews.length > 0 &&
-              userReviews[0].exhibition.title} */}
-          </Text>
         </View>
-        {favoriteExhibitions.map((exhibition) => (
-          <Text key={exhibition.id}>{exhibition.id}</Text>
-        ))}
-      </ScrollView>
-    </SafeAreaView>
+      </Animated.ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   safeContainer: {
     flex: 1,
-    padding: 12,
     backgroundColor: colors.background,
   },
   container: {
@@ -258,51 +347,35 @@ const styles = StyleSheet.create({
     paddingVertical: 40,
     backgroundColor: colors.background,
     gap: 10,
+    paddingBottom: 500, // Ensure there's enough space at the bottom
   },
   profileContainer: {
-    // borderColor: "white",
-    // borderWidth: 2,
-    display: "flex",
     justifyContent: "center",
     alignItems: "center",
     gap: 10,
   },
-
+  profileImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+  },
   followersContainer: {
-    // borderColor: "white",
-    // borderWidth: 2,
-    display: "flex",
     flexDirection: "row",
     justifyContent: "space-evenly",
     alignItems: "center",
     gap: 10,
   },
   favoritesContainer: {
-    // borderColor: "white",
-    // borderWidth: 2,
-    display: "flex",
+    marginTop: 10,
     flexDirection: "column",
     alignItems: "flex-start",
     gap: 10,
   },
   follow: {
     padding: 4,
-    display: "flex",
     justifyContent: "center",
+    alignItems: "center",
     gap: 4,
-    alignItems: "center",
-    // borderColor: "white",
-    // borderWidth: 2,
-  },
-  text: {
-    color: colors.text_pink,
-    fontFamily: "Inter_400Regular",
-    fontSize: 20,
-  },
-  signUpButton: {
-    alignItems: "center",
-    padding: 5,
-    borderRadius: 4,
   },
   userNameText: {
     color: colors.text_pink,
@@ -310,16 +383,19 @@ const styles = StyleSheet.create({
     fontSize: 17,
   },
   favoriteScroll: {
-    display: "flex",
     flexDirection: "row",
     width: "100%",
     justifyContent: "space-evenly",
     alignItems: "center",
-    // borderColor: "white",
-    // borderWidth: 2,
+  },
+  noFavoritesText: {
+    color: "white",
+    fontSize: 17,
+    marginBottom: 20,
   },
   reviewsContainer: {
     gap: 12,
   },
 });
+
 export default ProfilePage;
