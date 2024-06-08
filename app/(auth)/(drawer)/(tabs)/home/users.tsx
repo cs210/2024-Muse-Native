@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
   },
   reviewsContainer: {
     marginTop: 4,
-    gap: 12,
+    gap: 20,
     padding: 12,
   },
 });
