@@ -24,26 +24,23 @@ const artifactPressed = (artifact: Artifact) => {
 };
 
 const ArtifactScrollView: React.FC<ArtifactCarouselProps> = ({ artifacts }) => {
-  console.log(artifacts);
   return (
     <View style={styles.container}>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {artifacts.map((artifact, index) => (
-          <TouchableOpacity
-            key={index}
-            style={styles.artifactContainer}
-            onPress={() => artifactPressed(artifact)}
-          >
-            <Image
-              style={styles.artifactImage}
-              source={{
-                uri: artifact.cover_photo_url,
-              }}
-            />
-            <Text style={styles.artifactTitle} numberOfLines={3}>
-              {artifact.title}
-            </Text>
-          </TouchableOpacity>
+          <View key={index} style={styles.artifactContainer}>
+            <TouchableOpacity onPress={() => artifactPressed(artifact)}>
+              <Image
+                style={styles.artifactImage}
+                source={{
+                  uri: artifact.cover_photo_url,
+                }}
+              />
+              <Text style={styles.artifactTitle} numberOfLines={3}>
+                {artifact.title}
+              </Text>
+            </TouchableOpacity>
+          </View>
         ))}
       </ScrollView>
     </View>
